@@ -1,55 +1,83 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { PageShell, SectionEyebrow } from "@/components/site";
-import { buildCalendarDashboardModel, createDemoDashboardSession } from "@/lib/calendar-access";
+import { dashboardSessionCookieName, parseSignedDashboardSession } from "@/lib/auth-session";
+import { buildCalendarDashboardModel } from "@/lib/calendar-access";
 import { serviceCategories, staffMembers } from "@/lib/studio-data";
 
-export default function DashboardPage() {
-  const ownerModel = buildCalendarDashboardModel(createDemoDashboardSession("owner"), staffMembers);
-  const staffModel = buildCalendarDashboardModel(createDemoDashboardSession("staff", "team-member-10"), staffMembers);
-  const featuredStaffCalendars = staffModel.visibleCalendars.filter((calendar, index) =>
-    index < 4 || calendar.staffSlug === "team-member-10" || calendar.staffSlug === "team-member-11" || index > staffModel.visibleCalendars.length - 3,
+function getDashboardSessionSecret() {
+  return process.env.HERMES_DASHBOARD_SESSION_SECRET ?? "mild2wild-local-prototype-session-secret";
+}
+
+async function logoutAction() {
+  "use server";
+
+  const cookieStore = await cookies();
+  cookieStore.delete(dashboardSessionCookieName);
+  redirect("/login");
+}
+
+export default async function DashboardPage() {
+  const cookieStore = await cookies();
+  const session = parseSignedDashboardSession(cookieStore.get(dashboardSessionCookieName)?.value, getDashboardSessionSecret());
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  const dashboardModel = buildCalendarDashboardModel(session, staffMembers.filter((staff) => !staff.isMascot));
+  const featuredStaffCalendars = dashboardModel.visibleCalendars.filter((calendar, index) =>
+    dashboardModel.canManageAllCalendars || index < 4 || calendar.canEdit || index > dashboardModel.visibleCalendars.length - 3,
   );
 
   return (
     <PageShell>
       <section className="mx-auto max-w-7xl px-5 py-16">
-        <SectionEyebrow color="#A95CFF">Admin + staff portal</SectionEyebrow>
-        <h1 className="brand-display max-w-5xl text-5xl font-black uppercase md:text-7xl">Role-based calendars are the backbone.</h1>
-        <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
-          This is the dashboard foundation for the owner/admin login and individual employee logins. The real auth layer can plug into this permission model next: owner sees every calendar, staff can only move their own appointments.
-        </p>
+        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-start">
+          <div>
+            <SectionEyebrow color="#A95CFF">Admin + staff portal</SectionEyebrow>
+            <h1 className="brand-display max-w-5xl text-5xl font-black uppercase md:text-7xl">Role-based calendars are live.</h1>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
+              Signed sessions now separate owner/admin access from individual employee logins. The owner can manage every calendar; employees can only edit their own schedule lane.
+            </p>
+          </div>
+          <form action={logoutAction}>
+            <button className="rounded-full border border-white/15 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-white/75 transition hover:bg-white hover:text-black" type="submit">
+              Log out
+            </button>
+          </form>
+        </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-2">
           <article className="neon-card rounded-[2rem] p-6" style={{ boxShadow: "0 0 70px #A95CFF22" }}>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.26em] text-purple-200/75">{ownerModel.sessionLabel}</p>
-                <h2 className="brand-display mt-2 text-3xl font-black uppercase">Owner command center</h2>
+                <p className="text-xs font-black uppercase tracking-[0.26em] text-purple-200/75">{dashboardModel.sessionLabel}</p>
+                <h2 className="brand-display mt-2 text-3xl font-black uppercase">{session.displayName}</h2>
               </div>
-              <span className="rounded-full bg-purple-300 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-black">All access</span>
+              <span className="rounded-full bg-purple-300 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-black">
+                {dashboardModel.canManageAllCalendars ? "All access" : "Scoped"}
+              </span>
             </div>
-            <p className="mt-4 text-white/65">Can manage all calendars, staff profiles, services, products, and call-agent leads.</p>
+            <p className="mt-4 text-white/65">
+              {dashboardModel.canManageAllCalendars
+                ? "Can manage all calendars, staff profiles, services, products, and call-agent leads."
+                : "Can view the portal but only edit their own profile, availability, and bookings."}
+            </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              <Metric label="Visible calendars" value={ownerModel.visibleCalendars.length.toString()} />
-              <Metric label="Editable calendars" value={ownerModel.editableCalendarSlugs.length.toString()} />
-              <Metric label="Permission" value="Owner" />
+              <Metric label="Visible calendars" value={dashboardModel.visibleCalendars.length.toString()} />
+              <Metric label="Editable calendars" value={dashboardModel.editableCalendarSlugs.length.toString()} />
+              <Metric label="Permission" value={dashboardModel.canManageAllCalendars ? "Owner" : "Staff"} />
             </div>
           </article>
 
           <article className="neon-card rounded-[2rem] p-6" style={{ boxShadow: "0 0 70px #4DDCE522" }}>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs font-black uppercase tracking-[0.26em] text-cyan-100/75">{staffModel.sessionLabel}</p>
-                <h2 className="brand-display mt-2 text-3xl font-black uppercase">Employee calendar lane</h2>
-              </div>
-              <span className="rounded-full bg-cyan-300 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-black">Scoped</span>
-            </div>
-            <p className="mt-4 text-white/65">Can view the portal but only edit their own profile, availability, and bookings.</p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              <Metric label="Visible calendars" value={staffModel.visibleCalendars.length.toString()} />
-              <Metric label="Editable calendars" value={staffModel.editableCalendarSlugs.length.toString()} />
-              <Metric label="Locked from" value="Others" />
-            </div>
+            <SectionEyebrow color="#4DDCE5">Call-agent handoff</SectionEyebrow>
+            <h2 className="brand-display text-3xl font-black uppercase">Lead intake can route to the right person.</h2>
+            <p className="mt-4 text-white/65">
+              The worker agent can collect name, requested service, and appointment notes, then hand the call to the shop with context already attached. Service-specific routing uses the same staff/category model as the public pages.
+            </p>
           </article>
         </div>
       </section>
@@ -57,12 +85,16 @@ export default function DashboardPage() {
       <section className="mx-auto max-w-7xl px-5 py-10">
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
           <div>
-            <SectionEyebrow color="#4DDCE5">Example staff-login calendar board</SectionEyebrow>
-            <h2 className="brand-display max-w-4xl text-4xl font-black uppercase md:text-6xl">One editable calendar, every other calendar locked.</h2>
+            <SectionEyebrow color="#4DDCE5">Calendar board</SectionEyebrow>
+            <h2 className="brand-display max-w-4xl text-4xl font-black uppercase md:text-6xl">
+              {dashboardModel.canManageAllCalendars ? "Every staff calendar is editable." : "One editable calendar, every other calendar locked."}
+            </h2>
           </div>
-          <Link href="/staff/team-member-10" className="rounded-full border border-white/15 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-white/75 transition hover:bg-white hover:text-black">
-            View example profile
-          </Link>
+          {session.staffSlug ? (
+            <Link href={`/staff/${session.staffSlug}`} className="rounded-full border border-white/15 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-white/75 transition hover:bg-white hover:text-black">
+              View my profile
+            </Link>
+          ) : null}
         </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">

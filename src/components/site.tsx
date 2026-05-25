@@ -10,6 +10,7 @@ export function SiteHeader() {
     ["Tour", "/tour"],
     ["Products", "/products"],
     ["Book", "/book"],
+    ["Login", "/login"],
   ];
 
   return (

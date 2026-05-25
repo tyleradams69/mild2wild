@@ -34,6 +34,7 @@ export type StaffMember = {
   socialLinks: SocialLink[];
   gallery: string[];
   calendarColor: string;
+  isMascot?: boolean;
 };
 
 export type DashboardScope = {
@@ -187,45 +188,51 @@ const categoryAccentRotation: Record<ServiceCategorySlug, string[]> = {
   aesthetics: ["#A95CFF", "#C66BFF", "#79D94D", "#8A5CFF"],
 };
 
-const staffSeed: Array<{ index: number; categorySlug: ServiceCategorySlug }> = [
+const mascotBio =
+  "The shop dog is part of the Mild 2 Wild personality and can be featured as the mascot on the staff page, tour page, and brand moments without appearing as a bookable service provider.";
+
+const staffSeed: Array<{ index: number; categorySlug?: ServiceCategorySlug; isMascot?: boolean }> = [
   { index: 1, categorySlug: "nails" },
   { index: 2, categorySlug: "nails" },
   { index: 3, categorySlug: "nails" },
-  { index: 4, categorySlug: "nails" },
+  { index: 4, categorySlug: "aesthetics" },
   { index: 5, categorySlug: "nails" },
-  { index: 6, categorySlug: "hair" },
-  { index: 7, categorySlug: "hair" },
+  { index: 6, categorySlug: "aesthetics" },
+  { index: 7, categorySlug: "tattoo" },
   { index: 8, categorySlug: "hair" },
   { index: 9, categorySlug: "hair" },
   { index: 10, categorySlug: "tattoo" },
-  { index: 11, categorySlug: "tattoo" },
-  { index: 12, categorySlug: "tattoo" },
-  { index: 13, categorySlug: "tattoo" },
-  { index: 14, categorySlug: "aesthetics" },
-  { index: 15, categorySlug: "aesthetics" },
-  { index: 16, categorySlug: "aesthetics" },
+  { index: 11, categorySlug: "hair" },
+  { index: 12, isMascot: true },
+  { index: 13, categorySlug: "aesthetics" },
+  { index: 14, categorySlug: "nails" },
+  { index: 15, categorySlug: "nails" },
+  { index: 16, categorySlug: "nails" },
   { index: 17, categorySlug: "aesthetics" },
 ];
 
-export const staffMembers: StaffMember[] = staffSeed.map(({ index, categorySlug }) => {
+export const staffMembers: StaffMember[] = staffSeed.map(({ index, categorySlug, isMascot }) => {
   const paddedIndex = String(index).padStart(2, "0");
-  const categoryIndex = staffSeed.filter((staff) => staff.categorySlug === categorySlug && staff.index <= index).length - 1;
-  const colors = categoryAccentRotation[categorySlug];
+  const categoryIndex = categorySlug
+    ? staffSeed.filter((staff) => staff.categorySlug === categorySlug && staff.index <= index).length - 1
+    : 0;
+  const colors = categorySlug ? categoryAccentRotation[categorySlug] : ["#F06BD6"];
 
   return {
     slug: `team-member-${paddedIndex}`,
-    name: `Team Member ${paddedIndex}`,
-    title: categoryTitles[categorySlug],
-    bio: categoryBio[categorySlug],
+    name: isMascot ? "Shop Dog Mascot" : `Team Member ${paddedIndex}`,
+    title: isMascot ? "Shop Mascot" : categoryTitles[categorySlug as ServiceCategorySlug],
+    bio: isMascot ? mascotBio : categoryBio[categorySlug as ServiceCategorySlug],
     photoUrl: `/staff/team-member-${paddedIndex}.jpg`,
-    serviceCategorySlugs: [categorySlug],
-    serviceSlugs: serviceSlugsByCategory[categorySlug],
+    serviceCategorySlugs: categorySlug ? [categorySlug] : [],
+    serviceSlugs: categorySlug ? serviceSlugsByCategory[categorySlug] : [],
     socialLinks: [
       { label: "Instagram coming soon", href: "#" },
       { label: "Portfolio coming soon", href: "#" },
     ],
-    gallery: categoryGallery[categorySlug],
+    gallery: isMascot ? ["Mascot photo slot", "Shop-dog story", "Tour-page cameo"] : categoryGallery[categorySlug as ServiceCategorySlug],
     calendarColor: colors[categoryIndex % colors.length],
+    isMascot,
   };
 });
 
