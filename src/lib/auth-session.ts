@@ -9,19 +9,30 @@ export type DashboardAuthSession = {
   role: DashboardAuthRole;
   staffSlug?: string;
   displayName: string;
+  email?: string;
   expiresAt: number;
 };
 
 export type LoginFormChoice = {
   role?: string;
   staffSlug?: string;
+  ownerEmail?: string;
 };
 
 export type LoginSessionResult =
   | { ok: true; session: DashboardAuthSession }
-  | { ok: false; error: "invalid_role" | "missing_staff" | "unknown_staff" | "mascot_not_bookable" };
+  | { ok: false; error: "invalid_role" | "invalid_owner_email" | "missing_staff" | "unknown_staff" | "mascot_not_bookable" };
 
 const oneDayMs = 24 * 60 * 60 * 1000;
+
+export const ownerAdminProfile = {
+  name: "Caitlin",
+  email: "Hyer.quality.craft@gmail.com",
+} as const;
+
+function normalizeEmail(value: unknown) {
+  return typeof value === "string" ? value.trim().toLowerCase() : "";
+}
 
 function signPayload(payload: string, secret: string) {
   return createHmac("sha256", secret).update(payload).digest("base64url");
@@ -51,6 +62,7 @@ function decodePayload(payload: string): DashboardAuthSession | null {
       role: parsed.role,
       staffSlug: parsed.staffSlug,
       displayName: parsed.displayName,
+      email: typeof parsed.email === "string" ? parsed.email : undefined,
       expiresAt: parsed.expiresAt,
     };
   } catch {
@@ -85,11 +97,16 @@ export function parseSignedDashboardSession(cookieValue: string | undefined | nu
 
 export function resolveLoginSession(choice: LoginFormChoice, now = Date.now()): LoginSessionResult {
   if (choice.role === "owner") {
+    if (normalizeEmail(choice.ownerEmail) !== normalizeEmail(ownerAdminProfile.email)) {
+      return { ok: false, error: "invalid_owner_email" };
+    }
+
     return {
       ok: true,
       session: {
         role: "owner",
-        displayName: "Owner Admin",
+        displayName: ownerAdminProfile.name,
+        email: ownerAdminProfile.email,
         expiresAt: now + oneDayMs,
       },
     };

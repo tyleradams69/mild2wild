@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  ownerAdminProfile,
   createSignedDashboardSession,
   parseSignedDashboardSession,
   resolveLoginSession,
@@ -35,12 +36,21 @@ describe("dashboard auth session foundation", () => {
   });
 
   it("maps login form choices to scoped sessions", () => {
-    const owner = resolveLoginSession({ role: "owner" });
+    const owner = resolveLoginSession({ role: "owner", ownerEmail: "Hyer.quality.craft@gmail.com" });
     const staff = resolveLoginSession({ role: "staff", staffSlug: "team-member-10" });
     const missingStaff = resolveLoginSession({ role: "staff" });
 
     expect(owner.ok && owner.session.role).toBe("owner");
+    expect(owner.ok && owner.session.displayName).toBe("Caitlin");
+    expect(owner.ok && owner.session.email).toBe(ownerAdminProfile.email);
     expect(staff.ok && staff.session.staffSlug).toBe("team-member-10");
     expect(missingStaff.ok).toBe(false);
+  });
+
+  it("requires Caitlin's admin email for owner login", () => {
+    expect(ownerAdminProfile).toEqual({ name: "Caitlin", email: "Hyer.quality.craft@gmail.com" });
+    expect(resolveLoginSession({ role: "owner", ownerEmail: "hyER.quality.craft@gmail.com" }).ok).toBe(true);
+    expect(resolveLoginSession({ role: "owner" })).toEqual({ ok: false, error: "invalid_owner_email" });
+    expect(resolveLoginSession({ role: "owner", ownerEmail: "someone@example.com" })).toEqual({ ok: false, error: "invalid_owner_email" });
   });
 });

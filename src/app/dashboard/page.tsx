@@ -66,6 +66,7 @@ export default async function DashboardPage() {
                 : "Can view the portal but only edit their own profile, availability, and bookings."}
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              {session.email ? <Metric label="Admin email" value={session.email} /> : null}
               <Metric label="Visible calendars" value={dashboardModel.visibleCalendars.length.toString()} />
               <Metric label="Editable calendars" value={dashboardModel.editableCalendarSlugs.length.toString()} />
               <Metric label="Permission" value={dashboardModel.canManageAllCalendars ? "Owner" : "Staff"} />
