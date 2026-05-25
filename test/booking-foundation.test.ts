@@ -2,10 +2,12 @@ import { describe, expect, it } from "vitest";
 import { services, staffMembers } from "../src/lib/studio-data";
 import {
   buildAppointmentInsert,
+  buildBookingServiceGroups,
   buildCallAgentLeadInsert,
   validateBookingRequest,
   validateCallAgentLead,
 } from "../src/lib/booking-foundation";
+import { serviceCategories } from "../src/lib/studio-data";
 
 const staffIdsBySlug = new Map([
   ["team-member-10", "staff-tattoo-id"],
@@ -18,6 +20,20 @@ const serviceIdsBySlug = new Map([
 ]);
 
 describe("booking foundation", () => {
+  it("builds customer booking choices with only compatible staff and no mascot", () => {
+    const groups = buildBookingServiceGroups({ serviceCategories, services, staffMembers });
+    const tattooConsult = groups.flatMap((group) => group.services).find((service) => service.slug === "tattoo-consult");
+
+    expect(tattooConsult?.compatibleStaff.map((staff) => staff.slug)).toEqual([
+      "team-member-03",
+      "team-member-07",
+      "team-member-10",
+    ]);
+    expect(groups.flatMap((group) => group.services).flatMap((service) => service.compatibleStaff.map((staff) => staff.slug))).not.toContain(
+      "team-member-12",
+    );
+  });
+
   it("accepts a valid appointment only when the selected staff offers the selected service", () => {
     const result = validateBookingRequest(
       {

@@ -1,4 +1,4 @@
-import type { StaffMember, StudioService } from "./studio-data";
+import type { ServiceCategory, StaffMember, StudioService } from "./studio-data";
 
 export type BookingRequestInput = {
   customerName?: unknown;
@@ -47,6 +47,25 @@ type ValidationResult<T> = { ok: true; value: T } | { ok: false; errors: string[
 type BookingDataset = {
   services: Pick<StudioService, "slug" | "durationMinutes">[];
   staffMembers: Pick<StaffMember, "slug" | "serviceSlugs">[];
+};
+
+export type BookingServiceGroup = {
+  slug: string;
+  name: string;
+  accent: string;
+  services: Array<{
+    slug: string;
+    name: string;
+    priceLabel: string;
+    durationMinutes: number;
+    description: string;
+    compatibleStaff: Array<{
+      slug: string;
+      name: string;
+      title: string;
+      calendarColor: string;
+    }>;
+  }>;
 };
 
 type IdMaps = {
@@ -117,6 +136,41 @@ export function validateBookingRequest(input: BookingRequestInput, dataset: Book
       notes,
     },
   };
+}
+
+export function buildBookingServiceGroups({
+  serviceCategories,
+  services,
+  staffMembers,
+}: {
+  serviceCategories: ServiceCategory[];
+  services: StudioService[];
+  staffMembers: StaffMember[];
+}): BookingServiceGroup[] {
+  const bookableStaff = staffMembers.filter((staff) => !staff.isMascot);
+
+  return serviceCategories.map((category) => ({
+    slug: category.slug,
+    name: category.name,
+    accent: category.accent,
+    services: services
+      .filter((service) => service.categorySlug === category.slug)
+      .map((service) => ({
+        slug: service.slug,
+        name: service.name,
+        priceLabel: service.priceLabel,
+        durationMinutes: service.durationMinutes,
+        description: service.description,
+        compatibleStaff: bookableStaff
+          .filter((staff) => staff.serviceSlugs.includes(service.slug))
+          .map((staff) => ({
+            slug: staff.slug,
+            name: staff.name,
+            title: staff.title,
+            calendarColor: staff.calendarColor,
+          })),
+      })),
+  }));
 }
 
 export function buildAppointmentInsert(request: ValidatedBookingRequest, maps: IdMaps) {

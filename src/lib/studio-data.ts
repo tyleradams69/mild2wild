@@ -194,7 +194,7 @@ const mascotBio =
 const staffSeed: Array<{ index: number; categorySlug?: ServiceCategorySlug; isMascot?: boolean }> = [
   { index: 1, categorySlug: "nails" },
   { index: 2, categorySlug: "nails" },
-  { index: 3, categorySlug: "nails" },
+  { index: 3, categorySlug: "tattoo" },
   { index: 4, categorySlug: "aesthetics" },
   { index: 5, categorySlug: "nails" },
   { index: 6, categorySlug: "aesthetics" },
