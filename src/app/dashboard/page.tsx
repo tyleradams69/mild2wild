@@ -5,7 +5,7 @@ import Link from "next/link";
 import { PageShell, SectionEyebrow } from "@/components/site";
 import { dashboardSessionCookieName, parseSignedDashboardSession } from "@/lib/auth-session";
 import { buildCalendarDashboardModel } from "@/lib/calendar-access";
-import { serviceCategories, staffMembers } from "@/lib/studio-data";
+import { getStaffBySlug, serviceCategories, staffMembers } from "@/lib/studio-data";
 
 function getDashboardSessionSecret() {
   return process.env.HERMES_DASHBOARD_SESSION_SECRET ?? "mild2wild-local-prototype-session-secret";
@@ -27,9 +27,12 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const dashboardModel = buildCalendarDashboardModel(session, staffMembers.filter((staff) => !staff.isMascot));
-  const featuredStaffCalendars = dashboardModel.visibleCalendars.filter((calendar, index) =>
-    dashboardModel.canManageAllCalendars || index < 4 || calendar.canEdit || index > dashboardModel.visibleCalendars.length - 3,
+  const dashboardModel = buildCalendarDashboardModel(session, staffMembers);
+  const identityChipLabel = dashboardModel.canManageAllCalendars ? "Owner Admin" : (dashboardModel.profileAvatar?.title ?? dashboardModel.sessionLabel);
+  const featuredStaffCalendars = dashboardModel.visibleCalendars.filter(
+    (calendar, index) =>
+      !getStaffBySlug(calendar.staffSlug)?.isMascot &&
+      (dashboardModel.canManageAllCalendars || index < 4 || calendar.canEdit || index > dashboardModel.visibleCalendars.length - 3),
   );
 
   return (
@@ -62,7 +65,7 @@ export default async function DashboardPage() {
             <div className="hidden min-w-0 sm:block">
               <p className="max-w-56 text-sm font-black text-white">{session.displayName}</p>
               <p className="mt-0.5 max-w-56 text-[0.65rem] font-black uppercase tracking-[0.14em] text-white/45">
-                {dashboardModel.profileAvatar?.title ?? dashboardModel.sessionLabel}
+                {identityChipLabel}
               </p>
             </div>
             <form action={logoutAction}>
