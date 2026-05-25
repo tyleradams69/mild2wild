@@ -65,8 +65,8 @@ export default async function DashboardPage() {
                 ? "Can manage all calendars, staff profiles, services, products, and call-agent leads."
                 : "Can view the portal but only edit their own profile, availability, and bookings."}
             </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              {session.email ? <Metric label="Admin email" value={session.email} /> : null}
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {session.email ? <Metric label="Admin email" value={session.email} wide /> : null}
               <Metric label="Visible calendars" value={dashboardModel.visibleCalendars.length.toString()} />
               <Metric label="Editable calendars" value={dashboardModel.editableCalendarSlugs.length.toString()} />
               <Metric label="Permission" value={dashboardModel.canManageAllCalendars ? "Owner" : "Staff"} />
@@ -134,10 +134,10 @@ export default async function DashboardPage() {
   );
 }
 
-function Metric({ label, value }: { label: string; value: string }) {
+function Metric({ label, value, wide = false }: { label: string; value: string; wide?: boolean }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-      <p className="text-2xl font-black text-white">{value}</p>
+    <div className={`min-w-0 rounded-2xl border border-white/10 bg-white/5 p-4 ${wide ? "sm:col-span-2 xl:col-span-3" : ""}`}>
+      <p className="min-w-0 break-words text-2xl font-black leading-tight text-white [overflow-wrap:anywhere] sm:text-3xl">{value}</p>
       <p className="mt-1 text-[0.65rem] font-black uppercase tracking-[0.2em] text-white/42">{label}</p>
     </div>
   );
