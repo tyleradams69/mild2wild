@@ -21,6 +21,12 @@ export type CalendarCardModel = {
 
 export type CalendarDashboardModel = {
   sessionLabel: string;
+  profileAvatar?: {
+    name: string;
+    title: string;
+    photoUrl: string;
+    accent: string;
+  };
   canManageAllCalendars: boolean;
   editableCalendarSlugs: string[];
   visibleCalendars: CalendarCardModel[];
@@ -67,9 +73,18 @@ export function buildCalendarDashboardModel(session: DashboardSession, staffMemb
   const editableCalendarSlugs = getEditableCalendarSlugs(session, staffMembers);
   const editableSet = new Set(editableCalendarSlugs);
   const canManageAllCalendars = session.role === "owner";
+  const profileStaff = session.staffSlug ? staffMembers.find((staff) => staff.slug === session.staffSlug && !staff.isMascot) : undefined;
 
   return {
     sessionLabel: canManageAllCalendars ? "Owner admin login" : `${session.displayName} staff login`,
+    profileAvatar: profileStaff
+      ? {
+          name: profileStaff.name,
+          title: profileStaff.title,
+          photoUrl: profileStaff.photoUrl,
+          accent: profileStaff.calendarColor,
+        }
+      : undefined,
     canManageAllCalendars,
     editableCalendarSlugs,
     visibleCalendars: staffMembers.map((staff) => {

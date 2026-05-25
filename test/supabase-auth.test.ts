@@ -38,6 +38,7 @@ describe("Supabase dashboard auth", () => {
     expect(result.ok && result.session.role).toBe("owner");
     expect(result.ok && result.session.displayName).toBe("Caitlin");
     expect(result.ok && result.session.email).toBe(ownerAdminProfile.email);
+    expect(result.ok && result.session.staffSlug).toBe("team-member-13");
     expect(JSON.stringify(result)).not.toContain("123456");
     expect(JSON.stringify(result)).not.toContain("supabase-access-token");
     expect(JSON.stringify(result)).not.toContain("supabase-refresh-token");

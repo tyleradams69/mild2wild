@@ -36,7 +36,7 @@ describe("dashboard auth session foundation", () => {
   });
 
   it("stores Caitlin's owner identity as dashboard metadata", () => {
-    expect(ownerAdminProfile).toEqual({ name: "Caitlin", email: "Hyer.quality.craft@gmail.com" });
+    expect(ownerAdminProfile).toEqual({ name: "Caitlin", email: "Hyer.quality.craft@gmail.com", staffSlug: "team-member-13" });
   });
 
   it("does not mark localhost production cookies secure over plain http", () => {

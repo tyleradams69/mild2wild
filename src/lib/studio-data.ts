@@ -204,7 +204,7 @@ const staffSeed: Array<{ index: number; categorySlug?: ServiceCategorySlug; isMa
   { index: 10, categorySlug: "tattoo" },
   { index: 11, categorySlug: "hair" },
   { index: 12, isMascot: true },
-  { index: 13, categorySlug: "aesthetics" },
+  { index: 13, categorySlug: "nails" },
   { index: 14, categorySlug: "nails" },
   { index: 15, categorySlug: "nails" },
   { index: 16, categorySlug: "nails" },

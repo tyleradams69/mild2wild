@@ -84,6 +84,7 @@ export function dashboardSessionFromSupabaseUser(user: SupabasePasswordGrantUser
   if (email === normalizeEmail(ownerAdminProfile.email)) {
     return {
       role: "owner",
+      staffSlug: ownerAdminProfile.staffSlug,
       displayName: ownerAdminProfile.name,
       email: ownerAdminProfile.email,
       expiresAt: now + oneDayMs,

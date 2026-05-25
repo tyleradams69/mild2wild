@@ -40,14 +40,23 @@ describe("Mild 2 Wild service and staff rules", () => {
       "team-member-01",
       "team-member-02",
       "team-member-05",
+      "team-member-13",
       "team-member-14",
       "team-member-15",
       "team-member-16",
     ]);
     expect(slugsFor("hair")).toEqual(["team-member-08", "team-member-09", "team-member-11"]);
     expect(slugsFor("tattoo")).toEqual(["team-member-03", "team-member-07", "team-member-10"]);
-    expect(slugsFor("aesthetics")).toEqual(["team-member-04", "team-member-06", "team-member-13", "team-member-17"]);
+    expect(slugsFor("aesthetics")).toEqual(["team-member-04", "team-member-06", "team-member-17"]);
     expect(staffMembers.find((staff) => staff.slug === "team-member-12")?.isMascot).toBe(true);
+  });
+
+  it("maps Caitlin to team member 13 as a nail artist", () => {
+    const caitlin = getStaffBySlug("team-member-13");
+
+    expect(caitlin?.title).toBe("Nail Artist");
+    expect(caitlin?.serviceCategorySlugs).toEqual(["nails"]);
+    expect(caitlin?.photoUrl).toBe("/staff/team-member-13.jpg");
   });
 
   it("models owner/admin access differently from individual employee calendar access", () => {

@@ -15,6 +15,7 @@ export type DashboardAuthSession = {
 export const ownerAdminProfile = {
   name: "Caitlin",
   email: "Hyer.quality.craft@gmail.com",
+  staffSlug: "team-member-13",
 } as const;
 
 function hostWithoutPort(host: string | undefined | null) {

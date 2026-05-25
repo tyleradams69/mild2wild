@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { PageShell, SectionEyebrow } from "@/components/site";
 import { dashboardSessionCookieName, parseSignedDashboardSession } from "@/lib/auth-session";
@@ -42,11 +43,34 @@ export default async function DashboardPage() {
               Signed sessions now separate owner/admin access from individual employee logins. The owner can manage every calendar; employees can only edit their own schedule lane.
             </p>
           </div>
-          <form action={logoutAction}>
-            <button className="rounded-full border border-white/15 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-white/75 transition hover:bg-white hover:text-black" type="submit">
-              Log out
-            </button>
-          </form>
+          <div className="flex items-center gap-3 self-start rounded-full border border-white/10 bg-black/60 p-2 pr-4 shadow-2xl shadow-pink-500/10">
+            {dashboardModel.profileAvatar ? (
+              <div
+                className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 bg-black"
+                style={{ borderColor: dashboardModel.profileAvatar.accent, boxShadow: `0 0 28px ${dashboardModel.profileAvatar.accent}55` }}
+              >
+                <Image
+                  src={dashboardModel.profileAvatar.photoUrl}
+                  alt={`${dashboardModel.profileAvatar.name} cartoon portrait`}
+                  fill
+                  sizes="64px"
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            ) : null}
+            <div className="hidden min-w-0 sm:block">
+              <p className="max-w-56 text-sm font-black text-white">{session.displayName}</p>
+              <p className="mt-0.5 max-w-56 text-[0.65rem] font-black uppercase tracking-[0.14em] text-white/45">
+                {dashboardModel.profileAvatar?.title ?? dashboardModel.sessionLabel}
+              </p>
+            </div>
+            <form action={logoutAction}>
+              <button className="rounded-full border border-white/15 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-white/75 transition hover:bg-white hover:text-black" type="submit">
+                Log out
+              </button>
+            </form>
+          </div>
         </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-2">

@@ -34,4 +34,18 @@ describe("calendar access foundation", () => {
     expect(model.visibleCalendars.find((calendar) => calendar.staffSlug === "team-member-11")?.canEdit).toBe(false);
     expect(model.visibleCalendars.filter((calendar) => calendar.canEdit)).toHaveLength(1);
   });
+
+  it("personalizes dashboard sessions with the logged-in employee cartoon image", () => {
+    const model = buildCalendarDashboardModel(
+      { role: "owner", displayName: "Caitlin", staffSlug: "team-member-13" },
+      staffMembers,
+    );
+
+    expect(model.profileAvatar).toEqual({
+      name: "Team Member 13",
+      title: "Nail Artist",
+      photoUrl: "/staff/team-member-13.jpg",
+      accent: expect.any(String),
+    });
+  });
 });
