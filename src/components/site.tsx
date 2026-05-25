@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ServiceCategory, StaffMember } from "@/lib/studio-data";
 import { serviceCategories } from "@/lib/studio-data";
@@ -83,15 +84,29 @@ export function ServiceCategoryCard({ category }: { category: ServiceCategory })
 export function StaffCard({ staff }: { staff: StaffMember }) {
   const primary = serviceCategories.find((category) => category.slug === staff.serviceCategorySlugs[0]);
   return (
-    <Link href={`/staff/${staff.slug}`} className="neon-card group block overflow-hidden rounded-[2rem] p-5">
-      <div
-        className="flex aspect-[4/3] items-center justify-center rounded-[1.4rem] text-5xl font-black text-black"
-        style={{ background: `linear-gradient(135deg, ${staff.calendarColor}, ${primary?.accent ?? "#ffffff"})` }}
-      >
-        {staff.name
-          .split(" ")
-          .map((part) => part[0])
-          .join("")}
+    <Link
+      href={`/staff/${staff.slug}`}
+      className="neon-card group block overflow-hidden rounded-[2rem] p-4 transition duration-300 hover:-translate-y-1"
+      style={{ boxShadow: `0 0 45px ${staff.calendarColor}18` }}
+    >
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[1.4rem] border border-white/10 bg-black">
+        <Image
+          src={staff.photoUrl}
+          alt={`${staff.name} profile photo`}
+          fill
+          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 100vw"
+          className="object-cover transition duration-500 group-hover:scale-105"
+        />
+        <div
+          className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/45 to-transparent"
+          style={{ boxShadow: `inset 0 -45px 70px ${staff.calendarColor}18` }}
+        />
+        <span
+          className="absolute left-4 top-4 rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.18em] text-black"
+          style={{ background: primary?.accent ?? staff.calendarColor }}
+        >
+          {primary?.name ?? "Staff"}
+        </span>
       </div>
       <div className="mt-5">
         <p className="text-xs font-black uppercase tracking-[0.24em] text-white/45">{staff.title}</p>

@@ -4,6 +4,7 @@ import {
   getFeaturedStaffForCategory,
   getServiceCategoryBySlug,
   getServicesForCategory,
+  getStaffForService,
   serviceCategories,
   type ServiceCategorySlug,
 } from "@/lib/studio-data";
@@ -39,37 +40,64 @@ export default async function ServiceCategoryPage({ params }: { params: Promise<
           <SectionEyebrow color={category.accent}>{category.name}</SectionEyebrow>
           <h1 className="brand-display max-w-5xl text-5xl font-black uppercase md:text-7xl">{category.headline}</h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/68">{category.description}</p>
-          <Link
-            href="/book"
-            className="mt-8 inline-block rounded-full px-7 py-4 font-black uppercase tracking-[0.2em] text-black"
-            style={{ background: category.accent }}
-          >
-            Book {category.name}
-          </Link>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/book"
+              className="inline-block rounded-full px-7 py-4 font-black uppercase tracking-[0.2em] text-black"
+              style={{ background: category.accent }}
+            >
+              Book {category.name}
+            </Link>
+            <a href="#service-staff" className="inline-block rounded-full border border-white/15 px-7 py-4 font-black uppercase tracking-[0.2em] text-white/80">
+              Meet the right staff
+            </a>
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-7xl gap-8 px-5 py-12 lg:grid-cols-[0.85fr_1.15fr]">
+      <section className="mx-auto grid max-w-7xl gap-8 px-5 py-12 lg:grid-cols-[0.95fr_1.05fr]">
         <div>
           <SectionEyebrow color={category.accent}>Services</SectionEyebrow>
           <div className="space-y-4">
-            {services.map((service) => (
-              <article key={service.slug} className="neon-card rounded-[1.6rem] p-6">
-                <div className="flex items-start justify-between gap-5">
-                  <div>
-                    <h2 className="brand-display text-2xl font-black uppercase">{service.name}</h2>
-                    <p className="mt-2 text-white/62">{service.description}</p>
+            {services.map((service) => {
+              const serviceStaff = getStaffForService(service.slug);
+              return (
+                <article key={service.slug} className="neon-card rounded-[1.6rem] p-6">
+                  <div className="flex items-start justify-between gap-5">
+                    <div>
+                      <h2 className="brand-display text-2xl font-black uppercase">{service.name}</h2>
+                      <p className="mt-2 text-white/62">{service.description}</p>
+                    </div>
+                    <span className="rounded-full border border-white/15 px-3 py-1 text-xs font-bold text-white/70">{service.durationMinutes}m</span>
                   </div>
-                  <span className="rounded-full border border-white/15 px-3 py-1 text-xs font-bold text-white/70">{service.durationMinutes}m</span>
-                </div>
-                <p className="mt-4 font-black" style={{ color: category.accent }}>{service.priceLabel}</p>
-              </article>
-            ))}
+                  <p className="mt-4 font-black" style={{ color: category.accent }}>
+                    {service.priceLabel}
+                  </p>
+                  <div className="mt-5 border-t border-white/10 pt-4">
+                    <p className="text-xs font-black uppercase tracking-[0.22em] text-white/42">Available with</p>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {serviceStaff.map((member) => (
+                        <Link
+                          key={member.slug}
+                          href={`/staff/${member.slug}`}
+                          className="rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-white/72 transition hover:bg-white/10 hover:text-white"
+                        >
+                          {member.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
 
-        <div>
+        <div id="service-staff">
           <SectionEyebrow color={category.accent}>{category.staffLabel}</SectionEyebrow>
+          <p className="mb-5 text-white/60">
+            This page is filtered to {category.name.toLowerCase()} only, so visitors never see unrelated staff for this service lane.
+          </p>
           <div className="grid gap-5 md:grid-cols-2">
             {staff.map((member) => (
               <StaffCard key={member.slug} staff={member} />

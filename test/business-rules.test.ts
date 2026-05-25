@@ -34,12 +34,12 @@ describe("Mild 2 Wild service and staff rules", () => {
 
   it("models owner/admin access differently from individual employee calendar access", () => {
     const ownerScope = getStaffDashboardScope("owner");
-    const employeeScope = getStaffDashboardScope("staff", "raven-ink");
+    const employeeScope = getStaffDashboardScope("staff", "team-member-10");
 
     expect(ownerScope.canManageAllCalendars).toBe(true);
     expect(ownerScope.visibleStaffSlugs).toEqual(staffMembers.map((staff) => staff.slug));
     expect(employeeScope.canManageAllCalendars).toBe(false);
-    expect(employeeScope.visibleStaffSlugs).toEqual(["raven-ink"]);
+    expect(employeeScope.visibleStaffSlugs).toEqual(["team-member-10"]);
   });
 
   it("includes all client-requested primary service categories", () => {

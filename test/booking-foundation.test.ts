@@ -8,8 +8,8 @@ import {
 } from "../src/lib/booking-foundation";
 
 const staffIdsBySlug = new Map([
-  ["raven-ink", "staff-raven-id"],
-  ["luna-lacquer", "staff-luna-id"],
+  ["team-member-10", "staff-tattoo-id"],
+  ["team-member-01", "staff-nails-id"],
 ]);
 
 const serviceIdsBySlug = new Map([
@@ -25,7 +25,7 @@ describe("booking foundation", () => {
         customerPhone: "555-0101",
         customerEmail: "maya@example.com",
         serviceSlug: "tattoo-consult",
-        staffSlug: "raven-ink",
+        staffSlug: "team-member-10",
         startsAt: "2026-06-01T18:00:00.000Z",
         notes: "First tattoo consult.",
       },
@@ -44,7 +44,7 @@ describe("booking foundation", () => {
         customerName: "Maya Rose",
         customerPhone: "555-0101",
         serviceSlug: "tattoo-consult",
-        staffSlug: "luna-lacquer",
+        staffSlug: "team-member-01",
         startsAt: "2026-06-01T18:00:00.000Z",
       },
       { services, staffMembers },
@@ -61,7 +61,7 @@ describe("booking foundation", () => {
         customerName: "Maya Rose",
         customerPhone: "555-0101",
         serviceSlug: "tattoo-consult",
-        staffSlug: "raven-ink",
+        staffSlug: "team-member-10",
         startsAt: "2026-06-01T18:00:00.000Z",
         notes: "Placement consult.",
       },
@@ -71,7 +71,7 @@ describe("booking foundation", () => {
     if (!valid.ok) throw new Error(valid.errors.join(", "));
 
     expect(buildAppointmentInsert(valid.value, { staffIdsBySlug, serviceIdsBySlug })).toEqual({
-      staff_id: "staff-raven-id",
+      staff_id: "staff-tattoo-id",
       service_id: "service-tattoo-consult-id",
       customer_name: "Maya Rose",
       customer_phone: "555-0101",
@@ -88,7 +88,7 @@ describe("booking foundation", () => {
       customerName: "Jules",
       customerPhone: "555-0222",
       requestedService: "pink chrome nail art",
-      preferredStaffSlug: "luna-lacquer",
+      preferredStaffSlug: "team-member-01",
       preferredTime: "Friday afternoon",
       summary: "Jules wants pink chrome flames with Luna next Friday afternoon.",
       transferredTo: "front desk",
@@ -100,7 +100,7 @@ describe("booking foundation", () => {
       customer_name: "Jules",
       customer_phone: "555-0222",
       requested_service: "pink chrome nail art",
-      preferred_staff_slug: "luna-lacquer",
+      preferred_staff_slug: "team-member-01",
       preferred_time: "Friday afternoon",
       summary: "Jules wants pink chrome flames with Luna next Friday afternoon.",
       transferred_to: "front desk",

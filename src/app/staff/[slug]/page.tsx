@@ -1,6 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import { PageShell, SectionEyebrow } from "@/components/site";
-import { getStaffBySlug, serviceCategories, staffMembers } from "@/lib/studio-data";
+import { getStaffBySlug, serviceCategories, services, staffMembers } from "@/lib/studio-data";
 
 export function generateStaticParams() {
   return staffMembers.map((staff) => ({ slug: staff.slug }));
@@ -21,19 +22,26 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
   }
 
   const categories = serviceCategories.filter((category) => staff.serviceCategorySlugs.includes(category.slug));
+  const staffServices = services.filter((service) => staff.serviceSlugs.includes(service.slug));
 
   return (
     <PageShell>
-      <section className="mx-auto grid max-w-7xl gap-8 px-5 py-16 lg:grid-cols-[0.8fr_1.2fr]">
-        <div className="neon-card rounded-[3rem] p-6">
-          <div
-            className="flex aspect-[4/5] items-center justify-center rounded-[2rem] text-7xl font-black text-black"
-            style={{ background: `linear-gradient(135deg, ${staff.calendarColor}, #ffffff)` }}
-          >
-            {staff.name
-              .split(" ")
-              .map((part) => part[0])
-              .join("")}
+      <section className="mx-auto grid max-w-7xl gap-8 px-5 py-16 lg:grid-cols-[0.82fr_1.18fr]">
+        <div className="neon-card rounded-[3rem] p-5" style={{ boxShadow: `0 0 80px ${staff.calendarColor}22` }}>
+          <div className="relative aspect-[4/5] overflow-hidden rounded-[2.3rem] border border-white/10 bg-black">
+            <Image
+              src={staff.photoUrl}
+              alt={`${staff.name} profile photo`}
+              fill
+              priority
+              sizes="(min-width: 1024px) 40vw, 100vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/35 to-transparent" />
+            <div className="absolute bottom-5 left-5 right-5">
+              <p className="text-xs font-black uppercase tracking-[0.28em] text-white/60">Meet me</p>
+              <h1 className="brand-display mt-2 text-4xl font-black uppercase text-white md:text-5xl">{staff.name}</h1>
+            </div>
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
             {staff.socialLinks.map((link) => (
@@ -45,8 +53,8 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
         </div>
 
         <div>
-          <SectionEyebrow color={staff.calendarColor}>Meet me</SectionEyebrow>
-          <h1 className="brand-display text-5xl font-black uppercase md:text-7xl">{staff.name}</h1>
+          <SectionEyebrow color={staff.calendarColor}>Personal profile</SectionEyebrow>
+          <h2 className="brand-display text-5xl font-black uppercase md:text-7xl">{staff.name}</h2>
           <p className="mt-3 text-xl font-bold text-white/70">{staff.title}</p>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/68">{staff.bio}</p>
 
@@ -65,7 +73,31 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
 
           <div className="mt-10 grid gap-5 md:grid-cols-2">
             <section className="neon-card rounded-[2rem] p-6">
-              <h2 className="brand-display text-2xl font-black uppercase">Gallery</h2>
+              <h3 className="brand-display text-2xl font-black uppercase">Services offered</h3>
+              <div className="mt-5 grid gap-3">
+                {staffServices.map((service) => {
+                  const category = serviceCategories.find((item) => item.slug === service.categorySlug);
+                  return (
+                    <Link
+                      href={`/services/${service.categorySlug}`}
+                      key={service.slug}
+                      className="rounded-2xl border border-white/10 bg-white/5 p-4 text-white/72 transition hover:bg-white/10"
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="font-black">{service.name}</span>
+                        <span className="text-xs font-black" style={{ color: category?.accent ?? staff.calendarColor }}>
+                          {service.durationMinutes}m
+                        </span>
+                      </div>
+                      <p className="mt-2 text-sm text-white/50">{service.priceLabel}</p>
+                    </Link>
+                  );
+                })}
+              </div>
+            </section>
+
+            <section className="neon-card rounded-[2rem] p-6">
+              <h3 className="brand-display text-2xl font-black uppercase">Portfolio notes</h3>
               <div className="mt-5 grid gap-3">
                 {staff.gallery.map((item) => (
                   <div key={item} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-white/68">
@@ -75,10 +107,10 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
               </div>
             </section>
 
-            <section className="neon-card rounded-[2rem] p-6">
-              <h2 className="brand-display text-2xl font-black uppercase">Personal calendar</h2>
-              <p className="mt-3 text-white/62">
-                This booking block will connect to {staff.name}&apos;s own Supabase-backed calendar. Other employees cannot move this calendar.
+            <section className="neon-card rounded-[2rem] p-6 md:col-span-2">
+              <h3 className="brand-display text-2xl font-black uppercase">Personal calendar</h3>
+              <p className="mt-3 max-w-3xl text-white/62">
+                This booking block is reserved for {staff.name}&apos;s own calendar. When employee logins are added, this staff member will only manage their own schedule, while the owner/admin can see and manage every calendar.
               </p>
               <Link href="/book" className="mt-6 inline-block rounded-full bg-white px-5 py-3 font-black uppercase tracking-[0.18em] text-black">
                 Book with me

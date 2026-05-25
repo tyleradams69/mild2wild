@@ -148,80 +148,86 @@ export const services: StudioService[] = [
   },
 ];
 
-export const staffMembers: StaffMember[] = [
-  {
-    slug: "luna-lacquer",
-    name: "Luna Lacquer",
-    title: "Lead Nail Artist",
-    bio: "Luna specializes in hand-painted details, chrome, gems, and statement sets that match the Mild 2 Wild energy.",
-    photoUrl: "/staff/luna-lacquer.svg",
-    serviceCategorySlugs: ["nails"],
-    serviceSlugs: ["custom-nail-art", "gel-manicure"],
-    socialLinks: [{ label: "Instagram", href: "https://instagram.com/" }],
-    gallery: ["Chrome flames", "Pink aura set", "Gemstone claws"],
-    calendarColor: "#F06BD6",
-  },
-  {
-    slug: "nova-nails",
-    name: "Nova Nails",
-    title: "Gel & Sculpted Set Specialist",
-    bio: "Nova keeps nail appointments crisp, colorful, and wearable with sculpted structure and clean finishes.",
-    photoUrl: "/staff/nova-nails.svg",
-    serviceCategorySlugs: ["nails"],
-    serviceSlugs: ["gel-manicure", "custom-nail-art"],
-    socialLinks: [{ label: "TikTok", href: "https://tiktok.com/" }],
-    gallery: ["French remix", "Lime jelly set", "Short glam gel"],
-    calendarColor: "#79D94D",
-  },
-  {
-    slug: "raven-ink",
-    name: "Raven Ink",
-    title: "Tattoo Artist",
-    bio: "Raven creates bold illustrative tattoos, crisp linework, and custom pieces built around client stories.",
-    photoUrl: "/staff/raven-ink.svg",
-    serviceCategorySlugs: ["tattoo"],
-    serviceSlugs: ["tattoo-consult", "flash-tattoo"],
-    socialLinks: [{ label: "Instagram", href: "https://instagram.com/" }],
-    gallery: ["Fine-line florals", "Traditional flash", "Custom shoulder piece"],
-    calendarColor: "#4DDCE5",
-  },
-  {
-    slug: "ace-needle",
-    name: "Ace Needle",
-    title: "Flash & Custom Tattoo Artist",
-    bio: "Ace focuses on punchy flash, clean blackwork, and approachable consultation-first tattoo experiences.",
-    photoUrl: "/staff/ace-needle.svg",
-    serviceCategorySlugs: ["tattoo"],
-    serviceSlugs: ["tattoo-consult", "flash-tattoo"],
-    socialLinks: [{ label: "Portfolio", href: "https://example.com/" }],
-    gallery: ["Blackwork moth", "Tiny symbols", "Bold dagger flash"],
-    calendarColor: "#FF3434",
-  },
-  {
-    slug: "sol-strands",
-    name: "Sol Strands",
-    title: "Colorist & Stylist",
-    bio: "Sol brings color theory, smooth styling, and transformation appointments for guests who want a new look.",
-    photoUrl: "/staff/sol-strands.svg",
-    serviceCategorySlugs: ["hair"],
-    serviceSlugs: ["vivids-color", "cut-style"],
-    socialLinks: [{ label: "Instagram", href: "https://instagram.com/" }],
-    gallery: ["Copper melt", "Neon peekaboo", "Layered blowout"],
-    calendarColor: "#FFE45C",
-  },
-  {
-    slug: "iris-aura",
-    name: "Iris Aura",
-    title: "Aesthetics & Spa Specialist",
-    bio: "Iris handles relaxing skincare, brows, and spa services with a calm touch inside the high-energy shop.",
-    photoUrl: "/staff/iris-aura.svg",
-    serviceCategorySlugs: ["aesthetics"],
-    serviceSlugs: ["facial-glow", "brow-lash"],
-    socialLinks: [{ label: "Instagram", href: "https://instagram.com/" }],
-    gallery: ["Glow facial", "Soft brows", "Spa detail"],
-    calendarColor: "#A95CFF",
-  },
+const serviceSlugsByCategory: Record<ServiceCategorySlug, string[]> = {
+  nails: ["custom-nail-art", "gel-manicure"],
+  hair: ["vivids-color", "cut-style"],
+  tattoo: ["tattoo-consult", "flash-tattoo"],
+  aesthetics: ["facial-glow", "brow-lash"],
+};
+
+const categoryTitles: Record<ServiceCategorySlug, string> = {
+  nails: "Nail Artist",
+  hair: "Hair Stylist",
+  tattoo: "Tattoo Artist",
+  aesthetics: "Aesthetics & Spa Specialist",
+};
+
+const categoryBio: Record<ServiceCategorySlug, string> = {
+  nails:
+    "This team member will get a client-supplied bio soon. For now, their page is ready for nail specialties, portfolio notes, social links, and their own protected booking calendar.",
+  hair:
+    "This team member will get a client-supplied bio soon. For now, their page is ready for hair services, transformation notes, social links, and their own protected booking calendar.",
+  tattoo:
+    "This team member will get a client-supplied bio soon. For now, their page is ready for tattoo consultation details, portfolio notes, social links, and their own protected booking calendar.",
+  aesthetics:
+    "This team member will get a client-supplied bio soon. For now, their page is ready for spa and aesthetics specialties, social links, and their own protected booking calendar.",
+};
+
+const categoryGallery: Record<ServiceCategorySlug, string[]> = {
+  nails: ["Portfolio image slot", "Signature set notes", "Favorite nail-art style"],
+  hair: ["Before/after slot", "Color specialty notes", "Styling portfolio slot"],
+  tattoo: ["Tattoo portfolio slot", "Flash sheet slot", "Consultation style notes"],
+  aesthetics: ["Treatment-room slot", "Skincare result notes", "Relaxation/service notes"],
+};
+
+const categoryAccentRotation: Record<ServiceCategorySlug, string[]> = {
+  nails: ["#F06BD6", "#FF5AB8", "#FF8BE8", "#B73CFF", "#FF7AC8"],
+  hair: ["#FFE45C", "#FFB84D", "#E9FF63", "#F8D34E"],
+  tattoo: ["#4DDCE5", "#30F2FF", "#7A6CFF", "#57FFD6"],
+  aesthetics: ["#A95CFF", "#C66BFF", "#79D94D", "#8A5CFF"],
+};
+
+const staffSeed: Array<{ index: number; categorySlug: ServiceCategorySlug }> = [
+  { index: 1, categorySlug: "nails" },
+  { index: 2, categorySlug: "nails" },
+  { index: 3, categorySlug: "nails" },
+  { index: 4, categorySlug: "nails" },
+  { index: 5, categorySlug: "nails" },
+  { index: 6, categorySlug: "hair" },
+  { index: 7, categorySlug: "hair" },
+  { index: 8, categorySlug: "hair" },
+  { index: 9, categorySlug: "hair" },
+  { index: 10, categorySlug: "tattoo" },
+  { index: 11, categorySlug: "tattoo" },
+  { index: 12, categorySlug: "tattoo" },
+  { index: 13, categorySlug: "tattoo" },
+  { index: 14, categorySlug: "aesthetics" },
+  { index: 15, categorySlug: "aesthetics" },
+  { index: 16, categorySlug: "aesthetics" },
+  { index: 17, categorySlug: "aesthetics" },
 ];
+
+export const staffMembers: StaffMember[] = staffSeed.map(({ index, categorySlug }) => {
+  const paddedIndex = String(index).padStart(2, "0");
+  const categoryIndex = staffSeed.filter((staff) => staff.categorySlug === categorySlug && staff.index <= index).length - 1;
+  const colors = categoryAccentRotation[categorySlug];
+
+  return {
+    slug: `team-member-${paddedIndex}`,
+    name: `Team Member ${paddedIndex}`,
+    title: categoryTitles[categorySlug],
+    bio: categoryBio[categorySlug],
+    photoUrl: `/staff/team-member-${paddedIndex}.jpg`,
+    serviceCategorySlugs: [categorySlug],
+    serviceSlugs: serviceSlugsByCategory[categorySlug],
+    socialLinks: [
+      { label: "Instagram coming soon", href: "#" },
+      { label: "Portfolio coming soon", href: "#" },
+    ],
+    gallery: categoryGallery[categorySlug],
+    calendarColor: colors[categoryIndex % colors.length],
+  };
+});
 
 export const productHighlights = [
   "Aftercare kits",
@@ -241,6 +247,10 @@ export function getServicesForCategory(slug: ServiceCategorySlug) {
 
 export function getFeaturedStaffForCategory(slug: ServiceCategorySlug) {
   return staffMembers.filter((staff) => staff.serviceCategorySlugs.includes(slug));
+}
+
+export function getStaffForService(serviceSlug: string) {
+  return staffMembers.filter((staff) => staff.serviceSlugs.includes(serviceSlug));
 }
 
 export function getStaffBySlug(slug: string) {
