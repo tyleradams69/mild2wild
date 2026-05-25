@@ -1,36 +1,5 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { PageShell, SectionEyebrow } from "@/components/site";
-import { createSignedDashboardSession, dashboardSessionCookieName, ownerAdminProfile } from "@/lib/auth-session";
-import { authenticateDashboardUser } from "@/lib/supabase-auth";
-
-function getDashboardSessionSecret() {
-  return process.env.HERMES_DASHBOARD_SESSION_SECRET ?? "mild2wild-local-prototype-session-secret";
-}
-
-async function loginAction(formData: FormData) {
-  "use server";
-
-  const email = formData.get("email")?.toString();
-  const password = formData.get("password")?.toString();
-  const resolved = await authenticateDashboardUser({ email, password });
-
-  if (!resolved.ok) {
-    redirect(`/login?error=${resolved.error}`);
-  }
-
-  const cookieValue = createSignedDashboardSession(resolved.session, getDashboardSessionSecret());
-  const cookieStore = await cookies();
-  cookieStore.set(dashboardSessionCookieName, cookieValue, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    expires: new Date(resolved.session.expiresAt),
-  });
-
-  redirect("/dashboard");
-}
+import { ownerAdminProfile } from "@/lib/auth-session";
 
 function errorCopy(error?: string) {
   if (!error) return null;
@@ -63,7 +32,7 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
           </div>
         ) : null}
 
-        <form action={loginAction} className="neon-card mt-10 grid gap-6 rounded-[2rem] p-6" style={{ boxShadow: "0 0 70px #F06BD622" }}>
+        <form action="/api/dashboard-login" method="post" className="neon-card mt-10 grid gap-6 rounded-[2rem] p-6" style={{ boxShadow: "0 0 70px #F06BD622" }}>
           <label className="rounded-3xl border border-white/10 bg-black/50 p-5">
             <span className="block text-xs font-black uppercase tracking-[0.24em] text-white/45">Email</span>
             <input

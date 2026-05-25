@@ -17,6 +17,19 @@ export const ownerAdminProfile = {
   email: "Hyer.quality.craft@gmail.com",
 } as const;
 
+function hostWithoutPort(host: string | undefined | null) {
+  return (host ?? "").split(":")[0]?.toLowerCase() ?? "";
+}
+
+export function shouldSecureDashboardSessionCookie(nodeEnv: string | undefined, host: string | undefined | null, forwardedProto: string | undefined | null) {
+  if (nodeEnv !== "production") return false;
+
+  const hostname = hostWithoutPort(host);
+  if (hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1") return false;
+
+  return forwardedProto === "https";
+}
+
 function signPayload(payload: string, secret: string) {
   return createHmac("sha256", secret).update(payload).digest("base64url");
 }

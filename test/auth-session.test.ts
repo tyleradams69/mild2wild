@@ -3,6 +3,7 @@ import {
   ownerAdminProfile,
   createSignedDashboardSession,
   parseSignedDashboardSession,
+  shouldSecureDashboardSessionCookie,
 } from "../src/lib/auth-session";
 
 describe("dashboard auth session foundation", () => {
@@ -36,5 +37,12 @@ describe("dashboard auth session foundation", () => {
 
   it("stores Caitlin's owner identity as dashboard metadata", () => {
     expect(ownerAdminProfile).toEqual({ name: "Caitlin", email: "Hyer.quality.craft@gmail.com" });
+  });
+
+  it("does not mark localhost production cookies secure over plain http", () => {
+    expect(shouldSecureDashboardSessionCookie("production", "127.0.0.1:3002", "http")).toBe(false);
+    expect(shouldSecureDashboardSessionCookie("production", "localhost:3002", "http")).toBe(false);
+    expect(shouldSecureDashboardSessionCookie("production", "mild2wild.vercel.app", "https")).toBe(true);
+    expect(shouldSecureDashboardSessionCookie("development", "mild2wild.vercel.app", "https")).toBe(false);
   });
 });
