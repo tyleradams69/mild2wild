@@ -19,7 +19,8 @@ async function loginAction(formData: FormData) {
   const role = formData.get("role")?.toString();
   const staffSlug = formData.get("staffSlug")?.toString();
   const ownerEmail = formData.get("ownerEmail")?.toString();
-  const resolved = resolveLoginSession({ role, staffSlug, ownerEmail });
+  const ownerPassword = formData.get("ownerPassword")?.toString();
+  const resolved = resolveLoginSession({ role, staffSlug, ownerEmail, ownerPassword });
 
   if (!resolved.ok) {
     redirect(`/login?error=${resolved.error}`);
@@ -79,6 +80,19 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
               />
               <span id="owner-email-help" className="mt-2 block text-xs leading-5 text-white/45">
                 Caitlin’s owner login email. Staff logins can leave this as-is and choose their employee profile.
+              </span>
+            </label>
+
+            <label className="rounded-3xl border border-white/10 bg-black/50 p-5">
+              <span className="block text-xs font-black uppercase tracking-[0.24em] text-white/45">Owner password</span>
+              <input
+                name="ownerPassword"
+                type="password"
+                className="mt-3 w-full rounded-2xl border border-white/10 bg-black px-4 py-3 font-bold text-white outline-none focus:border-pink-300"
+                aria-describedby="owner-password-help"
+              />
+              <span id="owner-password-help" className="mt-2 block text-xs leading-5 text-white/45">
+                Temporary launch password. Caitlin can update it from settings once the real account system is live.
               </span>
             </label>
 

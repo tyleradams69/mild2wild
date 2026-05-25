@@ -36,7 +36,7 @@ describe("dashboard auth session foundation", () => {
   });
 
   it("maps login form choices to scoped sessions", () => {
-    const owner = resolveLoginSession({ role: "owner", ownerEmail: "Hyer.quality.craft@gmail.com" });
+    const owner = resolveLoginSession({ role: "owner", ownerEmail: "Hyer.quality.craft@gmail.com", ownerPassword: "123456" }, Date.now(), "123456");
     const staff = resolveLoginSession({ role: "staff", staffSlug: "team-member-10" });
     const missingStaff = resolveLoginSession({ role: "staff" });
 
@@ -49,8 +49,16 @@ describe("dashboard auth session foundation", () => {
 
   it("requires Caitlin's admin email for owner login", () => {
     expect(ownerAdminProfile).toEqual({ name: "Caitlin", email: "Hyer.quality.craft@gmail.com" });
-    expect(resolveLoginSession({ role: "owner", ownerEmail: "hyER.quality.craft@gmail.com" }).ok).toBe(true);
+    expect(resolveLoginSession({ role: "owner", ownerEmail: "hyER.quality.craft@gmail.com", ownerPassword: "123456" }, Date.now(), "123456").ok).toBe(true);
     expect(resolveLoginSession({ role: "owner" })).toEqual({ ok: false, error: "invalid_owner_email" });
-    expect(resolveLoginSession({ role: "owner", ownerEmail: "someone@example.com" })).toEqual({ ok: false, error: "invalid_owner_email" });
+    expect(resolveLoginSession({ role: "owner", ownerEmail: "someone@example.com", ownerPassword: "123456" }, Date.now(), "123456")).toEqual({ ok: false, error: "invalid_owner_email" });
+  });
+
+  it("requires the configured temporary owner password and never stores it in the session", () => {
+    const valid = resolveLoginSession({ role: "owner", ownerEmail: ownerAdminProfile.email, ownerPassword: "123456" }, Date.now(), "123456");
+
+    expect(resolveLoginSession({ role: "owner", ownerEmail: ownerAdminProfile.email }, Date.now(), "123456")).toEqual({ ok: false, error: "invalid_owner_password" });
+    expect(resolveLoginSession({ role: "owner", ownerEmail: ownerAdminProfile.email, ownerPassword: "wrong" }, Date.now(), "123456")).toEqual({ ok: false, error: "invalid_owner_password" });
+    expect(valid.ok && valid.session).not.toHaveProperty("password");
   });
 });

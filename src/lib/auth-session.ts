@@ -17,11 +17,12 @@ export type LoginFormChoice = {
   role?: string;
   staffSlug?: string;
   ownerEmail?: string;
+  ownerPassword?: string;
 };
 
 export type LoginSessionResult =
   | { ok: true; session: DashboardAuthSession }
-  | { ok: false; error: "invalid_role" | "invalid_owner_email" | "missing_staff" | "unknown_staff" | "mascot_not_bookable" };
+  | { ok: false; error: "invalid_role" | "invalid_owner_email" | "invalid_owner_password" | "missing_staff" | "unknown_staff" | "mascot_not_bookable" };
 
 const oneDayMs = 24 * 60 * 60 * 1000;
 
@@ -32,6 +33,10 @@ export const ownerAdminProfile = {
 
 function normalizeEmail(value: unknown) {
   return typeof value === "string" ? value.trim().toLowerCase() : "";
+}
+
+function normalizeSecret(value: unknown) {
+  return typeof value === "string" ? value.trim() : "";
 }
 
 function signPayload(payload: string, secret: string) {
@@ -95,10 +100,15 @@ export function parseSignedDashboardSession(cookieValue: string | undefined | nu
   return session;
 }
 
-export function resolveLoginSession(choice: LoginFormChoice, now = Date.now()): LoginSessionResult {
+export function resolveLoginSession(choice: LoginFormChoice, now = Date.now(), expectedOwnerPassword = process.env.M2W_OWNER_ADMIN_PASSWORD ?? ""): LoginSessionResult {
   if (choice.role === "owner") {
     if (normalizeEmail(choice.ownerEmail) !== normalizeEmail(ownerAdminProfile.email)) {
       return { ok: false, error: "invalid_owner_email" };
+    }
+
+    const configuredOwnerPassword = normalizeSecret(expectedOwnerPassword);
+    if (!configuredOwnerPassword || !safeEqual(normalizeSecret(choice.ownerPassword), configuredOwnerPassword)) {
+      return { ok: false, error: "invalid_owner_password" };
     }
 
     return {
