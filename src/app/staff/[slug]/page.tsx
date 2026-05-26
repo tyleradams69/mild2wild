@@ -43,7 +43,7 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
             />
             <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/35 to-transparent" />
             <div className="absolute bottom-5 left-5 right-5">
-              <p className="text-xs font-black uppercase tracking-[0.28em] text-white/60">Meet me</p>
+              <p className="text-xs font-black uppercase tracking-[0.28em] text-white/60">{isMascot ? "Mascot profile" : "Meet me"}</p>
               <h1 className="brand-display mt-2 text-4xl font-black uppercase text-white md:text-5xl">{staff.name}</h1>
             </div>
           </div>
@@ -66,7 +66,7 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
         </div>
 
         <div>
-          <SectionEyebrow color={staff.calendarColor}>Personal profile</SectionEyebrow>
+          <SectionEyebrow color={staff.calendarColor}>{isMascot ? "Mascot profile" : "Personal profile"}</SectionEyebrow>
           <h2 className="brand-display text-5xl font-black uppercase md:text-7xl">{staff.name}</h2>
           <p className="mt-3 text-xl font-bold text-white/70">{staff.title}</p>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/68">{staff.bio}</p>
@@ -98,7 +98,7 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
                     ✦ Featured on the staff page, tour page, and brand moments.
                   </div>
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-white/68">
-                    ✦ Not available for appointments, logins, calendars, or service routing.
+                    ✦ Not available for appointments or service selection.
                   </div>
                 </div>
               </section>
@@ -143,14 +143,14 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
               <section className="neon-card rounded-[2rem] p-6 md:col-span-2">
                 <h3 className="brand-display text-2xl font-black uppercase">Brand mascot only</h3>
                 <p className="mt-3 max-w-3xl text-white/62">
-                  {staff.name} is intentionally excluded from booking CTAs, schedule blocks, staff logins, and service assignments. Visitors can still enjoy the mascot profile without accidentally trying to book the shop dog.
+                  {staff.name} is here for brand personality only. Guests can enjoy the mascot profile, but the shop dog cannot be booked for appointments or selected as a service provider.
                 </p>
               </section>
             ) : (
               <section className="neon-card rounded-[2rem] p-6 md:col-span-2">
                 <h3 className="brand-display text-2xl font-black uppercase">Personal calendar</h3>
                 <p className="mt-3 max-w-3xl text-white/62">
-                  This booking block is reserved for {staff.name}&apos;s own calendar. When employee logins are added, this staff member will only manage their own schedule, while the owner/admin can see and manage every calendar.
+                  Request an appointment with {staff.name}. The shop will follow up to confirm availability, pricing, and any deposit or consultation requirements.
                 </p>
                 <Link href="/book" className="mt-6 inline-block rounded-full bg-white px-5 py-3 font-black uppercase tracking-[0.18em] text-black">
                   Book with me

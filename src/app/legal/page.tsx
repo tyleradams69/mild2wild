@@ -5,17 +5,17 @@ const policies = [
   {
     title: "Booking requests are not final confirmations",
     body:
-      "Online requests and AI call-agent leads hold the details the team needs to follow up. Appointment times, staff assignments, final pricing, deposits, and required consultations are confirmed directly by Mild 2 Wild before the appointment is considered booked.",
+      "Online requests and phone-intake leads give the team the details needed to follow up. Appointment times, staff assignments, final pricing, deposits, and required consultations are confirmed directly by Mild 2 Wild before an appointment is considered booked.",
   },
   {
     title: "Tattoo consultations, age, ID, and consent",
     body:
-      "Tattoo services may require a consultation, valid government-issued photo ID, signed consent forms, and artist approval before scheduling. Minor tattoo policies, if any, must follow Ohio law and shop policy. The shop may decline or reschedule work that cannot be performed safely or legally.",
+      "Tattoo services may require a consultation, valid government-issued photo ID, signed consent forms, and artist approval before scheduling. All tattoo services must follow applicable Ohio law and shop policy. The shop may decline or reschedule work that cannot be performed safely or legally.",
   },
   {
     title: "Deposits, cancellations, and no-shows",
     body:
-      "Some services may require a deposit to reserve time. Deposits, cancellation windows, rescheduling limits, late arrivals, and no-show rules should be confirmed by the shop before payment. Any final deposit/refund terms should be reviewed and approved by the owner before publishing publicly.",
+      "Some services may require a deposit to reserve time. Deposit amounts, cancellation windows, rescheduling limits, late-arrival rules, and no-show policies are confirmed by the shop when the appointment is finalized.",
   },
   {
     title: "Health, safety, and service suitability",
@@ -25,22 +25,22 @@ const policies = [
   {
     title: "Pricing and service scope",
     body:
-      "Published prices may be starting prices or estimates. Final pricing can vary by design complexity, hair length/density, product usage, tattoo size/placement/detail, add-ons, and staff recommendation. The shop should confirm final pricing before service begins.",
+      "Published prices may be starting prices or estimates. Final pricing can vary by design complexity, hair length or density, product usage, tattoo size, placement, detail, add-ons, and staff recommendation. The shop confirms final pricing before service begins.",
   },
   {
     title: "Product sales and aftercare",
     body:
-      "Product availability, ingredients, and aftercare recommendations may change. Clients should follow staff-provided aftercare instructions and contact the shop with service-specific questions. Product information on the website should not replace professional advice from the service provider.",
+      "Product availability, ingredients, and aftercare recommendations may change. Clients should follow staff-provided aftercare instructions and contact the shop with service-specific questions. Website product information does not replace professional advice from the service provider.",
   },
   {
     title: "Privacy and communications",
     body:
-      "The site and call agent may collect names, phone numbers, emails, requested services, preferred staff, timing preferences, and notes so the business can follow up. Client details should be used for scheduling, customer support, service records, and related business communication only.",
+      "The website and phone intake may collect names, phone numbers, emails, requested services, preferred staff, timing preferences, and notes so the business can follow up. Client details are used for scheduling, customer support, service records, and related business communication.",
   },
   {
-    title: "AI call-agent handoff",
+    title: "Phone intake and text follow-up",
     body:
-      "The worker agent should collect the caller's important booking details, transfer the call to the business owner, and send a text summary after the call. The owner or staff should still verify details with the client before confirming an appointment.",
+      "If you contact the shop through an assisted phone intake, the system may collect your booking details and summarize them for the owner or staff. A team member will verify important details with you before confirming an appointment.",
   },
 ];
 
@@ -53,11 +53,11 @@ export default function LegalPage() {
           <div className="neon-card rounded-[2rem] p-7">
             <h1 className="brand-display text-5xl font-black uppercase md:text-7xl">Shop policies, consent, and privacy basics.</h1>
             <p className="mt-6 text-lg leading-8 text-white/65">
-              Draft policy language for Mild 2 Wild&apos;s multi-service site. The owner should review these rules before launch, especially tattoo consent, deposit/refund terms, and privacy language.
+              Please review these policies before booking. They help Mild 2 Wild provide safe, professional service and set clear expectations around appointments, consent, pricing, privacy, and aftercare.
             </p>
             <div className="mt-8 rounded-3xl border border-pink-300/30 bg-pink-500/10 p-5 text-sm leading-6 text-pink-50">
-              <strong className="block font-black uppercase tracking-[0.2em]">Launch note</strong>
-              This page is client-facing policy copy, not legal advice. Have Caitlin approve the final public version before publishing.
+              <strong className="block font-black uppercase tracking-[0.2em]">Important note</strong>
+              Some services require consultation or staff approval before scheduling. If anything changes after you submit a request, the shop will confirm next steps directly with you.
             </div>
             <Link
               href="/book"

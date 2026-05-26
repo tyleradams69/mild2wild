@@ -14,8 +14,7 @@ export default function Home() {
                 Mild<span className="text-pink-400">2</span>Wild
               </h1>
               <p className="mt-7 max-w-2xl text-xl leading-8 text-white/72">
-                A bright blacklight-style home for nails, tattoos, hair, aesthetics, spa services, products, staff meet-me pages,
-                protected calendars, and an AI call agent that gathers details before the handoff.
+                A bright blacklight-style home for nails, tattoos, hair, aesthetics, spa services, retail favorites, and a team that helps every guest find the right appointment.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <Link href="/book" className="rounded-full bg-pink-400 px-7 py-4 text-center font-black uppercase tracking-[0.2em] text-black hover:bg-white">
@@ -50,8 +49,8 @@ export default function Home() {
       <section id="services" className="mx-auto max-w-7xl px-5 py-16">
         <SectionEyebrow>Choose your lane</SectionEyebrow>
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
-          <h2 className="brand-display max-w-3xl text-4xl font-black uppercase md:text-6xl">Service pages connect clients to the right staff.</h2>
-          <p className="max-w-md text-white/60">No nail staff on tattoo pages. No tattoo artists on spa pages. Every category has its own relevant team.</p>
+          <h2 className="brand-display max-w-3xl text-4xl font-black uppercase md:text-6xl">Choose a service and meet the right team.</h2>
+          <p className="max-w-md text-white/60">Explore each service category, compare specialties, and request the appointment that fits your look.</p>
         </div>
         <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {serviceCategories.map((category) => (
@@ -73,8 +72,8 @@ export default function Home() {
         <div className="grid gap-5 lg:grid-cols-3">
           <div className="neon-card rounded-[2rem] p-7 lg:col-span-2">
             <SectionEyebrow color="#A95CFF">Video page</SectionEyebrow>
-            <h2 className="brand-display text-4xl font-black uppercase">Tour, charity, and what makes them different.</h2>
-            <p className="mt-4 text-white/65">The tour page is ready for a shop walk-through video, owner story, charity mission, and differentiators that make Mild 2 Wild more than a standard salon.</p>
+            <h2 className="brand-display text-4xl font-black uppercase">Tour the shop, community, and what makes it different.</h2>
+            <p className="mt-4 text-white/65">Get a feel for the studio, the creative energy, the community focus, and the details that make Mild 2 Wild more than a standard salon.</p>
           </div>
           <div className="neon-card rounded-[2rem] p-7">
             <SectionEyebrow color="#FF7A1A">Products</SectionEyebrow>

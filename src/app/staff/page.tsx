@@ -10,9 +10,9 @@ export default function StaffIndexPage() {
     <PageShell>
       <section className="mx-auto max-w-7xl px-5 py-16">
         <SectionEyebrow color="#F06BD6">Meet the crew</SectionEyebrow>
-        <h1 className="brand-display max-w-4xl text-5xl font-black uppercase md:text-7xl">Every employee gets a personal meet-me page.</h1>
+        <h1 className="brand-display max-w-4xl text-5xl font-black uppercase md:text-7xl">Meet the artists, stylists, and specialists.</h1>
         <p className="mt-6 max-w-3xl text-lg text-white/65">
-          The real names and bios can drop in later. The structure is ready now: profile photo, services, social links, portfolio notes, and a personal calendar lane for each staff member.
+          Explore the team by service category, view individual profiles, and choose who feels like the right fit for your next appointment.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
@@ -36,10 +36,10 @@ export default function StaffIndexPage() {
             <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-end">
               <div>
                 <p className="text-xs font-black uppercase tracking-[0.28em] text-lime-300">Shop mascot</p>
-                <h2 className="brand-display mt-2 text-3xl font-black uppercase">Meet the non-bookable hype crew</h2>
+                <h2 className="brand-display mt-2 text-3xl font-black uppercase">Meet the shop mascot</h2>
               </div>
               <p className="max-w-xl text-sm leading-6 text-white/55">
-                Mascots stay part of the brand story, but they are separated from the employee roster and never appear as bookable service providers.
+                The shop dog is part of the Mild 2 Wild personality, but this profile is for brand fun only and cannot be booked for appointments.
               </p>
             </div>
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

@@ -15,7 +15,7 @@ import {
 export const dynamic = "force-dynamic";
 
 function getDashboardSessionSecret() {
-  return process.env.HERMES_DASHBOARD_SESSION_SECRET ?? "mild2wild-local-prototype-session-secret";
+  return process.env.HERMES_DASHBOARD_SESSION_SECRET ?? "m2w-dashboard-dev-session-secret";
 }
 
 async function getSession() {
@@ -72,7 +72,7 @@ export default async function StaffEditPage({ params, searchParams }: { params: 
           <div>
             <SectionEyebrow color={profile.calendarColor}>Profile editor</SectionEyebrow>
             <h1 className="brand-display max-w-4xl text-5xl font-black uppercase md:text-7xl">Edit {profile.name}</h1>
-            <p className="mt-4 max-w-3xl text-white/62">Update the meet-me page copy, title, and social links. These changes are saved locally for the dashboard prototype and immediately reflected on the public staff profile.</p>
+            <p className="mt-4 max-w-3xl text-white/62">Update the meet-me page copy, title, and social links. Saved changes are immediately reflected on the public staff profile.</p>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href="/dashboard" className="rounded-full border border-white/15 px-5 py-3 text-sm font-black uppercase tracking-[0.18em] text-white/75 transition hover:bg-white hover:text-black">Dashboard</Link>

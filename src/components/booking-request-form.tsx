@@ -65,7 +65,7 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
         <div>
           <h2 className="brand-display text-3xl font-black uppercase">Request a booking</h2>
           <p className="mt-3 text-sm leading-6 text-white/62">
-            This form only shows staff who offer the selected service. The final system can swap this prototype endpoint for live calendar availability and payment/deposit rules.
+            Select a service to see matching team members. Submitting this form does not confirm an appointment; the shop will contact you to finalize availability, pricing, and any deposit requirements.
           </p>
         </div>
         {selectedService ? (
@@ -117,7 +117,7 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
             <p className="font-black uppercase tracking-[0.18em] text-white">{selectedService.name}</p>
             <p className="mt-2">{selectedService.description}</p>
             <p className="mt-2 text-white/45">
-              {selectedService.durationMinutes} minutes • {selectedService.priceLabel} • {compatibleStaff.length} compatible staff
+              {selectedService.durationMinutes} minutes • {selectedService.priceLabel} • {compatibleStaff.length} matching team members
             </p>
           </div>
         ) : null}

@@ -40,7 +40,7 @@ export async function POST(request: Request) {
   try {
     insertPayload = buildAppointmentInsert(validation.value, { staffIdsBySlug, serviceIdsBySlug });
   } catch {
-    return NextResponse.json({ ok: false, errors: ["Booking data has not been seeded yet."] }, { status: 500 });
+    return NextResponse.json({ ok: false, errors: ["Online booking is being connected. Please contact the shop directly and we can help with this request."] }, { status: 503 });
   }
 
   const { data, error } = await supabase

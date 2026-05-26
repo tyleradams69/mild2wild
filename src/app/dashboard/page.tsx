@@ -12,7 +12,7 @@ import { services } from "@/lib/studio-data";
 import { mergeStaffProfileOverrides, readStaffProfileOverrides } from "@/lib/staff-profile-overrides";
 
 function getDashboardSessionSecret() {
-  return process.env.HERMES_DASHBOARD_SESSION_SECRET ?? "mild2wild-local-prototype-session-secret";
+  return process.env.HERMES_DASHBOARD_SESSION_SECRET ?? "m2w-dashboard-dev-session-secret";
 }
 
 async function logoutAction() {

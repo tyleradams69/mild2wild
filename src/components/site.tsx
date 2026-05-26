@@ -42,7 +42,7 @@ export function SiteFooter() {
     <footer className="border-t border-white/10 px-5 py-12 text-center text-sm text-white/55">
       <p className="brand-display text-lg uppercase text-white">Mild 2 Wild</p>
       <p className="mt-2">Tattoos • Nails • Hair • Aesthetics • Spa • Products</p>
-      <p className="mt-4">Built for staff-owned calendars, owner admin visibility, and AI-assisted call intake.</p>
+      <p className="mt-4">Appointments, artist profiles, shop policies, aftercare, and retail favorites in one bright studio home.</p>
       <Link href="/legal" className="mt-5 inline-block font-black uppercase tracking-[0.22em] text-pink-300 transition hover:text-white">
         Legal & Policies
       </Link>
@@ -87,6 +87,8 @@ export function ServiceCategoryCard({ category }: { category: ServiceCategory })
 
 export function StaffCard({ staff }: { staff: StaffMember }) {
   const primary = serviceCategories.find((category) => category.slug === staff.serviceCategorySlugs[0]);
+  const badgeLabel = staff.isMascot ? "Mascot" : (primary?.name ?? "Staff");
+  const badgeColor = staff.isMascot ? staff.calendarColor : (primary?.accent ?? staff.calendarColor);
   return (
     <Link
       href={`/staff/${staff.slug}`}
@@ -107,15 +109,18 @@ export function StaffCard({ staff }: { staff: StaffMember }) {
         />
         <span
           className="absolute left-4 top-4 rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.18em] text-black"
-          style={{ background: primary?.accent ?? staff.calendarColor }}
+          style={{ background: badgeColor }}
         >
-          {primary?.name ?? "Staff"}
+          {badgeLabel}
         </span>
       </div>
       <div className="mt-5">
         <p className="text-xs font-black uppercase tracking-[0.24em] text-white/45">{staff.title}</p>
         <h3 className="brand-display mt-2 text-2xl font-black uppercase group-hover:text-pink-300">{staff.name}</h3>
         <p className="mt-3 line-clamp-3 text-sm text-white/65">{staff.bio}</p>
+        <p className="mt-4 text-xs font-black uppercase tracking-[0.2em]" style={{ color: staff.calendarColor }}>
+          View profile →
+        </p>
       </div>
     </Link>
   );
