@@ -53,7 +53,7 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
         return;
       }
 
-      setSubmission({ status: "success", message: "Booking request sent. The shop can confirm it from the dashboard." });
+      setSubmission({ status: "success", message: "Booking request sent. The shop will review the details and follow up to confirm availability." });
     } catch {
       setSubmission({ status: "error", message: "Could not reach the booking endpoint. Please try again." });
     }

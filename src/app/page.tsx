@@ -3,6 +3,8 @@ import { PageShell, SectionEyebrow, ServiceCategoryCard, StaffCard } from "@/com
 import { productHighlights, serviceCategories, staffMembers } from "@/lib/studio-data";
 
 export default function Home() {
+  const featuredStaff = staffMembers.filter((staff) => !staff.isMascot).slice(0, 6);
+
   return (
     <PageShell>
       <section className="mx-auto max-w-7xl px-5 py-16 md:py-24">
@@ -13,7 +15,7 @@ export default function Home() {
               <h1 className="brand-display text-5xl font-black uppercase leading-none tracking-[0.08em] md:text-8xl">
                 Mild<span className="text-pink-400">2</span>Wild
               </h1>
-              <p className="mt-7 max-w-2xl text-xl leading-8 text-white/72">
+              <p className="mt-7 max-w-2xl text-lg leading-8 text-white/72 md:text-xl">
                 A bright blacklight-style home for nails, tattoos, hair, aesthetics, spa services, retail favorites, and a team that helps every guest find the right appointment.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -23,6 +25,13 @@ export default function Home() {
                 <Link href="/tour" className="rounded-full border border-cyan-300 px-7 py-4 text-center font-black uppercase tracking-[0.2em] text-cyan-200 hover:bg-cyan-300 hover:text-black">
                   Tour the Shop
                 </Link>
+              </div>
+              <div className="mt-8 grid gap-3 text-sm font-bold text-white/68 sm:grid-cols-3">
+                {["Service-matched staff", "Owner alert handoffs", "Request-first booking"].map((item) => (
+                  <div key={item} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                    ✦ {item}
+                  </div>
+                ))}
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -61,9 +70,32 @@ export default function Home() {
 
       <section className="mx-auto max-w-7xl px-5 py-16">
         <SectionEyebrow color="#FFE45C">Meet-me profiles</SectionEyebrow>
-        <div className="grid gap-5 md:grid-cols-3">
-          {staffMembers.slice(0, 6).map((staff) => (
+        <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
+          <h2 className="brand-display max-w-3xl text-4xl font-black uppercase md:text-6xl">Every real team member gets a profile.</h2>
+          <Link href="/staff" className="rounded-full border border-yellow-200/40 px-5 py-3 text-center text-sm font-black uppercase tracking-[0.18em] text-yellow-100 transition hover:bg-yellow-200 hover:text-black">
+            View all staff
+          </Link>
+        </div>
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
+          {featuredStaff.map((staff) => (
             <StaffCard key={staff.slug} staff={staff} />
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-5 py-16">
+        <SectionEyebrow color="#79D94D">How requests work</SectionEyebrow>
+        <div className="grid gap-5 md:grid-cols-3">
+          {[
+            ["Pick the service", "Guests choose the appointment lane first so staff choices stay relevant to nails, hair, tattoo, aesthetics, or spa."],
+            ["Match the right person", "The site shows only team members connected to that service, then stores the request for follow-up."],
+            ["Confirm details", "The shop confirms timing, pricing, deposits, consultations, and any service-specific prep before anything is final."],
+          ].map(([title, copy], index) => (
+            <article key={title} className="neon-card rounded-[2rem] p-6">
+              <p className="brand-display text-5xl font-black text-lime-200">0{index + 1}</p>
+              <h3 className="brand-display mt-5 text-2xl font-black uppercase">{title}</h3>
+              <p className="mt-3 leading-7 text-white/62">{copy}</p>
+            </article>
           ))}
         </div>
       </section>

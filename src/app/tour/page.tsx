@@ -7,10 +7,16 @@ export default function TourPage() {
         <SectionEyebrow color="#4DDCE5">Shop video</SectionEyebrow>
         <h1 className="brand-display max-w-5xl text-5xl font-black uppercase md:text-7xl">Tour the shop, meet the vibe, and see what makes Mild 2 Wild different.</h1>
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
-          <div className="neon-card flex aspect-video items-center justify-center rounded-[3rem] border-cyan-300/30 p-8 text-center">
-            <div>
-              <p className="brand-display text-5xl font-black uppercase text-cyan-200">Video Tour Coming Soon</p>
+          <div className="neon-card flex aspect-video items-center justify-center overflow-hidden rounded-[3rem] border-cyan-300/30 p-8 text-center">
+            <div className="relative z-10">
+              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-cyan-200/40 bg-cyan-200/10 text-4xl text-cyan-100">▶</div>
+              <p className="brand-display text-4xl font-black uppercase text-cyan-200 md:text-5xl">Video Tour Coming Soon</p>
               <p className="mt-4 text-white/60">A walk-through video will live here once the final shop footage is ready.</p>
+              <div className="mt-6 flex flex-wrap justify-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-white/50">
+                <span className="rounded-full border border-white/10 px-3 py-2">Shop walkthrough</span>
+                <span className="rounded-full border border-white/10 px-3 py-2">Team story</span>
+                <span className="rounded-full border border-white/10 px-3 py-2">Community focus</span>
+              </div>
             </div>
           </div>
           <div className="space-y-5">

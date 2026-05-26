@@ -96,7 +96,7 @@ export default async function ServiceCategoryPage({ params }: { params: Promise<
         <div id="service-staff">
           <SectionEyebrow color={category.accent}>{category.staffLabel}</SectionEyebrow>
           <p className="mb-5 text-white/60">
-            This page is filtered to {category.name.toLowerCase()} only, so visitors never see unrelated staff for this service lane.
+            Each profile below is connected to this service category so guests can compare style, specialties, and fit before requesting an appointment.
           </p>
           <div className="grid gap-5 md:grid-cols-2">
             {staff.map((member) => (

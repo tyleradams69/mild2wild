@@ -15,8 +15,8 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black/80 backdrop-blur-xl">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
-        <Link href="/" className="brand-display text-xl font-black uppercase tracking-[0.22em]">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4">
+        <Link href="/" className="brand-display shrink-0 text-lg font-black uppercase tracking-[0.18em] sm:text-xl sm:tracking-[0.22em]">
           Mild<span className="text-pink-400">2</span>Wild
         </Link>
         <div className="hidden items-center gap-5 text-sm font-bold uppercase tracking-[0.22em] text-white/70 md:flex">
@@ -28,24 +28,44 @@ export function SiteHeader() {
         </div>
         <Link
           href="/book"
-          className="rounded-full bg-white px-4 py-2 text-sm font-black uppercase tracking-[0.18em] text-black transition hover:bg-pink-300"
+          className="shrink-0 rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-black transition hover:bg-pink-300 sm:text-sm sm:tracking-[0.18em]"
         >
           Book Now
         </Link>
       </nav>
+      <div className="border-t border-white/5 md:hidden">
+        <div className="mx-auto flex max-w-7xl gap-3 overflow-x-auto px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-white/65">
+          {links.filter(([label]) => label !== "Login").map(([label, href]) => (
+            <Link key={href} href={href} className="shrink-0 rounded-full border border-white/10 px-3 py-2 transition hover:border-pink-300/60 hover:text-white">
+              {label}
+            </Link>
+          ))}
+        </div>
+      </div>
     </header>
   );
 }
 
 export function SiteFooter() {
+  const footerLinks = [
+    ["Services", "/#services"],
+    ["Staff", "/staff"],
+    ["Book", "/book"],
+    ["Policies", "/legal"],
+  ];
+
   return (
     <footer className="border-t border-white/10 px-5 py-12 text-center text-sm text-white/55">
       <p className="brand-display text-lg uppercase text-white">Mild 2 Wild</p>
       <p className="mt-2">Tattoos • Nails • Hair • Aesthetics • Spa • Products</p>
       <p className="mt-4">Appointments, artist profiles, shop policies, aftercare, and retail favorites in one bright studio home.</p>
-      <Link href="/legal" className="mt-5 inline-block font-black uppercase tracking-[0.22em] text-pink-300 transition hover:text-white">
-        Legal & Policies
-      </Link>
+      <div className="mt-6 flex flex-wrap justify-center gap-3">
+        {footerLinks.map(([label, href]) => (
+          <Link key={href} href={href} className="rounded-full border border-white/10 px-4 py-2 font-black uppercase tracking-[0.18em] text-white/60 transition hover:border-pink-300/50 hover:text-white">
+            {label}
+          </Link>
+        ))}
+      </div>
     </footer>
   );
 }

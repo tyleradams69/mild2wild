@@ -35,8 +35,11 @@ export default function ProductsPage() {
         <SectionEyebrow color="#FF7A1A">Retail wall</SectionEyebrow>
         <h1 className="brand-display max-w-4xl text-5xl font-black uppercase md:text-7xl">Products that keep the appointment glow going.</h1>
         <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
-          Browse the product categories Mild 2 Wild can recommend during appointments. Full product names, photos, pricing, and gift-card checkout will be added as the retail lineup is finalized.
+          Browse the product categories Mild 2 Wild can recommend during appointments. Guests can ask their artist, stylist, or specialist about the best aftercare and retail fit during their visit.
         </p>
+        <div className="mt-8 rounded-[2rem] border border-orange-200/20 bg-orange-300/10 p-5 text-sm leading-7 text-orange-50">
+          Product availability can vary by season, service type, and individual aftercare needs. The team can confirm current options in studio.
+        </div>
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           {productCards.map((product, index) => (
             <article key={product.title} className="neon-card rounded-[2rem] p-6">

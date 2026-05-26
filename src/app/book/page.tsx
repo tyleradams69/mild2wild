@@ -14,6 +14,17 @@ export default function BookPage() {
         <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
           Pick the appointment type you want and we&apos;ll show the artists, stylists, and specialists available for that service. The shop will follow up to confirm timing, pricing, and any deposit details.
         </p>
+        <div className="mt-8 grid gap-3 md:grid-cols-3">
+          {[
+            "One request can include inspiration and notes.",
+            "Staff choices update based on the selected service.",
+            "Timing is reviewed before the appointment is confirmed.",
+          ].map((item) => (
+            <div key={item} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm font-bold text-white/68">
+              ✦ {item}
+            </div>
+          ))}
+        </div>
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
           <BookingRequestForm groups={bookingGroups} />

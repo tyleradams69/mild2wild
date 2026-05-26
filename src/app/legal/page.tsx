@@ -38,7 +38,7 @@ const policies = [
       "The website and phone intake may collect names, phone numbers, emails, requested services, preferred staff, timing preferences, and notes so the business can follow up. Client details are used for scheduling, customer support, service records, and related business communication.",
   },
   {
-    title: "Phone intake and text follow-up",
+    title: "Phone intake and owner alerts",
     body:
       "If you contact the shop through an assisted phone intake, the system may collect your booking details and summarize them for the owner or staff. A team member will verify important details with you before confirming an appointment.",
   },
