@@ -43,6 +43,9 @@ export function SiteFooter() {
       <p className="brand-display text-lg uppercase text-white">Mild 2 Wild</p>
       <p className="mt-2">Tattoos • Nails • Hair • Aesthetics • Spa • Products</p>
       <p className="mt-4">Built for staff-owned calendars, owner admin visibility, and AI-assisted call intake.</p>
+      <Link href="/legal" className="mt-5 inline-block font-black uppercase tracking-[0.22em] text-pink-300 transition hover:text-white">
+        Legal & Policies
+      </Link>
     </footer>
   );
 }

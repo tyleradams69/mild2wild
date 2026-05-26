@@ -1,6 +1,7 @@
 import { BookingRequestForm } from "@/components/booking-request-form";
 import { PageShell, SectionEyebrow } from "@/components/site";
 import { buildBookingServiceGroups } from "@/lib/booking-foundation";
+import { businessOwnerCallRouting } from "@/lib/call-agent-config";
 import { serviceCategories, services, staffMembers } from "@/lib/studio-data";
 
 export default function BookPage() {
@@ -22,7 +23,7 @@ export default function BookPage() {
             <div className="neon-card rounded-[2rem] p-6">
               <h2 className="brand-display text-3xl font-black uppercase">AI call agent intake</h2>
               <p className="mt-4 text-white/65">
-                The worker agent should gather name, phone, service requested, preferred staff, date/time preferences, and notes. Then it transfers the call with a concise summary.
+                The worker agent should gather name, phone, service requested, preferred staff, date/time preferences, and notes. Then it transfers the call to {businessOwnerCallRouting.name} and queues a text summary to {businessOwnerCallRouting.phoneDisplay} with all important details.
               </p>
               <div className="mt-6 rounded-2xl border border-lime-300/30 bg-lime-300/10 p-4 text-lime-100">
                 Example handoff: “This is Maya, interested in custom nail art with Team Member 01 next Friday afternoon. First-time client, wants pink chrome flames.”

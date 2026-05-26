@@ -66,14 +66,21 @@ describe("dashboard workspace", () => {
           preferred_staff_slug: "team-member-10",
           preferred_time: "Saturday",
           summary: "Riley wants a fine-line tattoo consult and asked for Saturday.",
-          transferred_to: "front desk",
+          transferred_to: "Caitlin (business owner) at 440-654-7085",
+          text_summary_recipient: "+14406547085",
+          text_summary_status: "pending",
           created_at: "2026-06-02T19:00:00.000Z",
         },
       ],
     });
 
     expect(inbox).toHaveLength(2);
-    expect(inbox[0]).toMatchObject({ source: "Call agent", customerName: "Riley", routedStaffName: "Team Member 10" });
+    expect(inbox[0]).toMatchObject({
+      source: "Call agent",
+      customerName: "Riley",
+      routedStaffName: "Team Member 10",
+      statusLabel: "Transferred to Caitlin (business owner) at 440-654-7085; text pending to +14406547085",
+    });
     expect(inbox[1]).toMatchObject({ source: "Booking form", customerName: "Maya Rose", routedStaffName: "Caitlin" });
   });
 

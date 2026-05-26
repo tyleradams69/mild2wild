@@ -107,7 +107,6 @@ describe("booking foundation", () => {
       preferredStaffSlug: "team-member-01",
       preferredTime: "Friday afternoon",
       summary: "Jules wants pink chrome flames with Luna next Friday afternoon.",
-      transferredTo: "front desk",
     });
 
     expect(valid.ok).toBe(true);
@@ -119,7 +118,11 @@ describe("booking foundation", () => {
       preferred_staff_slug: "team-member-01",
       preferred_time: "Friday afternoon",
       summary: "Jules wants pink chrome flames with Luna next Friday afternoon.",
-      transferred_to: "front desk",
+      transferred_to: "Caitlin (business owner) at 440-654-7085",
+      text_summary_recipient: "+14406547085",
+      text_summary_body:
+        "Mild 2 Wild call summary\nClient: Jules\nPhone: 555-0222\nService: pink chrome nail art\nPreferred staff: team-member-01\nPreferred time: Friday afternoon\nNotes: Jules wants pink chrome flames with Luna next Friday afternoon.",
+      text_summary_status: "pending",
     });
   });
 });

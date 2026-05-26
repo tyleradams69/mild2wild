@@ -1,3 +1,4 @@
+import { buildOwnerTextSummary, businessOwnerCallRouting } from "./call-agent-config";
 import type { ServiceCategory, StaffMember, StudioService } from "./studio-data";
 
 export type BookingRequestInput = {
@@ -30,6 +31,8 @@ export type CallAgentLeadInput = {
   preferredTime?: unknown;
   summary?: unknown;
   transferredTo?: unknown;
+  textSummaryRecipient?: unknown;
+  textSummaryBody?: unknown;
 };
 
 export type ValidatedCallAgentLead = {
@@ -39,7 +42,10 @@ export type ValidatedCallAgentLead = {
   preferredStaffSlug: string | null;
   preferredTime: string | null;
   summary: string;
-  transferredTo: string | null;
+  transferredTo: string;
+  textSummaryRecipient: string;
+  textSummaryBody: string;
+  textSummaryStatus: "pending";
 };
 
 type ValidationResult<T> = { ok: true; value: T } | { ok: false; errors: string[] };
@@ -201,7 +207,9 @@ export function validateCallAgentLead(input: CallAgentLeadInput): ValidationResu
   const preferredStaffSlug = nullableString(input.preferredStaffSlug);
   const preferredTime = nullableString(input.preferredTime);
   const summary = asTrimmedString(input.summary);
-  const transferredTo = nullableString(input.transferredTo);
+  const transferredTo = nullableString(input.transferredTo) ?? businessOwnerCallRouting.transferLabel;
+  const textSummaryRecipient = nullableString(input.textSummaryRecipient) ?? businessOwnerCallRouting.phoneE164;
+  const textSummaryBody = nullableString(input.textSummaryBody);
 
   if (!customerName) errors.push("Customer name is required.");
   if (!requestedService) errors.push("Requested service is required.");
@@ -219,6 +227,18 @@ export function validateCallAgentLead(input: CallAgentLeadInput): ValidationResu
       preferredTime,
       summary,
       transferredTo,
+      textSummaryRecipient,
+      textSummaryBody:
+        textSummaryBody ??
+        buildOwnerTextSummary({
+          customerName,
+          customerPhone,
+          requestedService,
+          preferredStaffSlug,
+          preferredTime,
+          summary,
+        }),
+      textSummaryStatus: "pending",
     },
   };
 }
@@ -232,5 +252,8 @@ export function buildCallAgentLeadInsert(lead: ValidatedCallAgentLead) {
     preferred_time: lead.preferredTime,
     summary: lead.summary,
     transferred_to: lead.transferredTo,
+    text_summary_recipient: lead.textSummaryRecipient,
+    text_summary_body: lead.textSummaryBody,
+    text_summary_status: lead.textSummaryStatus,
   };
 }

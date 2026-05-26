@@ -9,6 +9,8 @@ The app is built around the client vision:
 - owner/admin dashboard visibility across all staff
 - employee logins scoped to their own profile/calendar lane
 - first-party calendar foundation so the shop does not need every employee's Google Calendar or Calendly API
+- AI call-agent handoff routing to Caitlin with queued owner text summaries
+- legal/policy page for booking, tattoo consent, deposits, privacy, and aftercare basics
 - Booksy import-ready architecture for later client/appointment migration
 
 ## Tech stack
@@ -66,6 +68,7 @@ Apply migrations in order from `supabase/migrations/`:
 1. `20260525210000_mild2wild_schema.sql`
 2. `20260525211500_seed_mild2wild_foundation.sql`
 3. `20260525213000_owned_calendar_system.sql`
+4. `20260525214500_call_agent_owner_sms_summary.sql`
 
 These create:
 - service categories
@@ -77,6 +80,7 @@ These create:
 - appointments
 - call-agent leads
 - first-party calendar tables for clients, appointment audit events, and Booksy import tracking
+- call-agent SMS summary queue fields for owner follow-up
 
 After applying schema changes in Supabase, run:
 
@@ -108,6 +112,13 @@ Calendar design:
 - public booking requests and call-agent leads route into the same model
 - Booksy will be treated as an import source, not the ongoing source of truth
 
+Call-agent design:
+- transfer destination: Caitlin, business owner, 440-654-7085
+- persisted transfer label: `Caitlin (business owner) at 440-654-7085`
+- text summary recipient: `+14406547085`
+- generated summary includes client name, phone, requested service, preferred staff, preferred time, and notes
+- `text_summary_status` starts as `pending`; an SMS provider/webhook can later mark it `sent`, `failed`, or `skipped`
+
 Current Booksy status:
 - Booksy import parser/domain foundation exists and is tested.
 - The actual Booksy CSV/export is not required yet.
@@ -131,6 +142,7 @@ npm run security:audit
 
 ```text
 src/lib/studio-data.ts                         static service/staff foundation
+src/lib/call-agent-config.ts                   owner transfer + text-summary routing
 src/lib/booking-foundation.ts                  public booking validation + insert mapping
 src/lib/calendar-access.ts                     owner/staff calendar permissions
 src/lib/owned-calendar-system.ts               first-party calendar + Booksy import helpers

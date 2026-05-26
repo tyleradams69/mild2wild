@@ -23,6 +23,7 @@ Create a Supabase project, then apply these SQL files in order:
 supabase/migrations/20260525210000_mild2wild_schema.sql
 supabase/migrations/20260525211500_seed_mild2wild_foundation.sql
 supabase/migrations/20260525213000_owned_calendar_system.sql
+supabase/migrations/20260525214500_call_agent_owner_sms_summary.sql
 ```
 
 Verify the following tables exist:
@@ -94,6 +95,7 @@ npm run security:audit
 Then browser-test:
 - `/` homepage loads
 - `/book` booking form loads
+- `/legal` legal/policy page loads
 - `/staff` and staff profile pages load
 - `/login` redirects/login behavior is sane
 - owner dashboard sees all calendars/profiles

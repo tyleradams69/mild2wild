@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PageShell, SectionEyebrow } from "@/components/site";
 import { dashboardSessionCookieName, parseSignedDashboardSession } from "@/lib/auth-session";
 import { buildCalendarDashboardModel } from "@/lib/calendar-access";
+import { businessOwnerCallRouting } from "@/lib/call-agent-config";
 import { buildDashboardLeadInbox, buildProfileEditorModel } from "@/lib/dashboard-workspace";
 import { getStaffBySlug, serviceCategories, staffMembers } from "@/lib/studio-data";
 import { services } from "@/lib/studio-data";
@@ -60,7 +61,9 @@ export default async function DashboardPage() {
         preferred_staff_slug: "team-member-10",
         preferred_time: "Saturday afternoon",
         summary: "Call agent collected the consult request and told Riley the shop would follow up with timing options.",
-        transferred_to: "front desk",
+        transferred_to: businessOwnerCallRouting.transferLabel,
+        text_summary_recipient: businessOwnerCallRouting.phoneE164,
+        text_summary_status: "pending",
         created_at: "2026-06-02T19:00:00.000Z",
       },
     ],

@@ -79,6 +79,9 @@ create table public.call_agent_leads (
   preferred_time text,
   summary text not null,
   transferred_to text,
+  text_summary_recipient text not null default '+14406547085',
+  text_summary_body text,
+  text_summary_status text not null default 'pending' check (text_summary_status in ('pending', 'sent', 'failed', 'skipped')),
   created_at timestamptz not null default now()
 );
 

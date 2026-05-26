@@ -38,6 +38,8 @@ export type DashboardCallAgentLeadRow = {
   preferred_time?: string | null;
   summary?: string | null;
   transferred_to?: string | null;
+  text_summary_recipient?: string | null;
+  text_summary_status?: string | null;
   created_at?: string | null;
 };
 
@@ -123,7 +125,7 @@ export function buildDashboardLeadInbox({
         routedStaffName: clean(row.preferred_staff_name) || staff?.name || "Front desk",
         requestedFor: clean(row.preferred_time) || "Time TBD",
         summary: clean(row.summary) || "Call-agent transfer needs review.",
-        statusLabel: row.transferred_to ? `Transferred to ${row.transferred_to}` : "Needs follow-up",
+        statusLabel: buildCallAgentStatus(row),
         sortTime: row.created_at ?? "",
       };
     })
@@ -134,6 +136,15 @@ export function buildDashboardLeadInbox({
 
 function clean(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
+}
+
+function buildCallAgentStatus(row: DashboardCallAgentLeadRow) {
+  const transfer = clean(row.transferred_to);
+  const smsRecipient = clean(row.text_summary_recipient);
+  const smsStatus = clean(row.text_summary_status) || "pending";
+  const smsLabel = smsRecipient ? `text ${smsStatus} to ${smsRecipient}` : `text ${smsStatus}`;
+
+  return transfer ? `Transferred to ${transfer}; ${smsLabel}` : `Needs follow-up; ${smsLabel}`;
 }
 
 function humanizeSlug(value: string) {
