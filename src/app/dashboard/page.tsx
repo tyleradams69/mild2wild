@@ -163,7 +163,11 @@ export default async function DashboardPage() {
             <span className="rounded-full bg-yellow-200 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-black">{leadInbox.length} open</span>
           </div>
           <div className="mt-6 space-y-3">
-            {leadInbox.map((lead) => (
+            {leadInbox.length === 0 ? (
+              <div className="rounded-3xl border border-dashed border-white/15 bg-black/40 p-6 text-sm leading-6 text-white/58">
+                No open requests for this login yet. New booking requests and call-agent handoffs will appear here when they are routed to this calendar lane.
+              </div>
+            ) : leadInbox.map((lead) => (
               <div key={lead.id} className="rounded-3xl border border-white/10 bg-black/50 p-4">
                 <div className="flex flex-col justify-between gap-3 md:flex-row md:items-start">
                   <div>
@@ -180,6 +184,11 @@ export default async function DashboardPage() {
                   </div>
                 </div>
                 <p className="mt-4 text-sm leading-6 text-white/62">{lead.summary}</p>
+                {lead.smsSummaryLabel ? (
+                  <p className="mt-3 rounded-2xl border border-cyan-200/20 bg-cyan-200/10 px-4 py-3 text-xs font-bold uppercase tracking-[0.14em] text-cyan-100">
+                    {lead.smsSummaryLabel}
+                  </p>
+                ) : null}
               </div>
             ))}
           </div>
@@ -194,7 +203,11 @@ export default async function DashboardPage() {
               : "Staff accounts only get their own editable profile controls."}
           </p>
           <div className="mt-6 max-h-[34rem] space-y-3 overflow-y-auto pr-2 [scrollbar-color:#FF8AC8_rgba(255,255,255,0.08)]">
-            {profileEditorModel.editableProfiles.map((profile) => (
+            {profileEditorModel.editableProfiles.length === 0 ? (
+              <div className="rounded-3xl border border-dashed border-white/15 bg-black/40 p-5 text-sm leading-6 text-white/58">
+                No editable staff profiles are assigned to this login yet.
+              </div>
+            ) : profileEditorModel.editableProfiles.map((profile) => (
               <Link key={profile.slug} href={`/dashboard/staff/${profile.slug}/edit`} className="block rounded-3xl border border-white/10 bg-white/5 p-4 transition hover:border-white/30 hover:bg-white/10">
                 <div className="flex items-center justify-between gap-4">
                   <div className="min-w-0">

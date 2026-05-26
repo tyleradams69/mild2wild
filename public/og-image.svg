@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Mild 2 Wild neon salon tattoo spa website preview">
+  <defs>
+    <radialGradient id="g1" cx="20%" cy="10%" r="80%">
+      <stop offset="0" stop-color="#ff4fd8" stop-opacity="0.9"/>
+      <stop offset="0.38" stop-color="#111"/>
+      <stop offset="1" stop-color="#000"/>
+    </radialGradient>
+    <linearGradient id="g2" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#4ddce5"/>
+      <stop offset="0.5" stop-color="#ffe45c"/>
+      <stop offset="1" stop-color="#ff4fd8"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g1)"/>
+  <circle cx="1020" cy="115" r="190" fill="#4ddce5" opacity="0.16"/>
+  <circle cx="180" cy="525" r="220" fill="#ffe45c" opacity="0.14"/>
+  <rect x="70" y="70" width="1060" height="490" rx="48" fill="#050505" stroke="url(#g2)" stroke-width="5" opacity="0.92"/>
+  <text x="100" y="180" fill="#fff" font-family="Arial Black, Impact, sans-serif" font-size="82" font-weight="900" letter-spacing="7">MILD 2 WILD</text>
+  <text x="104" y="244" fill="#ff8adf" font-family="Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="5">TATTOOS • NAILS • HAIR • SPA</text>
+  <text x="104" y="335" fill="#fff" font-family="Arial, sans-serif" font-size="46" font-weight="800">Bright booking, staff profiles,</text>
+  <text x="104" y="395" fill="#fff" font-family="Arial, sans-serif" font-size="46" font-weight="800">shop story, and products.</text>
+  <g filter="url(#glow)">
+    <rect x="104" y="455" width="190" height="52" rx="26" fill="#4ddce5"/>
+    <rect x="322" y="455" width="170" height="52" rx="26" fill="#ffe45c"/>
+    <rect x="520" y="455" width="170" height="52" rx="26" fill="#ff4fd8"/>
+  </g>
+  <text x="138" y="490" fill="#000" font-family="Arial Black, Arial, sans-serif" font-size="18" font-weight="900" letter-spacing="2">BOOK</text>
+  <text x="359" y="490" fill="#000" font-family="Arial Black, Arial, sans-serif" font-size="18" font-weight="900" letter-spacing="2">MEET</text>
+  <text x="552" y="490" fill="#000" font-family="Arial Black, Arial, sans-serif" font-size="18" font-weight="900" letter-spacing="2">TOUR</text>
+</svg>
