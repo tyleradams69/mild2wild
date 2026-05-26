@@ -54,7 +54,7 @@ export type DashboardInboxItem = {
   requestedFor: string;
   summary: string;
   statusLabel: string;
-  smsSummaryLabel: string | null;
+  ownerAlertLabel: string | null;
   sortTime: string;
 };
 
@@ -107,7 +107,7 @@ export function buildDashboardLeadInbox({
         requestedFor,
         summary: clean(row.notes) || `Booking request for ${requestedFor}.`,
         statusLabel: clean(row.status) || "requested",
-        smsSummaryLabel: null,
+        ownerAlertLabel: null,
         sortTime: row.starts_at ?? "",
       };
     })
@@ -129,7 +129,7 @@ export function buildDashboardLeadInbox({
         requestedFor: clean(row.preferred_time) || "Time TBD",
         summary: clean(row.summary) || "Call-agent transfer needs review.",
         statusLabel: status.statusLabel,
-        smsSummaryLabel: status.smsSummaryLabel,
+        ownerAlertLabel: status.ownerAlertLabel,
         sortTime: row.created_at ?? "",
       };
     })
@@ -144,12 +144,12 @@ function clean(value: unknown) {
 
 function buildCallAgentStatus(row: DashboardCallAgentLeadRow) {
   const transfer = clean(row.transferred_to);
-  const smsRecipient = clean(row.text_summary_recipient);
-  const smsStatus = clean(row.text_summary_status) || "pending";
+  const alertRecipient = clean(row.text_summary_recipient);
+  const alertStatus = clean(row.text_summary_status) || "pending";
   const statusLabel = transfer ? `Transferred to ${transfer}` : "Needs follow-up";
-  const smsSummaryLabel = smsRecipient ? `Owner text summary: ${humanizeSlug(smsStatus)} to ${smsRecipient}` : `Owner text summary: ${humanizeSlug(smsStatus)}`;
+  const ownerAlertLabel = alertRecipient ? `Owner alert summary: ${humanizeSlug(alertStatus)} to ${alertRecipient}` : `Owner alert summary: ${humanizeSlug(alertStatus)}`;
 
-  return { statusLabel, smsSummaryLabel };
+  return { statusLabel, ownerAlertLabel };
 }
 
 function humanizeSlug(value: string) {

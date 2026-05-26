@@ -184,9 +184,9 @@ export default async function DashboardPage() {
                   </div>
                 </div>
                 <p className="mt-4 text-sm leading-6 text-white/62">{lead.summary}</p>
-                {lead.smsSummaryLabel ? (
+                {lead.ownerAlertLabel ? (
                   <p className="mt-3 rounded-2xl border border-cyan-200/20 bg-cyan-200/10 px-4 py-3 text-xs font-bold uppercase tracking-[0.14em] text-cyan-100">
-                    {lead.smsSummaryLabel}
+                    {lead.ownerAlertLabel}
                   </p>
                 ) : null}
               </div>

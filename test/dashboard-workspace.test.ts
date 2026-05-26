@@ -80,7 +80,7 @@ describe("dashboard workspace", () => {
       customerName: "Riley",
       routedStaffName: "Team Member 10",
       statusLabel: "Transferred to Caitlin (business owner) at 440-654-7085",
-      smsSummaryLabel: expect.stringContaining("Owner text summary: Pending"),
+      ownerAlertLabel: expect.stringContaining("Owner alert summary: Pending"),
     });
     expect(inbox[1]).toMatchObject({ source: "Booking form", customerName: "Maya Rose", routedStaffName: "Caitlin" });
   });

@@ -4,6 +4,7 @@ import {
   validateCallAgentLead,
 } from "@/lib/booking-foundation";
 import { createSupabaseServerClient } from "@/lib/supabase";
+import { sendTelegramOwnerAlert } from "@/lib/telegram-owner-alert";
 
 function isMissingSmsSummaryColumns(error: { code?: string; message?: string } | null) {
   if (!error) return false;
@@ -20,6 +21,17 @@ function legacyCallAgentLeadInsert(lead: ReturnType<typeof buildCallAgentLeadIns
     preferred_time: lead.preferred_time,
     summary: lead.summary,
     transferred_to: lead.transferred_to,
+  };
+}
+
+function telegramResponseFields(result: Awaited<ReturnType<typeof sendTelegramOwnerAlert>>) {
+  if (result.queued) {
+    return { telegramAlertQueued: true, telegramMessageId: result.messageId };
+  }
+
+  return {
+    telegramAlertQueued: false,
+    telegramAlertReason: result.reason === "missing_config" ? "Telegram is not configured yet." : "Telegram delivery failed; the lead is still saved in the dashboard.",
   };
 }
 
@@ -49,7 +61,8 @@ export async function POST(request: Request) {
     .single();
 
   if (!error) {
-    return NextResponse.json({ ok: true, lead: data }, { status: 201 });
+    const telegramAlert = await sendTelegramOwnerAlert(insertPayload.text_summary_body);
+    return NextResponse.json({ ok: true, lead: data, ...telegramResponseFields(telegramAlert) }, { status: 201 });
   }
 
   if (isMissingSmsSummaryColumns(error)) {
@@ -60,7 +73,11 @@ export async function POST(request: Request) {
       .single();
 
     if (!fallback.error) {
-      return NextResponse.json({ ok: true, lead: fallback.data, smsSummaryQueued: false }, { status: 201 });
+      const telegramAlert = await sendTelegramOwnerAlert(insertPayload.text_summary_body);
+      return NextResponse.json(
+        { ok: true, lead: fallback.data, ownerAlertSaved: false, ...telegramResponseFields(telegramAlert) },
+        { status: 201 },
+      );
     }
   }
 

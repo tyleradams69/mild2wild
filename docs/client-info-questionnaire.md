@@ -132,7 +132,8 @@ Service categories to confirm:
 ## 10. Call-agent / worker-agent intake
 
 - Final transfer phone number:
-- Final SMS summary recipient:
+- Final Telegram alert chat/group owner:
+- Backup SMS summary recipient, if SMS is added later:
 - Business greeting/script preferences:
 - Required fields the agent must collect:
   - Name
@@ -148,7 +149,8 @@ Service categories to confirm:
 - When should the agent transfer immediately?
 - When should the agent only take a message?
 - Any phrases or promises the agent should avoid?
-- SMS/voice provider preference:
+- Alert/voice provider preference:
+  - Telegram bot alerts
   - Twilio
   - Telnyx
   - Bland/Retell/Vapi/etc.
@@ -192,4 +194,4 @@ Before public launch, owner should approve:
 - Tour/about/charity content
 - Business address/hours/phone/social links
 - Dashboard login users and permissions
-- Call-agent script and transfer/SMS destination
+- Call-agent script and transfer/Telegram alert destination

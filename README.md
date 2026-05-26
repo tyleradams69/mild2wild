@@ -9,7 +9,7 @@ The app is built around the client vision:
 - owner/admin dashboard visibility across all staff
 - employee logins scoped to their own profile/calendar lane
 - first-party calendar foundation so the shop does not need every employee's Google Calendar or Calendly API
-- AI call-agent handoff routing to Caitlin with queued owner text summaries
+- AI call-agent handoff routing to Caitlin with saved owner alert summaries and optional Telegram alerts
 - legal/policy page for booking, tattoo consent, deposits, privacy, and aftercare basics
 - Booksy import-ready architecture for later client/appointment migration
 
@@ -54,12 +54,15 @@ SUPABASE_URL=
 SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 HERMES_DASHBOARD_SESSION_SECRET=
+TELEGRAM_BOT_TOKEN=
+TELEGRAM_OWNER_CHAT_ID=
 ```
 
 Notes:
 - `NEXT_PUBLIC_*` values are browser-visible and must only contain public Supabase anon config.
 - `SUPABASE_SERVICE_ROLE_KEY` is server-only. Never expose it in client code.
 - `HERMES_DASHBOARD_SESSION_SECRET` should be a strong random value in production.
+- `TELEGRAM_BOT_TOKEN` and `TELEGRAM_OWNER_CHAT_ID` are optional. If missing, call-agent leads still save to the dashboard and return `telegramAlertQueued: false`.
 
 ## Supabase setup
 
@@ -80,7 +83,7 @@ These create:
 - appointments
 - call-agent leads
 - first-party calendar tables for clients, appointment audit events, and Booksy import tracking
-- call-agent SMS summary queue fields for owner follow-up
+- call-agent owner alert summary fields for dashboard follow-up and optional Telegram delivery
 
 After applying schema changes in Supabase, run:
 
@@ -116,8 +119,9 @@ Call-agent design:
 - transfer destination: Caitlin, business owner, 440-654-7085
 - persisted transfer label: `Caitlin (business owner) at 440-654-7085`
 - text summary recipient: `+14406547085`
-- generated summary includes client name, phone, requested service, preferred staff, preferred time, and notes
-- `text_summary_status` starts as `pending`; an SMS provider/webhook can later mark it `sent`, `failed`, or `skipped`
+- generated alert summary includes client name, phone, requested service, preferred staff, preferred time, and notes
+- Telegram can deliver owner phone alerts without Twilio approval; setup notes live in `docs/telegram-owner-alerts.md`
+- `text_summary_status` starts as `pending`; these columns are currently used as generic owner-alert summary storage and can still support SMS later if desired
 
 Current Booksy status:
 - Booksy import parser/domain foundation exists and is tested.
