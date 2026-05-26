@@ -8,6 +8,7 @@ import { buildCalendarDashboardModel } from "@/lib/calendar-access";
 import { buildDashboardLeadInbox, buildProfileEditorModel } from "@/lib/dashboard-workspace";
 import { getStaffBySlug, serviceCategories, staffMembers } from "@/lib/studio-data";
 import { services } from "@/lib/studio-data";
+import { mergeStaffProfileOverrides, readStaffProfileOverrides } from "@/lib/staff-profile-overrides";
 
 function getDashboardSessionSecret() {
   return process.env.HERMES_DASHBOARD_SESSION_SECRET ?? "mild2wild-local-prototype-session-secret";
@@ -29,12 +30,13 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const bookableStaffMembers = staffMembers.filter((staff) => !staff.isMascot);
+  const mergedStaffMembers = mergeStaffProfileOverrides(staffMembers, await readStaffProfileOverrides());
+  const bookableStaffMembers = mergedStaffMembers.filter((staff) => !staff.isMascot);
   const dashboardModel = buildCalendarDashboardModel(session, bookableStaffMembers);
-  const profileEditorModel = buildProfileEditorModel(session, staffMembers, services);
+  const profileEditorModel = buildProfileEditorModel(session, mergedStaffMembers, services);
   const leadInbox = buildDashboardLeadInbox({
     session,
-    staffMembers,
+    staffMembers: mergedStaffMembers,
     services,
     appointments: [
       {
@@ -188,9 +190,9 @@ export default async function DashboardPage() {
               ? "Owner/admin can update every staff profile. The mascot stays visible on the public site but is not an editable booking provider."
               : "Staff accounts only get their own editable profile controls."}
           </p>
-          <div className="mt-6 space-y-3">
-            {profileEditorModel.editableProfiles.slice(0, 4).map((profile) => (
-              <Link key={profile.slug} href={`/staff/${profile.slug}`} className="block rounded-3xl border border-white/10 bg-white/5 p-4 transition hover:border-white/30 hover:bg-white/10">
+          <div className="mt-6 max-h-[34rem] space-y-3 overflow-y-auto pr-2 [scrollbar-color:#FF8AC8_rgba(255,255,255,0.08)]">
+            {profileEditorModel.editableProfiles.map((profile) => (
+              <Link key={profile.slug} href={`/dashboard/staff/${profile.slug}/edit`} className="block rounded-3xl border border-white/10 bg-white/5 p-4 transition hover:border-white/30 hover:bg-white/10">
                 <div className="flex items-center justify-between gap-4">
                   <div className="min-w-0">
                     <p className="truncate text-lg font-black text-white">{profile.name}</p>

@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PageShell, SectionEyebrow } from "@/components/site";
-import { getStaffBySlug, serviceCategories, services, staffMembers } from "@/lib/studio-data";
+import { serviceCategories, services, staffMembers } from "@/lib/studio-data";
+import { mergeStaffProfileOverrides, readStaffProfileOverrides } from "@/lib/staff-profile-overrides";
+
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return staffMembers.map((staff) => ({ slug: staff.slug }));
@@ -9,7 +12,7 @@ export function generateStaticParams() {
 
 export default async function StaffProfilePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const staff = getStaffBySlug(slug);
+  const staff = mergeStaffProfileOverrides(staffMembers, await readStaffProfileOverrides()).find((item) => item.slug === slug);
 
   if (!staff) {
     return (
