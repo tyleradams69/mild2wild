@@ -49,6 +49,8 @@ export default async function DashboardPage() {
         staff_slug: "team-member-13",
         starts_at: "2026-06-01T18:00:00.000Z",
         status: "requested",
+        lead_status: "contacted",
+        internal_notes: "Called once, send inspiration/photo examples before confirming deposit.",
         notes: "Wants chrome flame nail art and asked for Caitlin if available.",
       },
     ],
@@ -64,6 +66,8 @@ export default async function DashboardPage() {
         transferred_to: businessOwnerCallRouting.transferLabel,
         text_summary_recipient: businessOwnerCallRouting.phoneE164,
         text_summary_status: "pending",
+        lead_status: "waiting_on_client",
+        internal_notes: "Needs Saturday consult options before follow-up.",
         created_at: "2026-06-02T19:00:00.000Z",
       },
     ],
@@ -174,6 +178,7 @@ export default async function DashboardPage() {
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="rounded-full bg-white px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.16em] text-black">{lead.source}</span>
                       <span className="rounded-full border border-white/10 px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.16em] text-white/55">{lead.statusLabel}</span>
+                      <span className={`rounded-full px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.16em] ${lead.workflowTone}`}>{lead.workflowStatusLabel}</span>
                     </div>
                     <h3 className="mt-3 text-xl font-black text-white">{lead.customerName}</h3>
                     <p className="mt-1 text-sm text-white/55">{lead.contact}</p>
@@ -184,6 +189,16 @@ export default async function DashboardPage() {
                   </div>
                 </div>
                 <p className="mt-4 text-sm leading-6 text-white/62">{lead.summary}</p>
+                <div className="mt-3 grid gap-3 md:grid-cols-2">
+                  <div className="rounded-2xl border border-lime-200/20 bg-lime-200/10 px-4 py-3 text-xs leading-5 text-lime-50">
+                    <span className="block font-black uppercase tracking-[0.18em] text-lime-100">Next action</span>
+                    <span className="mt-1 block text-white/70">{lead.nextAction}</span>
+                  </div>
+                  <div className="rounded-2xl border border-purple-200/20 bg-purple-200/10 px-4 py-3 text-xs leading-5 text-purple-50">
+                    <span className="block font-black uppercase tracking-[0.18em] text-purple-100">Internal note</span>
+                    <span className="mt-1 block whitespace-pre-line text-white/70">{lead.internalNote || "No internal note yet."}</span>
+                  </div>
+                </div>
                 {lead.ownerAlertLabel ? (
                   <p className="mt-3 rounded-2xl border border-cyan-200/20 bg-cyan-200/10 px-4 py-3 text-xs font-bold uppercase tracking-[0.14em] text-cyan-100">
                     {lead.ownerAlertLabel}

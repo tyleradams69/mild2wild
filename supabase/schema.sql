@@ -66,6 +66,8 @@ create table public.appointments (
   starts_at timestamptz not null,
   ends_at timestamptz not null,
   status public.appointment_status not null default 'requested',
+  lead_status text not null default 'new' check (lead_status in ('new', 'contacted', 'waiting_on_client', 'booked', 'not_a_fit', 'archived')),
+  internal_notes text,
   notes text,
   created_at timestamptz not null default now()
 );
@@ -79,9 +81,11 @@ create table public.call_agent_leads (
   preferred_time text,
   summary text not null,
   transferred_to text,
-  text_summary_recipient text not null default '+14406547085',
+  text_summary_recipient text not null default '+144****7085',
   text_summary_body text,
   text_summary_status text not null default 'pending' check (text_summary_status in ('pending', 'sent', 'failed', 'skipped')),
+  lead_status text not null default 'new' check (lead_status in ('new', 'contacted', 'waiting_on_client', 'booked', 'not_a_fit', 'archived')),
+  internal_notes text,
   created_at timestamptz not null default now()
 );
 

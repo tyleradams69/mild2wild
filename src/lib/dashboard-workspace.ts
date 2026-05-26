@@ -1,4 +1,5 @@
 import type { DashboardAuthSession } from "./auth-session";
+import { buildLeadWorkflowSummary, type LeadWorkflowStatus } from "./lead-workflow";
 import type { StaffMember, StudioService } from "./studio-data";
 
 export type ProfileEditorModel = {
@@ -25,6 +26,8 @@ export type DashboardAppointmentRow = {
   staff_name?: string | null;
   starts_at?: string | null;
   status?: string | null;
+  lead_status?: string | null;
+  internal_notes?: string | null;
   notes?: string | null;
 };
 
@@ -40,6 +43,8 @@ export type DashboardCallAgentLeadRow = {
   transferred_to?: string | null;
   text_summary_recipient?: string | null;
   text_summary_status?: string | null;
+  lead_status?: string | null;
+  internal_notes?: string | null;
   created_at?: string | null;
 };
 
@@ -54,6 +59,11 @@ export type DashboardInboxItem = {
   requestedFor: string;
   summary: string;
   statusLabel: string;
+  workflowStatus: LeadWorkflowStatus;
+  workflowStatusLabel: string;
+  workflowTone: string;
+  nextAction: string;
+  internalNote: string;
   ownerAlertLabel: string | null;
   sortTime: string;
 };
@@ -96,6 +106,7 @@ export function buildDashboardLeadInbox({
       const staff = routedStaffSlug ? staffMembers.find((item) => item.slug === routedStaffSlug) : undefined;
       const service = row.service_slug ? services.find((item) => item.slug === row.service_slug) : undefined;
       const requestedFor = row.starts_at ? formatLeadDate(row.starts_at) : "Time TBD";
+      const workflow = buildLeadWorkflowSummary(row.lead_status, row.internal_notes);
       return {
         id: row.id,
         source: "Booking form",
@@ -107,6 +118,11 @@ export function buildDashboardLeadInbox({
         requestedFor,
         summary: clean(row.notes) || `Booking request for ${requestedFor}.`,
         statusLabel: clean(row.status) || "requested",
+        workflowStatus: workflow.status,
+        workflowStatusLabel: workflow.label,
+        workflowTone: workflow.tone,
+        nextAction: workflow.nextAction,
+        internalNote: workflow.notePreview,
         ownerAlertLabel: null,
         sortTime: row.starts_at ?? "",
       };
@@ -118,6 +134,7 @@ export function buildDashboardLeadInbox({
       const routedStaffSlug = row.preferred_staff_slug ?? null;
       const staff = routedStaffSlug ? staffMembers.find((item) => item.slug === routedStaffSlug) : undefined;
       const status = buildCallAgentStatus(row);
+      const workflow = buildLeadWorkflowSummary(row.lead_status, row.internal_notes);
       return {
         id: row.id,
         source: "Call agent",
@@ -129,6 +146,11 @@ export function buildDashboardLeadInbox({
         requestedFor: clean(row.preferred_time) || "Time TBD",
         summary: clean(row.summary) || "Call-agent transfer needs review.",
         statusLabel: status.statusLabel,
+        workflowStatus: workflow.status,
+        workflowStatusLabel: workflow.label,
+        workflowTone: workflow.tone,
+        nextAction: workflow.nextAction,
+        internalNote: workflow.notePreview,
         ownerAlertLabel: status.ownerAlertLabel,
         sortTime: row.created_at ?? "",
       };
