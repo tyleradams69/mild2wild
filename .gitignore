@@ -16,6 +16,9 @@
 # local runtime edits/fallback stores
 /.data/
 
+# client-shareable generated files kept local
+/client-share/
+
 # next.js
 /.next/
 /out/
