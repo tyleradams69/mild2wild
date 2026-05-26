@@ -55,6 +55,7 @@ describe("calendar board", () => {
     expect(board.totalAppointments).toBe(2);
     expect(board.visibleLanes.find((lane) => lane.staffSlug === "team-member-13")?.appointments.map((item) => item.id)).toEqual(["appt-nails"]);
     expect(board.visibleLanes.find((lane) => lane.staffSlug === "team-member-10")?.appointments.map((item) => item.id)).toEqual(["appt-tattoo"]);
+    expect(board.visibleLanes.find((lane) => lane.staffSlug === "team-member-13")?.detailHref).toBe("/dashboard/calendar/team-member-13");
     expect(board.visibleLanes.every((lane) => lane.canEdit)).toBe(true);
   });
 

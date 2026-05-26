@@ -34,6 +34,7 @@ export type CalendarBoardLane = {
   staffName: string;
   staffTitle: string;
   calendarColor: string;
+  detailHref: string;
   canEdit: boolean;
   appointments: CalendarBoardCard[];
 };
@@ -97,6 +98,7 @@ export function buildCalendarBoard({
       staffName: staff.name,
       staffTitle: staff.title,
       calendarColor: staff.calendarColor,
+      detailHref: `/dashboard/calendar/${staff.slug}`,
       canEdit: session.role === "owner" || session.staffSlug === staff.slug,
       appointments: laneAppointments,
     };
