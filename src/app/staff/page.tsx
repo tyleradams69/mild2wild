@@ -3,6 +3,9 @@ import { PageShell, SectionEyebrow, StaffCard } from "@/components/site";
 import { serviceCategories, staffMembers } from "@/lib/studio-data";
 
 export default function StaffIndexPage() {
+  const mascotProfiles = staffMembers.filter((staff) => staff.isMascot);
+  const employeeProfiles = staffMembers.filter((staff) => !staff.isMascot);
+
   return (
     <PageShell>
       <section className="mx-auto max-w-7xl px-5 py-16">
@@ -28,8 +31,27 @@ export default function StaffIndexPage() {
           })}
         </div>
 
+        {mascotProfiles.length > 0 ? (
+          <div className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.03] p-5">
+            <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-end">
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.28em] text-lime-300">Shop mascot</p>
+                <h2 className="brand-display mt-2 text-3xl font-black uppercase">Meet the non-bookable hype crew</h2>
+              </div>
+              <p className="max-w-xl text-sm leading-6 text-white/55">
+                Mascots stay part of the brand story, but they are separated from the employee roster and never appear as bookable service providers.
+              </p>
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {mascotProfiles.map((staff) => (
+                <StaffCard key={staff.slug} staff={staff} />
+              ))}
+            </div>
+          </div>
+        ) : null}
+
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {staffMembers.map((staff) => (
+          {employeeProfiles.map((staff) => (
             <StaffCard key={staff.slug} staff={staff} />
           ))}
         </div>

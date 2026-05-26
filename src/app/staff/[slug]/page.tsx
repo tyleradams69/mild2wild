@@ -26,6 +26,7 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
 
   const categories = serviceCategories.filter((category) => staff.serviceCategorySlugs.includes(category.slug));
   const staffServices = services.filter((service) => staff.serviceSlugs.includes(service.slug));
+  const isMascot = !!staff.isMascot;
 
   return (
     <PageShell>
@@ -71,6 +72,11 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/68">{staff.bio}</p>
 
           <div className="mt-8 flex flex-wrap gap-3">
+            {isMascot ? (
+              <span className="rounded-full bg-lime-300 px-4 py-2 text-sm font-black uppercase tracking-[0.18em] text-black">
+                Non-bookable mascot
+              </span>
+            ) : null}
             {categories.map((category) => (
               <Link
                 key={category.slug}
@@ -84,29 +90,43 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
           </div>
 
           <div className="mt-10 grid gap-5 md:grid-cols-2">
-            <section className="neon-card rounded-[2rem] p-6">
-              <h3 className="brand-display text-2xl font-black uppercase">Services offered</h3>
-              <div className="mt-5 grid gap-3">
-                {staffServices.map((service) => {
-                  const category = serviceCategories.find((item) => item.slug === service.categorySlug);
-                  return (
-                    <Link
-                      href={`/services/${service.categorySlug}`}
-                      key={service.slug}
-                      className="rounded-2xl border border-white/10 bg-white/5 p-4 text-white/72 transition hover:bg-white/10"
-                    >
-                      <div className="flex items-center justify-between gap-4">
-                        <span className="font-black">{service.name}</span>
-                        <span className="text-xs font-black" style={{ color: category?.accent ?? staff.calendarColor }}>
-                          {service.durationMinutes}m
-                        </span>
-                      </div>
-                      <p className="mt-2 text-sm text-white/50">{service.priceLabel}</p>
-                    </Link>
-                  );
-                })}
-              </div>
-            </section>
+            {isMascot ? (
+              <section className="neon-card rounded-[2rem] p-6">
+                <h3 className="brand-display text-2xl font-black uppercase">Mascot role</h3>
+                <div className="mt-5 grid gap-3">
+                  <div className="rounded-2xl border border-lime-300/25 bg-lime-300/10 p-4 text-lime-50">
+                    ✦ Featured on the staff page, tour page, and brand moments.
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-white/68">
+                    ✦ Not available for appointments, logins, calendars, or service routing.
+                  </div>
+                </div>
+              </section>
+            ) : (
+              <section className="neon-card rounded-[2rem] p-6">
+                <h3 className="brand-display text-2xl font-black uppercase">Services offered</h3>
+                <div className="mt-5 grid gap-3">
+                  {staffServices.map((service) => {
+                    const category = serviceCategories.find((item) => item.slug === service.categorySlug);
+                    return (
+                      <Link
+                        href={`/services/${service.categorySlug}`}
+                        key={service.slug}
+                        className="rounded-2xl border border-white/10 bg-white/5 p-4 text-white/72 transition hover:bg-white/10"
+                      >
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="font-black">{service.name}</span>
+                          <span className="text-xs font-black" style={{ color: category?.accent ?? staff.calendarColor }}>
+                            {service.durationMinutes}m
+                          </span>
+                        </div>
+                        <p className="mt-2 text-sm text-white/50">{service.priceLabel}</p>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
 
             <section className="neon-card rounded-[2rem] p-6">
               <h3 className="brand-display text-2xl font-black uppercase">Portfolio notes</h3>
@@ -119,15 +139,24 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
               </div>
             </section>
 
-            <section className="neon-card rounded-[2rem] p-6 md:col-span-2">
-              <h3 className="brand-display text-2xl font-black uppercase">Personal calendar</h3>
-              <p className="mt-3 max-w-3xl text-white/62">
-                This booking block is reserved for {staff.name}&apos;s own calendar. When employee logins are added, this staff member will only manage their own schedule, while the owner/admin can see and manage every calendar.
-              </p>
-              <Link href="/book" className="mt-6 inline-block rounded-full bg-white px-5 py-3 font-black uppercase tracking-[0.18em] text-black">
-                Book with me
-              </Link>
-            </section>
+            {isMascot ? (
+              <section className="neon-card rounded-[2rem] p-6 md:col-span-2">
+                <h3 className="brand-display text-2xl font-black uppercase">Brand mascot only</h3>
+                <p className="mt-3 max-w-3xl text-white/62">
+                  {staff.name} is intentionally excluded from booking CTAs, schedule blocks, staff logins, and service assignments. Visitors can still enjoy the mascot profile without accidentally trying to book the shop dog.
+                </p>
+              </section>
+            ) : (
+              <section className="neon-card rounded-[2rem] p-6 md:col-span-2">
+                <h3 className="brand-display text-2xl font-black uppercase">Personal calendar</h3>
+                <p className="mt-3 max-w-3xl text-white/62">
+                  This booking block is reserved for {staff.name}&apos;s own calendar. When employee logins are added, this staff member will only manage their own schedule, while the owner/admin can see and manage every calendar.
+                </p>
+                <Link href="/book" className="mt-6 inline-block rounded-full bg-white px-5 py-3 font-black uppercase tracking-[0.18em] text-black">
+                  Book with me
+                </Link>
+              </section>
+            )}
           </div>
         </div>
       </section>
