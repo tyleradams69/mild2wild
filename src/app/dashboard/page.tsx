@@ -5,7 +5,9 @@ import Link from "next/link";
 import { PageShell, SectionEyebrow } from "@/components/site";
 import { dashboardSessionCookieName, parseSignedDashboardSession } from "@/lib/auth-session";
 import { buildCalendarDashboardModel } from "@/lib/calendar-access";
+import { buildDashboardLeadInbox, buildProfileEditorModel } from "@/lib/dashboard-workspace";
 import { getStaffBySlug, serviceCategories, staffMembers } from "@/lib/studio-data";
+import { services } from "@/lib/studio-data";
 
 function getDashboardSessionSecret() {
   return process.env.HERMES_DASHBOARD_SESSION_SECRET ?? "mild2wild-local-prototype-session-secret";
@@ -27,7 +29,40 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  const dashboardModel = buildCalendarDashboardModel(session, staffMembers);
+  const bookableStaffMembers = staffMembers.filter((staff) => !staff.isMascot);
+  const dashboardModel = buildCalendarDashboardModel(session, bookableStaffMembers);
+  const profileEditorModel = buildProfileEditorModel(session, staffMembers, services);
+  const leadInbox = buildDashboardLeadInbox({
+    session,
+    staffMembers,
+    services,
+    appointments: [
+      {
+        id: "demo-booking-1",
+        customer_name: "Maya Rose",
+        customer_phone: "555-0101",
+        customer_email: "maya@example.com",
+        service_slug: "custom-nail-art",
+        staff_slug: "team-member-13",
+        starts_at: "2026-06-01T18:00:00.000Z",
+        status: "requested",
+        notes: "Wants chrome flame nail art and asked for Caitlin if available.",
+      },
+    ],
+    callAgentLeads: [
+      {
+        id: "demo-call-1",
+        customer_name: "Riley",
+        customer_phone: "555-0303",
+        requested_service: "Fine-line tattoo consult",
+        preferred_staff_slug: "team-member-10",
+        preferred_time: "Saturday afternoon",
+        summary: "Call agent collected the consult request and told Riley the shop would follow up with timing options.",
+        transferred_to: "front desk",
+        created_at: "2026-06-02T19:00:00.000Z",
+      },
+    ],
+  });
   const identityChipLabel = dashboardModel.canManageAllCalendars ? "Owner Admin" : (dashboardModel.profileAvatar?.title ?? dashboardModel.sessionLabel);
   const featuredStaffCalendars = dashboardModel.visibleCalendars.filter(
     (calendar, index) =>
@@ -108,6 +143,66 @@ export default async function DashboardPage() {
             </p>
           </article>
         </div>
+      </section>
+
+      <section className="mx-auto grid max-w-7xl gap-6 px-5 py-10 lg:grid-cols-[1.2fr_0.8fr]">
+        <article className="neon-card rounded-[2rem] p-6" style={{ boxShadow: "0 0 70px #FFE45C22" }}>
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <SectionEyebrow color="#FFE45C">Lead inbox</SectionEyebrow>
+              <h2 className="brand-display text-4xl font-black uppercase">Bookings + call-agent transfers.</h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-white/60">
+                Public booking requests and worker-agent call handoffs land in one routed queue so Caitlin can see who needs a follow-up and which staff lane owns it.
+              </p>
+            </div>
+            <span className="rounded-full bg-yellow-200 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-black">{leadInbox.length} open</span>
+          </div>
+          <div className="mt-6 space-y-3">
+            {leadInbox.map((lead) => (
+              <div key={lead.id} className="rounded-3xl border border-white/10 bg-black/50 p-4">
+                <div className="flex flex-col justify-between gap-3 md:flex-row md:items-start">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-full bg-white px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.16em] text-black">{lead.source}</span>
+                      <span className="rounded-full border border-white/10 px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.16em] text-white/55">{lead.statusLabel}</span>
+                    </div>
+                    <h3 className="mt-3 text-xl font-black text-white">{lead.customerName}</h3>
+                    <p className="mt-1 text-sm text-white/55">{lead.contact}</p>
+                  </div>
+                  <div className="text-left md:text-right">
+                    <p className="text-sm font-black text-white">{lead.serviceLabel}</p>
+                    <p className="mt-1 text-xs font-black uppercase tracking-[0.18em] text-white/45">{lead.routedStaffName} · {lead.requestedFor}</p>
+                  </div>
+                </div>
+                <p className="mt-4 text-sm leading-6 text-white/62">{lead.summary}</p>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="neon-card rounded-[2rem] p-6" style={{ boxShadow: "0 0 70px #FF4FD822" }}>
+          <SectionEyebrow color="#FF4FD8">Profile controls</SectionEyebrow>
+          <h2 className="brand-display text-4xl font-black uppercase">Meet-me pages ready to manage.</h2>
+          <p className="mt-3 text-sm leading-6 text-white/60">
+            {profileEditorModel.canManageAllProfiles
+              ? "Owner/admin can update every staff profile. The mascot stays visible on the public site but is not an editable booking provider."
+              : "Staff accounts only get their own editable profile controls."}
+          </p>
+          <div className="mt-6 space-y-3">
+            {profileEditorModel.editableProfiles.slice(0, 4).map((profile) => (
+              <Link key={profile.slug} href={`/staff/${profile.slug}`} className="block rounded-3xl border border-white/10 bg-white/5 p-4 transition hover:border-white/30 hover:bg-white/10">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="truncate text-lg font-black text-white">{profile.name}</p>
+                    <p className="mt-1 text-xs font-black uppercase tracking-[0.18em] text-white/45">{profile.title}</p>
+                  </div>
+                  <span className="rounded-full bg-pink-300 px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.14em] text-black">Edit</span>
+                </div>
+                <p className="mt-3 line-clamp-2 text-sm leading-6 text-white/55">{profile.serviceNames.join(" · ")}</p>
+              </Link>
+            ))}
+          </div>
+        </article>
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-10">

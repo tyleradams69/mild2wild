@@ -42,7 +42,7 @@ describe("calendar access foundation", () => {
     );
 
     expect(model.profileAvatar).toEqual({
-      name: "Team Member 13",
+      name: "Caitlin",
       title: "Nail Artist",
       photoUrl: "/staff/team-member-13.jpg",
       accent: expect.any(String),

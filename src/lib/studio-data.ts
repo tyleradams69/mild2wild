@@ -220,7 +220,7 @@ export const staffMembers: StaffMember[] = staffSeed.map(({ index, categorySlug,
 
   return {
     slug: `team-member-${paddedIndex}`,
-    name: isMascot ? "Shop Dog Mascot" : `Team Member ${paddedIndex}`,
+    name: isMascot ? "Shop Dog Mascot" : index === 13 ? "Caitlin" : `Team Member ${paddedIndex}`,
     title: isMascot ? "Shop Mascot" : categoryTitles[categorySlug as ServiceCategorySlug],
     bio: isMascot ? mascotBio : categoryBio[categorySlug as ServiceCategorySlug],
     photoUrl: `/staff/team-member-${paddedIndex}.jpg`,
