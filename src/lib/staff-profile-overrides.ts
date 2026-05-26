@@ -22,7 +22,12 @@ export function mergeStaffProfileOverrides(staffMembers: StaffMember[], override
     const override = overrides[staff.slug];
     if (!override) return staff;
 
-    const socialLinks = staff.socialLinks.filter((link) => link.label !== "Instagram" && link.label !== "TikTok");
+    const socialLinks = staff.socialLinks.filter((link) => {
+      const label = link.label.toLowerCase();
+      if (override.instagramUrl && label.includes("instagram")) return false;
+      if (override.tiktokUrl && label.includes("tiktok")) return false;
+      return label !== "instagram" && label !== "tiktok";
+    });
     if (override.instagramUrl) socialLinks.push({ label: "Instagram", href: override.instagramUrl });
     if (override.tiktokUrl) socialLinks.push({ label: "TikTok", href: override.tiktokUrl });
 

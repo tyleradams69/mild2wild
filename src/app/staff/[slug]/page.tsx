@@ -47,11 +47,20 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
             </div>
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
-            {staff.socialLinks.map((link) => (
-              <a key={link.label} href={link.href} className="rounded-full border border-white/15 px-4 py-2 text-sm font-bold text-white/70 hover:text-white">
-                {link.label}
-              </a>
-            ))}
+            {staff.socialLinks.map((link) => {
+              const socialText = formatSocialLinkText(link.label);
+              return (
+                <a
+                  key={`${link.label}-${link.href}`}
+                  href={link.href}
+                  aria-label={link.label}
+                  className="inline-flex min-h-12 items-center gap-3 rounded-full border border-white/15 px-5 py-3 text-sm font-black text-white/70 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
+                >
+                  <SocialLinkIcon label={link.label} />
+                  {socialText ? <span>{socialText}</span> : null}
+                </a>
+              );
+            })}
           </div>
         </div>
 
@@ -123,5 +132,39 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
         </div>
       </section>
     </PageShell>
+  );
+}
+
+function formatSocialLinkText(label: string) {
+  const normalized = label.toLowerCase();
+  if (normalized === "instagram" || normalized === "tiktok") return "";
+  if (normalized === "instagram coming soon" || normalized === "tiktok coming soon") return "Coming soon";
+  return label;
+}
+
+function SocialLinkIcon({ label }: { label: string }) {
+  const normalized = label.toLowerCase();
+  if (normalized.includes("instagram")) return <InstagramLogo />;
+  if (normalized.includes("tiktok")) return <TikTokLogo />;
+  return null;
+}
+
+function InstagramLogo() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6 shrink-0" fill="none">
+      <rect x="3" y="3" width="18" height="18" rx="5.5" stroke="#FF4FB8" strokeWidth="2.2" />
+      <circle cx="12" cy="12" r="4.1" stroke="#FFD35A" strokeWidth="2.2" />
+      <circle cx="17.2" cy="6.8" r="1.35" fill="#8A5CFF" />
+    </svg>
+  );
+}
+
+function TikTokLogo() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6 shrink-0" fill="none">
+      <path d="M14.7 3v11.2a4.35 4.35 0 1 1-4.35-4.35c.35 0 .69.04 1.02.12v3.1a1.48 1.48 0 1 0 1.05 1.42V3h2.28Z" stroke="#25F4EE" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14.7 3c.43 2.55 1.95 4.16 4.5 4.48v3.07c-1.65-.04-3.12-.55-4.5-1.55" stroke="#FE2C55" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14.7 3v11.2a4.35 4.35 0 1 1-4.35-4.35c.35 0 .69.04 1.02.12v3.1a1.48 1.48 0 1 0 1.05 1.42V3h2.28Z" stroke="white" strokeWidth="1.15" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }

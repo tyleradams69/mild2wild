@@ -23,6 +23,7 @@ describe("staff profile overrides", () => {
     const merged = mergeStaffProfileOverrides(staffMembers, {
       "team-member-13": {
         name: "Caitlin",
+        title: "Owner / Nail Artist",
         bio: "Custom bio written in the dashboard.",
         instagramUrl: "https://instagram.com/caitlin.nails",
         tiktokUrl: "",
@@ -36,6 +37,7 @@ describe("staff profile overrides", () => {
       bio: "Custom bio written in the dashboard.",
     });
     expect(caitlin?.socialLinks.find((link) => link.label === "Instagram")?.href).toBe("https://instagram.com/caitlin.nails");
+    expect(caitlin?.socialLinks.map((link) => link.label)).not.toContain("Instagram coming soon");
     expect(merged.find((staff) => staff.slug === "team-member-10")?.name).toBe("Team Member 10");
   });
 
