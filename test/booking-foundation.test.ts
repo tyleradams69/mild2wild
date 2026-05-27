@@ -87,6 +87,8 @@ describe("booking foundation", () => {
     expect(buildAppointmentInsert(valid.value, { staffIdsBySlug, serviceIdsBySlug })).toEqual({
       staff_id: "staff-tattoo-id",
       service_id: "service-tattoo-consult-id",
+      service_name: "Tattoo Consultation",
+      source: "website",
       customer_name: "Maya Rose",
       customer_phone: "555-0101",
       customer_email: null,

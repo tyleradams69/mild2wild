@@ -15,6 +15,7 @@ export type ValidatedBookingRequest = {
   customerPhone: string | null;
   customerEmail: string | null;
   serviceSlug: string;
+  serviceName: string;
   staffSlug: string;
   startsAt: string;
   endsAt: string;
@@ -26,7 +27,7 @@ export type ValidatedBookingRequest = {
 type ValidationResult<T> = { ok: true; value: T } | { ok: false; errors: string[] };
 
 type BookingDataset = {
-  services: Pick<StudioService, "slug" | "durationMinutes">[];
+  services: Pick<StudioService, "slug" | "name" | "durationMinutes">[];
   staffMembers: Pick<StaffMember, "slug" | "serviceSlugs">[];
 };
 
@@ -110,6 +111,7 @@ export function validateBookingRequest(input: BookingRequestInput, dataset: Book
       customerPhone,
       customerEmail,
       serviceSlug,
+      serviceName: service.name,
       staffSlug,
       startsAt,
       endsAt: addMinutes(startsAt, service.durationMinutes),
@@ -164,6 +166,8 @@ export function buildAppointmentInsert(request: ValidatedBookingRequest, maps: I
   return {
     staff_id: staffId,
     service_id: serviceId,
+    service_name: request.serviceName,
+    source: "website" as const,
     customer_name: request.customerName,
     customer_phone: request.customerPhone,
     customer_email: request.customerEmail,
