@@ -165,13 +165,25 @@ body::after {
 
 .wavy-divider {
   position: relative;
-  height: 42px;
-  margin-block: 0.5rem;
-  background:
-    radial-gradient(50% 100% at 50% 0%, transparent 58%, currentColor 59% 68%, transparent 69%) 0 0 / 82px 42px repeat-x;
-  color: var(--paint-pink);
-  opacity: 0.95;
-  filter: drop-shadow(0 3px 0 var(--outline));
+  height: 34px;
+  margin-block: 0.5rem 1.25rem;
+  overflow: hidden;
+  background: transparent;
+}
+
+.wavy-divider::before {
+  content: "";
+  position: absolute;
+  left: -2rem;
+  right: -2rem;
+  top: 50%;
+  height: 18px;
+  translate: 0 -50%;
+  rotate: -0.8deg;
+  border: 3px solid var(--outline);
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff8bc8, #ffe26f, #79dfff, #b99cff, #95df68);
+  box-shadow: 0 5px 0 rgba(23, 19, 15, 0.9);
 }
 
 .paint-splash {
@@ -247,6 +259,47 @@ body::after {
     radial-gradient(circle at 86% 68%, rgba(121, 223, 255, 0.3), transparent 11rem),
     #1b1714;
   color: #fff7e8;
+}
+
+/* Legacy pages still use the old dark-theme Tailwind utilities. The new
+   mural system is light, so normalize public-page copy back to ink while
+   preserving intentionally dark form/image panels and the dark footer. */
+main [class*="text-white"] {
+  color: rgba(23, 19, 15, 0.72) !important;
+}
+
+main h1[class*="text-white"],
+main h2[class*="text-white"],
+main h3[class*="text-white"],
+main .brand-display[class*="text-white"] {
+  color: var(--ink) !important;
+}
+
+main [class*="border-white"] {
+  border-color: rgba(23, 19, 15, 0.18) !important;
+}
+
+main [class*="bg-white/5"],
+main [class*="bg-white/10"] {
+  background-color: rgba(255, 250, 240, 0.58) !important;
+}
+
+main [class*="bg-black"] [class*="text-white"],
+main input[class*="text-white"],
+main textarea[class*="text-white"],
+main select[class*="text-white"] {
+  color: #fff7e8 !important;
+}
+
+main input[class*="bg-black"],
+main textarea[class*="bg-black"],
+main select[class*="bg-black"] {
+  background-color: #17130f !important;
+  border-color: rgba(255, 247, 232, 0.22) !important;
+}
+
+.footer-mural [class*="text-white"] {
+  color: rgba(255, 247, 232, 0.78) !important;
 }
 
 @media (prefers-reduced-motion: no-preference) {
