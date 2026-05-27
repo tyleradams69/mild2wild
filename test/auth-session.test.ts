@@ -20,6 +20,15 @@ describe("dashboard auth session foundation", () => {
     expect(parseSignedDashboardSession(cookie, secret)?.role).toBe("owner");
   });
 
+  it("verifies sessions after the cookie layer decodes the payload", () => {
+    const cookie = createSignedDashboardSession(
+      { role: "owner", displayName: "Owner Admin", email: "owner@example.com", expiresAt: Date.now() + 60_000 },
+      secret,
+    );
+
+    expect(parseSignedDashboardSession(decodeURIComponent(cookie), secret)?.email).toBe("owner@example.com");
+  });
+
   it("rejects forged or expired dashboard sessions", () => {
     const cookie = createSignedDashboardSession(
       { role: "staff", staffSlug: "team-member-10", displayName: "Team Member 10", expiresAt: Date.now() + 60_000 },

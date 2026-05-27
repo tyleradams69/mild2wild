@@ -43,7 +43,7 @@ function safeEqual(left: string, right: string) {
 }
 
 function encodePayload(session: DashboardAuthSession) {
-  return encodeURIComponent(JSON.stringify(session));
+  return JSON.stringify(session);
 }
 
 function decodePayload(payload: string): DashboardAuthSession | null {

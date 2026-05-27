@@ -430,8 +430,12 @@ export default async function DashboardPage() {
                     </span>
                     <h3 className="brand-display mt-5 text-2xl font-black uppercase">{lane.staffName}</h3>
                     <p className="mt-1 text-xs font-black uppercase tracking-[0.2em] text-white/45">{lane.staffTitle}</p>
-                    <Link href={lane.detailHref} className="mt-4 inline-flex rounded-full border border-white/15 px-4 py-2 text-[0.65rem] font-black uppercase tracking-[0.16em] text-white/70 transition hover:bg-white hover:text-black">
-                      Open calendar
+                    <Link
+                      href={lane.detailHref}
+                      className="mt-4 inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-black shadow-lg transition hover:scale-[1.02] hover:bg-white sm:w-auto"
+                      style={{ background: lane.calendarColor, boxShadow: `0 0 30px ${lane.calendarColor}55` }}
+                    >
+                      Open calendar →
                     </Link>
                   </div>
                   <span className="text-xl">{lane.canEdit ? "✦" : "锁"}</span>
