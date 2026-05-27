@@ -5,7 +5,7 @@ const siteUrl = "https://mild2wild.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  const staticRoutes = ["", "/book", "/staff", "/tour", "/products", "/legal", "/login"];
+  const staticRoutes = ["", "/book", "/staff", "/tour", "/products", "/dog-clicker", "/legal", "/login"];
   const serviceRoutes = serviceCategories.map((category) => `/services/${category.slug}`);
   const staffRoutes = staffMembers.map((staff) => `/staff/${staff.slug}`);
 
