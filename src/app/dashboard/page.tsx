@@ -480,12 +480,15 @@ export default async function DashboardPage() {
                     <p className="text-xs font-black uppercase tracking-[0.18em] text-white/50">Block time</p>
                     <div className="mt-3 grid gap-3">
                       <input name="startsAt" type="datetime-local" className="min-w-0 rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none focus:border-cyan-300" required />
-                      <select name="durationMinutes" defaultValue="60" className="min-w-0 rounded-2xl border border-white/10 bg-black py-2 pl-3 pr-10 text-sm text-white outline-none focus:border-cyan-300">
-                        <option value="30">30m</option>
-                        <option value="60">60m</option>
-                        <option value="90">90m</option>
-                        <option value="120">120m</option>
-                      </select>
+                      <span className="relative min-w-0">
+                        <select name="durationMinutes" defaultValue="60" className="w-full min-w-0 appearance-none rounded-2xl border border-white/10 bg-black py-2 pl-3 pr-12 text-sm text-white outline-none focus:border-cyan-300">
+                          <option value="30">30m</option>
+                          <option value="60">60m</option>
+                          <option value="90">90m</option>
+                          <option value="120">120m</option>
+                        </select>
+                        <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-lg leading-none text-white/90">⌄</span>
+                      </span>
                     </div>
                     <input name="notes" placeholder="Reason, e.g. lunch, consult hold, time off" className="mt-3 w-full min-w-0 rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-cyan-300" />
                     <button type="submit" className="mt-3 rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-black transition hover:bg-cyan-200">Add block</button>
@@ -511,11 +514,14 @@ export default async function DashboardPage() {
                         <form action={updateAppointmentAction} className="mt-4 min-w-0 rounded-2xl border border-white/10 bg-white/5 p-3">
                           <input type="hidden" name="appointmentId" value={appointment.id} />
                           <div className="grid min-w-0 gap-3">
-                            <select name="status" defaultValue={appointment.status} className="min-w-0 rounded-2xl border border-white/10 bg-black py-2 pl-3 pr-10 text-sm text-white outline-none focus:border-pink-300">
-                              {calendarActionStatuses.map((status) => (
-                                <option key={status} value={status}>{status.replace(/_/g, " ")}</option>
-                              ))}
-                            </select>
+                            <span className="relative min-w-0">
+                              <select name="status" defaultValue={appointment.status} className="w-full min-w-0 appearance-none rounded-2xl border border-white/10 bg-black py-2 pl-3 pr-12 text-sm text-white outline-none focus:border-pink-300">
+                                {calendarActionStatuses.map((status) => (
+                                  <option key={status} value={status}>{status.replace(/_/g, " ")}</option>
+                                ))}
+                              </select>
+                              <span className="pointer-events-none absolute right-5 top-1/2 -translate-y-1/2 text-lg leading-none text-white/90">⌄</span>
+                            </span>
                             <input name="internalNotes" defaultValue={appointment.internalNotes ?? ""} placeholder="Internal note" className="min-w-0 rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-pink-300" />
                           </div>
                           <button type="submit" className="mt-3 rounded-full bg-pink-300 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-black transition hover:bg-white">Save update</button>
