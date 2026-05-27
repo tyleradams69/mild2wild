@@ -54,6 +54,7 @@ export function SiteHeader() {
     ["Staff", "/staff"],
     ["Tour", "/tour"],
     ["Products", "/products"],
+    ["Dog Game", "/dog-clicker"],
     ["Book", "/book"],
     ["Login", "/login"],
   ];
@@ -70,7 +71,7 @@ export function SiteHeader() {
               key={href}
               href={href}
               className="rounded-full border-2 border-black bg-white/70 px-3 py-2 shadow-[3px_4px_0_#17130f] transition hover:-translate-y-0.5 hover:text-black"
-              style={{ background: ["#ffcae6", "#c7f2ff", "#fff0a3", "#d5c4ff", "#caff9b", "#ffffff"][index] }}
+              style={{ background: ["#ffcae6", "#c7f2ff", "#fff0a3", "#d5c4ff", "#ffd7a8", "#caff9b", "#ffffff"][index] }}
             >
               {label}
             </Link>
