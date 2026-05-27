@@ -64,7 +64,7 @@ describe("Supabase dashboard auth", () => {
     });
 
     const result = await authenticateDashboardUser(
-      { email: ownerAdminProfile.email.toUpperCase(), password: "temporary-owner-password" },
+      { email: ownerAdminProfile.email.toUpperCase(), password: " temporary-owner-password " },
       { ...env, HERMES_DASHBOARD_OWNER_PASSWORD: "temporary-owner-password" },
       fetcher,
       1_000,
@@ -90,5 +90,18 @@ describe("Supabase dashboard auth", () => {
         fetcher,
       ),
     ).resolves.toEqual({ ok: false, error: "invalid_credentials" });
+  });
+
+  it("shows invalid credentials instead of not configured when the fallback password exists but Supabase env is missing", async () => {
+    const fetcher = vi.fn();
+
+    await expect(
+      authenticateDashboardUser(
+        { email: ownerAdminProfile.email, password: "wrong" },
+        { HERMES_DASHBOARD_OWNER_PASSWORD: "temporary-owner-password" },
+        fetcher,
+      ),
+    ).resolves.toEqual({ ok: false, error: "invalid_credentials" });
+    expect(fetcher).not.toHaveBeenCalled();
   });
 });

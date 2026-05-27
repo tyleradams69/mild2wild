@@ -66,6 +66,10 @@ function getFallbackOwnerPassword(env: SupabaseAuthEnv) {
   return readServerEnvValue(env.HERMES_DASHBOARD_OWNER_PASSWORD);
 }
 
+function hasFallbackOwnerPassword(env: SupabaseAuthEnv) {
+  return Boolean(getFallbackOwnerPassword(env));
+}
+
 function safeStringEqual(left: string, right: string) {
   const leftBuffer = Buffer.from(left);
   const rightBuffer = Buffer.from(right);
@@ -75,9 +79,9 @@ function safeStringEqual(left: string, right: string) {
 function fallbackOwnerSession(credentials: LoginCredentials, env: SupabaseAuthEnv, now: number): DashboardAuthSession | null {
   const fallbackPassword = getFallbackOwnerPassword(env);
   const email = typeof credentials.email === "string" ? credentials.email.trim().toLowerCase() : "";
-  const password = typeof credentials.password === "string" ? credentials.password : "";
+  const password = typeof credentials.password === "string" ? credentials.password.trim() : "";
 
-  if (!fallbackPassword || email !== ownerAdminProfile.email.toLowerCase() || !safeStringEqual(password, fallbackPassword)) {
+  if (!fallbackPassword || email !== ownerAdminProfile.email.toLowerCase() || !safeStringEqual(password, fallbackPassword.trim())) {
     return null;
   }
 
@@ -146,7 +150,9 @@ export async function authenticateDashboardUser(
   const fallbackSession = fallbackOwnerSession(credentials, env, now);
 
   if (!getSupabaseUrl(env) || !getSupabaseAnonKey(env)) {
-    return fallbackSession ? { ok: true, session: fallbackSession } : { ok: false, error: "supabase_not_configured" };
+    return fallbackSession
+      ? { ok: true, session: fallbackSession }
+      : { ok: false, error: hasFallbackOwnerPassword(env) ? "invalid_credentials" : "supabase_not_configured" };
   }
 
   const request = buildSupabasePasswordGrantRequest(env, email, password);
