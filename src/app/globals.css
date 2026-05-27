@@ -1,15 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050505;
-  --foreground: #ffffff;
-  --hot-pink: #f06bd6;
-  --cyan: #4ddce5;
-  --lime: #79d94d;
-  --orange: #ff7a1a;
-  --yellow: #ffe45c;
-  --red: #ff3434;
-  --purple: #a95cff;
+  --background: #f6f0e4;
+  --foreground: #17130f;
+  --ink: #17130f;
+  --paper: #fff7e8;
+  --wall: #dad5c9;
+  --soft-shadow: rgba(40, 26, 20, 0.18);
+  --hot-pink: #ff8bc8;
+  --paint-pink: #f6a2cf;
+  --cyan: #79dfff;
+  --paint-blue: #5ec8ff;
+  --lime: #95df68;
+  --orange: #ffb347;
+  --yellow: #ffe26f;
+  --red: #f15050;
+  --purple: #b99cff;
+  --lavender: #b6b8ff;
+  --outline: #241f1a;
 }
 
 @theme inline {
@@ -30,60 +38,287 @@ html {
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at 20% 10%, rgba(240, 107, 214, 0.22), transparent 26rem),
-    radial-gradient(circle at 85% 18%, rgba(77, 220, 229, 0.2), transparent 22rem),
-    radial-gradient(circle at 50% 72%, rgba(255, 52, 52, 0.16), transparent 28rem),
-    #050505;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at 16% 12%, rgba(182, 184, 255, 0.42), transparent 9rem),
+    radial-gradient(circle at 86% 8%, rgba(255, 139, 200, 0.34), transparent 12rem),
+    radial-gradient(circle at 82% 64%, rgba(121, 223, 255, 0.26), transparent 14rem),
+    linear-gradient(135deg, rgba(255, 247, 232, 0.94), rgba(218, 213, 201, 0.96));
+  min-height: 100vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(23, 19, 15, 0.035) 1px, transparent 1px),
+    linear-gradient(rgba(23, 19, 15, 0.026) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.46;
+  background-image:
+    radial-gradient(circle at 8% 72%, rgba(255, 226, 111, 0.72) 0 5rem, transparent 5.1rem),
+    radial-gradient(circle at 100% 28%, rgba(246, 162, 207, 0.55) 0 7rem, transparent 7.1rem),
+    radial-gradient(circle at 70% 96%, rgba(149, 223, 104, 0.42) 0 6rem, transparent 6.1rem);
+  filter: blur(1px);
 }
 
 ::selection {
   background: var(--hot-pink);
-  color: black;
+  color: var(--ink);
 }
 
 .brand-display {
-  font-family: var(--font-display), Georgia, serif;
-  letter-spacing: 0.08em;
+  font-family: var(--font-display), Impact, fantasy;
+  font-weight: 400;
+  letter-spacing: 0.035em;
+  line-height: 0.9;
+  text-shadow: 0.035em 0.045em 0 rgba(23, 19, 15, 0.14);
 }
 
-.neon-card {
-  background: rgba(8, 8, 10, 0.82);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 24px 90px rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(16px);
+.marker-script {
+  font-family: var(--font-marker), var(--font-geist-sans), sans-serif;
+}
+
+.paint-outline {
+  text-shadow:
+    3px 3px 0 var(--outline),
+    -1px -1px 0 var(--outline),
+    1px -1px 0 var(--outline),
+    -1px 1px 0 var(--outline),
+    0 10px 0 rgba(23, 19, 15, 0.12);
+}
+
+.neon-card,
+.paint-card {
+  position: relative;
+  color: var(--ink);
+  background:
+    linear-gradient(145deg, rgba(255, 253, 245, 0.9), rgba(255, 245, 225, 0.76)),
+    radial-gradient(circle at 20% 0%, rgba(255, 139, 200, 0.16), transparent 16rem);
+  border: 3px solid var(--outline);
+  box-shadow: 8px 9px 0 rgba(23, 19, 15, 0.88), 0 26px 60px var(--soft-shadow);
+  backdrop-filter: blur(8px);
+}
+
+.neon-card::before,
+.paint-card::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border: 1px dashed rgba(23, 19, 15, 0.16);
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 .scrollwork {
   position: relative;
+  overflow: hidden;
 }
 
 .scrollwork::before,
 .scrollwork::after {
-  content: "✦ ✧ ✦";
+  content: "";
   position: absolute;
-  left: 50%;
-  translate: -50% 0;
-  color: var(--cyan);
-  font-size: 1rem;
-  letter-spacing: 1.3rem;
-  opacity: 0.78;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.scrollwork::before {
-  top: -1.3rem;
-}
-
+.scrollwork::before,
 .scrollwork::after {
-  bottom: -1.3rem;
-  color: var(--hot-pink);
+  display: none;
+}
+
+.scrollwork > * {
+  position: relative;
+  z-index: 1;
 }
 
 .wavy-divider {
-  height: 28px;
+  position: relative;
+  height: 34px;
+  margin-block: 0.5rem 1.25rem;
+  overflow: hidden;
+  background: transparent;
+}
+
+.wavy-divider::before {
+  content: "";
+  position: absolute;
+  left: -2rem;
+  right: -2rem;
+  top: 50%;
+  height: 18px;
+  translate: 0 -50%;
+  rotate: -0.8deg;
+  border: 3px solid var(--outline);
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ff8bc8, #ffe26f, #79dfff, #b99cff, #95df68);
+  box-shadow: 0 5px 0 rgba(23, 19, 15, 0.9);
+}
+
+.paint-splat-img {
+  z-index: 0;
+  pointer-events: none;
+  overflow: visible;
+  height: auto;
+  max-width: none;
+  object-fit: contain;
+}
+
+.paint-splash {
+  position: absolute;
+  z-index: 0;
+  border: 4px solid var(--outline);
+  filter: drop-shadow(8px 8px 0 rgba(23, 19, 15, 0.2));
+  pointer-events: none;
+}
+
+.paint-splash.splash-yellow {
+  width: 15rem;
+  height: 13rem;
+  background: var(--yellow);
+  clip-path: polygon(36% 4%, 53% 20%, 81% 4%, 74% 32%, 100% 42%, 73% 53%, 88% 84%, 58% 72%, 42% 100%, 35% 70%, 5% 88%, 24% 57%, 0 39%, 29% 32%);
+}
+
+.paint-splash.splash-green {
+  width: 13rem;
+  height: 12rem;
+  background: var(--lime);
+  clip-path: polygon(42% 0, 52% 28%, 76% 7%, 70% 35%, 100% 33%, 75% 54%, 90% 79%, 60% 68%, 48% 100%, 37% 70%, 8% 87%, 25% 58%, 0 45%, 29% 35%, 19% 12%);
+}
+
+.paint-splash.splash-blue {
+  width: 14rem;
+  height: 12rem;
+  background: var(--paint-blue);
+  clip-path: polygon(42% 0, 60% 23%, 89% 7%, 74% 34%, 100% 50%, 70% 54%, 84% 87%, 55% 72%, 38% 100%, 31% 70%, 4% 82%, 23% 54%, 0 36%, 31% 34%, 18% 9%);
+}
+
+.shop-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--outline);
+  border-radius: 999px;
+  background: #fffaf0;
+  color: var(--ink);
+  box-shadow: 4px 5px 0 var(--outline);
+}
+
+.service-sticker {
+  border: 3px solid var(--outline) !important;
+  color: var(--ink) !important;
+  box-shadow: 4px 5px 0 var(--outline);
+}
+
+.drip-type {
+  position: relative;
+  display: inline-block;
+}
+
+.drip-type::after {
+  content: "";
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  bottom: -0.24em;
+  height: 0.22em;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow:
+    1.5em 0.12em 0 -0.03em currentColor,
+    4.4em 0.18em 0 -0.06em currentColor,
+    7.2em 0.1em 0 -0.04em currentColor;
+  opacity: 0.85;
+}
+
+.footer-mural {
   background:
-    radial-gradient(50% 100% at 50% 0%, transparent 62%, currentColor 63% 68%, transparent 69%) 0 0 / 64px 28px repeat-x;
-  opacity: 0.75;
+    radial-gradient(circle at 16% 28%, rgba(255, 139, 200, 0.34), transparent 12rem),
+    radial-gradient(circle at 86% 68%, rgba(121, 223, 255, 0.3), transparent 11rem),
+    #1b1714;
+  color: #fff7e8;
+}
+
+/* Legacy pages still use the old dark-theme Tailwind utilities. The new
+   mural system is light, so normalize public-page copy back to ink while
+   preserving intentionally dark form/image panels and the dark footer. */
+main [class*="text-white"] {
+  color: rgba(23, 19, 15, 0.72) !important;
+}
+
+main h1[class*="text-white"],
+main h2[class*="text-white"],
+main h3[class*="text-white"],
+main .brand-display[class*="text-white"] {
+  color: var(--ink) !important;
+}
+
+main [class*="border-white"] {
+  border-color: rgba(23, 19, 15, 0.18) !important;
+}
+
+main [class*="bg-white/5"],
+main [class*="bg-white/10"] {
+  background-color: rgba(255, 250, 240, 0.58) !important;
+}
+
+main [class*="bg-black"] [class*="text-white"],
+main input[class*="text-white"],
+main textarea[class*="text-white"],
+main select[class*="text-white"] {
+  color: #fff7e8 !important;
+}
+
+main input[class*="bg-black"],
+main textarea[class*="bg-black"],
+main select[class*="bg-black"] {
+  background-color: #17130f !important;
+  border-color: rgba(255, 247, 232, 0.22) !important;
+}
+
+.footer-mural [class*="text-white"] {
+  color: rgba(255, 247, 232, 0.78) !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .paint-splash,
+  .scrollwork::before,
+  .scrollwork::after {
+    transition: transform 220ms ease;
+  }
+
+  .group:hover .paint-splash,
+  .scrollwork:hover::before,
+  .scrollwork:hover::after {
+    transform: translateY(-4px) rotate(1deg);
+  }
+}
+
+@media (max-width: 760px) {
+  .paint-outline {
+    text-shadow:
+      2px 2px 0 var(--outline),
+      -1px -1px 0 var(--outline),
+      1px -1px 0 var(--outline),
+      -1px 1px 0 var(--outline);
+  }
+
+  .neon-card,
+  .paint-card {
+    box-shadow: 5px 6px 0 rgba(23, 19, 15, 0.9), 0 18px 34px var(--soft-shadow);
+  }
 }
