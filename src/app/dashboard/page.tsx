@@ -480,7 +480,7 @@ export default async function DashboardPage() {
                     <p className="text-xs font-black uppercase tracking-[0.18em] text-white/50">Block time</p>
                     <div className="mt-3 grid gap-3">
                       <input name="startsAt" type="datetime-local" className="min-w-0 rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none focus:border-cyan-300" required />
-                      <select name="durationMinutes" defaultValue="60" className="min-w-0 rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none focus:border-cyan-300">
+                      <select name="durationMinutes" defaultValue="60" className="min-w-0 rounded-2xl border border-white/10 bg-black py-2 pl-3 pr-10 text-sm text-white outline-none focus:border-cyan-300">
                         <option value="30">30m</option>
                         <option value="60">60m</option>
                         <option value="90">90m</option>
@@ -511,7 +511,7 @@ export default async function DashboardPage() {
                         <form action={updateAppointmentAction} className="mt-4 min-w-0 rounded-2xl border border-white/10 bg-white/5 p-3">
                           <input type="hidden" name="appointmentId" value={appointment.id} />
                           <div className="grid min-w-0 gap-3">
-                            <select name="status" defaultValue={appointment.status} className="min-w-0 rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none focus:border-pink-300">
+                            <select name="status" defaultValue={appointment.status} className="min-w-0 rounded-2xl border border-white/10 bg-black py-2 pl-3 pr-10 text-sm text-white outline-none focus:border-pink-300">
                               {calendarActionStatuses.map((status) => (
                                 <option key={status} value={status}>{status.replace(/_/g, " ")}</option>
                               ))}
