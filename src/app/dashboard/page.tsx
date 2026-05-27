@@ -235,11 +235,19 @@ export default async function DashboardPage() {
   const primaryCalendarLabel = dashboardModel.canManageAllCalendars ? "Open Caitlin's calendar" : "Open my calendar";
   return (
     <PageShell>
+      <div className="fixed inset-x-4 bottom-5 z-50 mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-3 rounded-[2rem] border border-cyan-200/40 bg-black/90 p-3 shadow-2xl shadow-cyan-400/25 backdrop-blur md:bottom-8">
+        <Link href="#calendar-board" className="rounded-full bg-cyan-200 px-5 py-3 text-xs font-black uppercase tracking-[0.16em] text-black transition hover:bg-white sm:text-sm">
+          Open all calendars ↓
+        </Link>
+        <Link href={primaryCalendarHref} className="rounded-full bg-purple-300 px-5 py-3 text-xs font-black uppercase tracking-[0.16em] text-black transition hover:bg-white sm:text-sm">
+          {primaryCalendarLabel} →
+        </Link>
+      </div>
       <section className="mx-auto max-w-7xl px-5 py-16">
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-start">
           <div>
             <SectionEyebrow color="#A95CFF">Admin + staff portal</SectionEyebrow>
-            <h1 className="brand-display max-w-5xl text-5xl font-black uppercase md:text-7xl">Role-based calendars are live.</h1>
+            <h1 className="brand-display max-w-5xl text-5xl font-black uppercase md:text-7xl">Calendar buttons are live.</h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
               Signed sessions now separate owner/admin access from individual employee logins. The owner can manage every calendar; employees can only edit their own schedule lane.
             </p>
@@ -298,6 +306,14 @@ export default async function DashboardPage() {
                 ? "Can manage all calendars, staff profiles, services, products, and call-agent leads."
                 : "Can view the portal but only edit their own profile, availability, and bookings."}
             </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link href="#calendar-board" className="rounded-full bg-cyan-200 px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-black transition hover:bg-white">
+                Open all calendars ↓
+              </Link>
+              <Link href={primaryCalendarHref} className="rounded-full border border-purple-200/45 bg-purple-300 px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-black transition hover:bg-white">
+                {primaryCalendarLabel} →
+              </Link>
+            </div>
             <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {session.email ? <Metric label="Admin email" value={session.email} wide /> : null}
               <Metric label="Visible calendars" value={dashboardModel.visibleCalendars.length.toString()} />
