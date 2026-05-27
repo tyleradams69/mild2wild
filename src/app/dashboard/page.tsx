@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { PageShell, SectionEyebrow } from "@/components/site";
 import { dashboardSessionCookieName, parseSignedDashboardSession } from "@/lib/auth-session";
 import { buildCalendarBoard, calendarActionStatuses, normalizeCalendarStatus, type CalendarBoardAppointment } from "@/lib/calendar-board";
@@ -444,11 +445,12 @@ export default async function DashboardPage() {
             return (
               <article
                 key={lane.staffSlug}
-                className="flex max-h-[42rem] min-w-0 flex-col rounded-[1.8rem] border bg-black/70 p-5"
+                className="goo-calendar-panel flex max-h-[42rem] min-w-0 flex-col rounded-[1.8rem] border bg-black/70 p-5"
                 style={{
+                  "--lane-color": lane.calendarColor,
                   borderColor: lane.canEdit ? `${lane.calendarColor}88` : "rgba(255,255,255,0.1)",
                   boxShadow: lane.canEdit ? `0 0 55px ${lane.calendarColor}24` : "none",
-                }}
+                } as CSSProperties}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
