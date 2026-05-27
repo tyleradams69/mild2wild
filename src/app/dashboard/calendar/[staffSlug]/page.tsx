@@ -182,7 +182,7 @@ export default async function StaffCalendarPage({ params }: { params: Promise<{ 
                         <div
                           key={event.appointment.id}
                           className={`absolute left-3 right-3 overflow-hidden rounded-2xl border p-4 shadow-2xl md:left-5 md:right-5 ${calendarEventClassName(event)}`}
-                          style={{ top: `${event.topRem}rem`, minHeight: `${event.heightRem}rem` }}
+                          style={{ top: `${event.topRem}rem`, height: `${event.heightRem}rem` }}
                         >
                           <div className="flex flex-col justify-between gap-3 md:flex-row md:items-start">
                             <div className="min-w-0">
