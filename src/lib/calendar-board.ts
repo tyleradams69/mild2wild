@@ -45,6 +45,42 @@ export type CalendarBoard = {
   emptyState: string;
 };
 
+export type CalendarDaySlot = {
+  hour: number;
+  label: string;
+};
+
+export type CalendarDayEventTone = "confirmed" | "requested" | "blocked" | "cancelled" | "completed";
+
+export type CalendarDayEvent = {
+  appointment: CalendarBoardCard;
+  startLabel: string;
+  endLabel: string;
+  durationLabel: string;
+  offsetMinutes: number;
+  durationMinutes: number;
+  topRem: number;
+  heightRem: number;
+  tone: CalendarDayEventTone;
+};
+
+export type CalendarDayGroup = {
+  dateKey: string;
+  heading: string;
+  subheading: string;
+  slots: CalendarDaySlot[];
+  events: CalendarDayEvent[];
+  startsAtHour: number;
+  endsAtHour: number;
+  heightRem: number;
+};
+
+export type CalendarDayView = {
+  days: CalendarDayGroup[];
+};
+
+const timelineHourHeightRem = 5.25;
+
 export function normalizeCalendarStatus(value: unknown): CalendarActionStatus | null {
   if (typeof value !== "string") return null;
   const normalized = value.trim().toLowerCase().replace(/[-\s]+/g, "_");
@@ -111,6 +147,65 @@ export function buildCalendarBoard({
   };
 }
 
+export function buildCalendarDayView(appointments: CalendarBoardCard[]): CalendarDayView {
+  const grouped = new Map<string, CalendarBoardCard[]>();
+
+  appointments
+    .slice()
+    .sort((left, right) => new Date(left.startsAt).getTime() - new Date(right.startsAt).getTime())
+    .forEach((appointment) => {
+      const key = dateKeyInNewYork(appointment.startsAt);
+      const existing = grouped.get(key) ?? [];
+      grouped.set(key, [...existing, appointment]);
+    });
+
+  const days = Array.from(grouped.entries()).map(([dateKey, dayAppointments]) => {
+    const startHours = dayAppointments.map((appointment) => partsInNewYork(appointment.startsAt).hour);
+    const endHours = dayAppointments.map((appointment) => {
+      const parts = partsInNewYork(appointment.endsAt);
+      return parts.minute > 0 ? parts.hour + 1 : parts.hour;
+    });
+    const startsAtHour = Math.max(8, Math.min(...startHours) - 1);
+    const endsAtHour = Math.min(21, Math.max(18, ...endHours) + 1);
+    const slots = Array.from({ length: endsAtHour - startsAtHour + 1 }, (_, index) => {
+      const hour = startsAtHour + index;
+      return { hour, label: formatHourLabel(hour) };
+    });
+    const events = dayAppointments.map((appointment) => {
+      const start = partsInNewYork(appointment.startsAt);
+      const end = partsInNewYork(appointment.endsAt);
+      const startMinutes = start.hour * 60 + start.minute;
+      const endMinutes = end.hour * 60 + end.minute;
+      const offsetMinutes = Math.max(0, startMinutes - startsAtHour * 60);
+      const durationMinutes = Math.max(15, endMinutes - startMinutes);
+      return {
+        appointment,
+        startLabel: formatTime(appointment.startsAt),
+        endLabel: formatTime(appointment.endsAt),
+        durationLabel: `${durationMinutes}m`,
+        offsetMinutes,
+        durationMinutes,
+        topRem: (offsetMinutes / 60) * timelineHourHeightRem,
+        heightRem: Math.max(3.5, (durationMinutes / 60) * timelineHourHeightRem),
+        tone: dayEventTone(appointment.status),
+      };
+    });
+
+    return {
+      dateKey,
+      heading: formatDayHeading(dayAppointments[0]?.startsAt ?? dateKey),
+      subheading: `${dayAppointments.length} ${dayAppointments.length === 1 ? "appointment" : "appointments"}`,
+      slots,
+      events,
+      startsAtHour,
+      endsAtHour,
+      heightRem: (endsAtHour - startsAtHour) * timelineHourHeightRem,
+    };
+  });
+
+  return { days };
+}
+
 function buildCalendarCard(appointment: CalendarBoardAppointment, canEdit: boolean): CalendarBoardCard {
   return {
     ...appointment,
@@ -143,6 +238,56 @@ function toneForStatus(value: string) {
   if (normalized === "completed") return "bg-cyan-200 text-black";
   if (normalized === "cancelled") return "bg-white/15 text-white/55";
   return "bg-yellow-200 text-black";
+}
+
+function dayEventTone(value: string): CalendarDayEventTone {
+  const normalized = value.trim().toLowerCase().replace(/[-\s]+/g, "_");
+  if (normalized === "confirmed") return "confirmed";
+  if (normalized === "completed") return "completed";
+  if (normalized === "cancelled" || normalized === "no_show") return "cancelled";
+  if (normalized === "blocked") return "blocked";
+  return "requested";
+}
+
+function partsInNewYork(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return { year: 0, month: 1, day: 1, hour: 8, minute: 0 };
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(date);
+  const get = (type: string) => Number(parts.find((part) => part.type === type)?.value ?? 0);
+  const rawHour = get("hour");
+  return {
+    year: get("year"),
+    month: get("month"),
+    day: get("day"),
+    hour: rawHour === 24 ? 0 : rawHour,
+    minute: get("minute"),
+  };
+}
+
+function dateKeyInNewYork(value: string) {
+  const parts = partsInNewYork(value);
+  return `${parts.year}-${String(parts.month).padStart(2, "0")}-${String(parts.day).padStart(2, "0")}`;
+}
+
+function formatDayHeading(value: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Date TBD";
+  return new Intl.DateTimeFormat("en-US", { weekday: "long", month: "short", day: "numeric", timeZone: "America/New_York" }).format(date);
+}
+
+function formatHourLabel(hour: number) {
+  if (hour === 0) return "12 AM";
+  if (hour < 12) return `${hour} AM`;
+  if (hour === 12) return "12 PM";
+  return `${hour - 12} PM`;
 }
 
 function formatDate(value: string) {

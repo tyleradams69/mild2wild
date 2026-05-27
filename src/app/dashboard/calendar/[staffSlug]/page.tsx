@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { PageShell, SectionEyebrow } from "@/components/site";
 import { dashboardSessionCookieName, parseSignedDashboardSession } from "@/lib/auth-session";
-import { buildCalendarBoard, type CalendarBoardAppointment } from "@/lib/calendar-board";
+import { buildCalendarBoard, buildCalendarDayView, type CalendarDayEvent, type CalendarBoardAppointment } from "@/lib/calendar-board";
 import { canEditOwnedAppointment } from "@/lib/owned-calendar-system";
 import { mergeStaffProfileOverrides, readStaffProfileOverrides } from "@/lib/staff-profile-overrides";
 import { serviceCategories, staffMembers } from "@/lib/studio-data";
@@ -117,6 +117,7 @@ export default async function StaffCalendarPage({ params }: { params: Promise<{ 
 
   const board = buildCalendarBoard({ session, staffMembers: mergedStaffMembers, appointments: await loadCalendarAppointments() });
   const lane = board.visibleLanes.find((item) => item.staffSlug === staffSlug);
+  const dayView = buildCalendarDayView(lane?.appointments ?? []);
   const category = serviceCategories.find((item) => staff.serviceCategorySlugs.includes(item.slug));
 
   return (
@@ -139,30 +140,86 @@ export default async function StaffCalendarPage({ params }: { params: Promise<{ 
           </span>
         </div>
 
-        <article className="mt-8 rounded-[2rem] border bg-black/70 p-6" style={{ borderColor: `${staff.calendarColor}88`, boxShadow: `0 0 65px ${staff.calendarColor}22` }}>
-          <p className="text-xs font-black uppercase tracking-[0.2em]" style={{ color: category?.accent ?? staff.calendarColor }}>
-            {category?.name ?? "Calendar"}
-          </p>
-          <div className="mt-5 space-y-4">
-            {!lane || lane.appointments.length === 0 ? (
-              <div className="rounded-3xl border border-dashed border-white/15 bg-black/40 p-8 text-white/60">No appointments or blocked time are on this staff calendar yet.</div>
-            ) : lane.appointments.map((appointment) => (
-              <div key={appointment.id} className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className={`rounded-full px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.16em] ${appointment.statusTone}`}>{appointment.statusLabel}</span>
-                  <span className="rounded-full border border-white/10 px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.16em] text-white/55">{appointment.source}</span>
-                </div>
-                <h2 className="mt-4 text-2xl font-black text-white">{appointment.clientName}</h2>
-                <p className="mt-1 text-white/60">{appointment.serviceName}</p>
-                <p className="mt-4 text-sm font-black text-white">{appointment.dateLabel} · {appointment.timeRange}</p>
-                <p className="mt-1 text-sm text-white/45">{appointment.contactLabel}</p>
-                {appointment.notes ? <p className="mt-4 text-sm leading-6 text-white/65">{appointment.notes}</p> : null}
-                {appointment.internalNotes ? <p className="mt-3 rounded-2xl border border-purple-200/20 bg-purple-200/10 p-4 text-sm leading-6 text-white/70">Internal note: {appointment.internalNotes}</p> : null}
-              </div>
-            ))}
+        <article className="mt-8 overflow-hidden rounded-[2rem] border bg-black/70" style={{ borderColor: `${staff.calendarColor}88`, boxShadow: `0 0 65px ${staff.calendarColor}22` }}>
+          <div className="flex flex-col justify-between gap-4 border-b border-white/10 p-6 md:flex-row md:items-end">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.2em]" style={{ color: category?.accent ?? staff.calendarColor }}>
+                {category?.name ?? "Calendar"} schedule
+              </p>
+              <h2 className="brand-display mt-2 text-3xl font-black uppercase text-white md:text-5xl">Day calendar</h2>
+            </div>
+            <p className="max-w-xl text-sm leading-6 text-white/55">
+              Appointments are plotted by time so the lane reads like a real calendar instead of a stacked list.
+            </p>
           </div>
+
+          {!lane || lane.appointments.length === 0 ? (
+            <div className="m-6 rounded-3xl border border-dashed border-white/15 bg-black/40 p-8 text-white/60">No appointments or blocked time are on this staff calendar yet.</div>
+          ) : (
+            <div className="space-y-8 p-4 md:p-6">
+              {dayView.days.map((day) => (
+                <section key={day.dateKey} className="overflow-hidden rounded-[1.7rem] border border-white/10 bg-white/[0.03]">
+                  <div className="flex flex-col justify-between gap-2 border-b border-white/10 bg-white/[0.04] px-5 py-4 md:flex-row md:items-center">
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-[0.22em] text-white/40">{day.dateKey}</p>
+                      <h3 className="brand-display text-3xl font-black uppercase text-white">{day.heading}</h3>
+                    </div>
+                    <span className="rounded-full px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-black" style={{ background: staff.calendarColor }}>
+                      {day.subheading}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-[4.5rem_1fr] md:grid-cols-[6rem_1fr]">
+                    <div className="border-r border-white/10 bg-black/35">
+                      {day.slots.map((slot) => (
+                        <div key={slot.hour} className="h-[5.25rem] border-b border-white/10 px-3 pt-2 text-right text-[0.68rem] font-black uppercase tracking-[0.12em] text-white/35 md:px-4">
+                          {slot.label}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="relative min-h-[24rem] bg-[linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:100%_5.25rem]" style={{ height: `${day.heightRem}rem` }}>
+                      {day.events.map((event) => (
+                        <div
+                          key={event.appointment.id}
+                          className={`absolute left-3 right-3 overflow-hidden rounded-2xl border p-4 shadow-2xl md:left-5 md:right-5 ${calendarEventClassName(event)}`}
+                          style={{ top: `${event.topRem}rem`, minHeight: `${event.heightRem}rem` }}
+                        >
+                          <div className="flex flex-col justify-between gap-3 md:flex-row md:items-start">
+                            <div className="min-w-0">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="rounded-full bg-black/40 px-3 py-1 text-[0.6rem] font-black uppercase tracking-[0.16em] text-white">{event.appointment.statusLabel}</span>
+                                <span className="rounded-full border border-white/20 px-3 py-1 text-[0.6rem] font-black uppercase tracking-[0.16em] text-white/70">{event.appointment.source}</span>
+                                <span className="rounded-full border border-white/20 px-3 py-1 text-[0.6rem] font-black uppercase tracking-[0.16em] text-white/70">{event.durationLabel}</span>
+                              </div>
+                              <h4 className="mt-3 truncate text-xl font-black text-white md:text-2xl">{event.appointment.clientName}</h4>
+                              <p className="mt-1 text-sm font-bold text-white/70">{event.appointment.serviceName}</p>
+                            </div>
+                            <div className="shrink-0 rounded-2xl bg-black/35 px-4 py-3 text-left md:text-right">
+                              <p className="text-sm font-black text-white">{event.startLabel}</p>
+                              <p className="text-xs font-bold text-white/55">to {event.endLabel}</p>
+                            </div>
+                          </div>
+                          <p className="mt-3 text-xs leading-5 text-white/65 md:text-sm">{event.appointment.contactLabel}</p>
+                          {event.appointment.notes ? <p className="mt-2 line-clamp-2 text-xs leading-5 text-white/70 md:text-sm">{event.appointment.notes}</p> : null}
+                          {event.appointment.internalNotes ? <p className="mt-3 rounded-xl border border-white/10 bg-black/25 p-3 text-xs leading-5 text-white/70">Internal note: {event.appointment.internalNotes}</p> : null}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
         </article>
       </section>
     </PageShell>
   );
+}
+
+function calendarEventClassName(event: CalendarDayEvent) {
+  if (event.tone === "confirmed") return "border-lime-200/45 bg-lime-300/18 shadow-lime-400/10";
+  if (event.tone === "requested") return "border-yellow-200/45 bg-yellow-300/18 shadow-yellow-400/10";
+  if (event.tone === "blocked") return "border-purple-200/35 bg-purple-300/14 shadow-purple-400/10";
+  if (event.tone === "completed") return "border-cyan-200/40 bg-cyan-300/14 shadow-cyan-400/10";
+  return "border-white/15 bg-white/8 opacity-70";
 }
