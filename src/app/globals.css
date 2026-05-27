@@ -92,38 +92,16 @@ body {
   --lane-color: var(--purple);
   position: relative;
   isolation: isolate;
+  overflow: visible;
   background: rgba(0, 0, 0, 0.72);
 }
 
-.goo-calendar-panel::before,
-.goo-calendar-panel::after {
-  content: "";
+.goo-calendar-outline {
   position: absolute;
-  pointer-events: none;
+  inset: -0.45rem;
   z-index: -1;
-  background: var(--lane-color);
-  opacity: 0.72;
-  filter: drop-shadow(0 0 0.7rem color-mix(in srgb, var(--lane-color) 45%, transparent));
-}
-
-.goo-calendar-panel::before {
-  width: 4.25rem;
-  height: 1.15rem;
-  left: 16%;
-  top: -0.42rem;
-  border-radius: 999px 999px 55% 55%;
-  box-shadow:
-    18rem 0.2rem 0 -0.28rem var(--lane-color),
-    30rem 19.5rem 0 -0.35rem var(--lane-color);
-}
-
-.goo-calendar-panel::after {
-  width: 1.15rem;
-  height: 4.1rem;
-  right: -0.42rem;
-  top: 21%;
-  border-radius: 55% 999px 999px 55%;
-  box-shadow:
-    -34rem 12rem 0 -0.22rem var(--lane-color),
-    -20rem 38rem 0 -0.38rem var(--lane-color);
+  overflow: visible;
+  color: var(--lane-color);
+  opacity: 0.92;
+  filter: drop-shadow(0 0 0.85rem color-mix(in srgb, var(--lane-color) 42%, transparent));
 }
