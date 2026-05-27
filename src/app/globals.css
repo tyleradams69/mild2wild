@@ -169,25 +169,13 @@ body::after {
   box-shadow: 0 5px 0 rgba(23, 19, 15, 0.9);
 }
 
-.paint-splat-svg {
+.paint-splat-img {
   z-index: 0;
   pointer-events: none;
   overflow: visible;
-  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.18));
-}
-
-.paint-splat-svg .splat-shadow {
-  fill: rgba(39, 33, 29, 0.72);
-  stroke: rgba(39, 33, 29, 0.72);
-  stroke-width: 10;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.paint-splat-svg path,
-.paint-splat-svg ellipse,
-.paint-splat-svg circle {
-  vector-effect: non-scaling-stroke;
+  height: auto;
+  max-width: none;
+  object-fit: contain;
 }
 
 .paint-splash {

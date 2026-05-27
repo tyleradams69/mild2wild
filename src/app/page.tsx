@@ -9,9 +9,9 @@ export default function Home() {
     <PageShell>
       <section className="mx-auto max-w-7xl px-5 py-14 md:py-20">
         <div className="scrollwork neon-card group overflow-hidden rounded-[3rem] border-pink-300/40 p-7 md:p-14">
-          <PaintSplat color="#f1c535" accent="#ffe781" variant="bubble" className="absolute -left-24 top-20 hidden w-60 -rotate-12 opacity-82 lg:block" />
-          <PaintSplat color="#68b844" accent="#a9ef7a" variant="window" className="absolute -bottom-8 -right-10 hidden w-56 rotate-12 opacity-82 lg:block" />
-          <PaintSplat color="#e786c5" accent="#ffc5e7" variant="long" className="absolute right-4 top-2 hidden w-44 rotate-[22deg] opacity-68 xl:block" />
+          <PaintSplat color="#f1c535" variant="bubble" className="absolute -left-24 top-20 hidden w-60 -rotate-12 opacity-82 lg:block" />
+          <PaintSplat color="#68b844" variant="window" className="absolute -bottom-8 -right-10 hidden w-56 rotate-12 opacity-82 lg:block" />
+          <PaintSplat color="#e786c5" variant="long" className="absolute right-4 top-2 hidden w-44 rotate-[22deg] opacity-68 xl:block" />
           <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
               <SectionEyebrow color="#ffcae6">Tattoos • Salon • Spa • Rainbow Studio</SectionEyebrow>
