@@ -57,4 +57,38 @@ describe("Supabase dashboard auth", () => {
       error: "invalid_credentials",
     });
   });
+
+  it("allows a server-only owner password fallback when Supabase auth is unavailable", async () => {
+    const fetcher = vi.fn(async () => {
+      throw new Error("network unavailable");
+    });
+
+    const result = await authenticateDashboardUser(
+      { email: ownerAdminProfile.email.toUpperCase(), password: "temporary-owner-password" },
+      { ...env, HERMES_DASHBOARD_OWNER_PASSWORD: "temporary-owner-password" },
+      fetcher,
+      1_000,
+    );
+
+    expect(result.ok && result.session.role).toBe("owner");
+    expect(result.ok && result.session.email).toBe(ownerAdminProfile.email);
+    expect(JSON.stringify(result)).not.toContain("temporary-owner-password");
+  });
+
+  it("does not allow the fallback password for non-owner emails", async () => {
+    const fetcher = vi.fn(async () =>
+      new Response(JSON.stringify({ error_description: "Invalid login credentials" }), {
+        status: 400,
+        headers: { "content-type": "application/json" },
+      }),
+    );
+
+    await expect(
+      authenticateDashboardUser(
+        { email: "staff@example.com", password: "temporary-owner-password" },
+        { ...env, HERMES_DASHBOARD_OWNER_PASSWORD: "temporary-owner-password" },
+        fetcher,
+      ),
+    ).resolves.toEqual({ ok: false, error: "invalid_credentials" });
+  });
 });

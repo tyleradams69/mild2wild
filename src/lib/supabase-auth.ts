@@ -1,3 +1,4 @@
+import { timingSafeEqual } from "node:crypto";
 import { ownerAdminProfile, type DashboardAuthSession } from "./auth-session";
 import { staffMembers } from "./studio-data";
 
@@ -61,6 +62,34 @@ function getSupabaseAnonKey(env: SupabaseAuthEnv) {
   return readServerEnvValue(env.SUPABASE_ANON_KEY) || readServerEnvValue(env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 }
 
+function getFallbackOwnerPassword(env: SupabaseAuthEnv) {
+  return readServerEnvValue(env.HERMES_DASHBOARD_OWNER_PASSWORD);
+}
+
+function safeStringEqual(left: string, right: string) {
+  const leftBuffer = Buffer.from(left);
+  const rightBuffer = Buffer.from(right);
+  return leftBuffer.length === rightBuffer.length && timingSafeEqual(leftBuffer, rightBuffer);
+}
+
+function fallbackOwnerSession(credentials: LoginCredentials, env: SupabaseAuthEnv, now: number): DashboardAuthSession | null {
+  const fallbackPassword = getFallbackOwnerPassword(env);
+  const email = typeof credentials.email === "string" ? credentials.email.trim().toLowerCase() : "";
+  const password = typeof credentials.password === "string" ? credentials.password : "";
+
+  if (!fallbackPassword || email !== ownerAdminProfile.email.toLowerCase() || !safeStringEqual(password, fallbackPassword)) {
+    return null;
+  }
+
+  return {
+    role: "owner",
+    staffSlug: ownerAdminProfile.staffSlug,
+    displayName: ownerAdminProfile.name,
+    email: ownerAdminProfile.email,
+    expiresAt: now + oneDayMs,
+  };
+}
+
 export function buildSupabasePasswordGrantRequest(env: SupabaseAuthEnv, email: string, password: string) {
   const supabaseUrl = getSupabaseUrl(env).replace(/\/+$/, "");
   const anonKey = getSupabaseAnonKey(env);
@@ -114,8 +143,10 @@ export async function authenticateDashboardUser(
   const password = typeof credentials.password === "string" ? credentials.password : "";
   if (!email || !password) return { ok: false, error: "missing_credentials" };
 
+  const fallbackSession = fallbackOwnerSession(credentials, env, now);
+
   if (!getSupabaseUrl(env) || !getSupabaseAnonKey(env)) {
-    return { ok: false, error: "supabase_not_configured" };
+    return fallbackSession ? { ok: true, session: fallbackSession } : { ok: false, error: "supabase_not_configured" };
   }
 
   const request = buildSupabasePasswordGrantRequest(env, email, password);
@@ -127,10 +158,10 @@ export async function authenticateDashboardUser(
       body: request.body,
     });
   } catch {
-    return { ok: false, error: "supabase_not_configured" };
+    return fallbackSession ? { ok: true, session: fallbackSession } : { ok: false, error: "supabase_not_configured" };
   }
 
-  if (!response.ok) return { ok: false, error: "invalid_credentials" };
+  if (!response.ok) return fallbackSession ? { ok: true, session: fallbackSession } : { ok: false, error: "invalid_credentials" };
 
   const payload = (await response.json().catch(() => null)) as SupabasePasswordGrantResponse | null;
   const session = payload?.user ? dashboardSessionFromSupabaseUser(payload.user, now) : null;
