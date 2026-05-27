@@ -444,7 +444,7 @@ export default async function DashboardPage() {
             return (
               <article
                 key={lane.staffSlug}
-                className="flex max-h-[42rem] flex-col overflow-hidden rounded-[1.8rem] border bg-black/70 p-5"
+                className="flex max-h-[42rem] min-w-0 flex-col rounded-[1.8rem] border bg-black/70 p-5"
                 style={{
                   borderColor: lane.canEdit ? `${lane.calendarColor}88` : "rgba(255,255,255,0.1)",
                   boxShadow: lane.canEdit ? `0 0 55px ${lane.calendarColor}24` : "none",
@@ -478,16 +478,16 @@ export default async function DashboardPage() {
                   <form action={blockCalendarTimeAction} className="mt-5 rounded-3xl border border-white/10 bg-white/5 p-4">
                     <input type="hidden" name="staffSlug" value={lane.staffSlug} />
                     <p className="text-xs font-black uppercase tracking-[0.18em] text-white/50">Block time</p>
-                    <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_7rem]">
-                      <input name="startsAt" type="datetime-local" className="rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none focus:border-cyan-300" required />
-                      <select name="durationMinutes" defaultValue="60" className="rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none focus:border-cyan-300">
+                    <div className="mt-3 grid gap-3">
+                      <input name="startsAt" type="datetime-local" className="min-w-0 rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none focus:border-cyan-300" required />
+                      <select name="durationMinutes" defaultValue="60" className="min-w-0 rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none focus:border-cyan-300">
                         <option value="30">30m</option>
                         <option value="60">60m</option>
                         <option value="90">90m</option>
                         <option value="120">120m</option>
                       </select>
                     </div>
-                    <input name="notes" placeholder="Reason, e.g. lunch, consult hold, time off" className="mt-3 w-full rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-cyan-300" />
+                    <input name="notes" placeholder="Reason, e.g. lunch, consult hold, time off" className="mt-3 w-full min-w-0 rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-cyan-300" />
                     <button type="submit" className="mt-3 rounded-full bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-black transition hover:bg-cyan-200">Add block</button>
                   </form>
                 ) : null}
@@ -496,7 +496,7 @@ export default async function DashboardPage() {
                   {lane.appointments.length === 0 ? (
                     <div className="rounded-3xl border border-dashed border-white/15 bg-black/40 p-5 text-sm leading-6 text-white/55">No appointments in this lane yet.</div>
                   ) : lane.appointments.map((appointment) => (
-                    <div key={appointment.id} className="rounded-3xl border border-white/10 bg-black/55 p-4">
+                    <div key={appointment.id} className="min-w-0 rounded-3xl border border-white/10 bg-black/55 p-4">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className={`rounded-full px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.16em] ${appointment.statusTone}`}>{appointment.statusLabel}</span>
                         <span className="rounded-full border border-white/10 px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.16em] text-white/55">{appointment.source}</span>
@@ -508,15 +508,15 @@ export default async function DashboardPage() {
                       {appointment.notes ? <p className="mt-3 text-sm leading-6 text-white/60">{appointment.notes}</p> : null}
 
                       {appointment.canEdit ? (
-                        <form action={updateAppointmentAction} className="mt-4 rounded-2xl border border-white/10 bg-white/5 p-3">
+                        <form action={updateAppointmentAction} className="mt-4 min-w-0 rounded-2xl border border-white/10 bg-white/5 p-3">
                           <input type="hidden" name="appointmentId" value={appointment.id} />
-                          <div className="grid gap-3 sm:grid-cols-[9rem_1fr]">
-                            <select name="status" defaultValue={appointment.status} className="rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none focus:border-pink-300">
+                          <div className="grid min-w-0 gap-3">
+                            <select name="status" defaultValue={appointment.status} className="min-w-0 rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none focus:border-pink-300">
                               {calendarActionStatuses.map((status) => (
                                 <option key={status} value={status}>{status.replace(/_/g, " ")}</option>
                               ))}
                             </select>
-                            <input name="internalNotes" defaultValue={appointment.internalNotes ?? ""} placeholder="Internal note" className="rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-pink-300" />
+                            <input name="internalNotes" defaultValue={appointment.internalNotes ?? ""} placeholder="Internal note" className="min-w-0 rounded-2xl border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none placeholder:text-white/35 focus:border-pink-300" />
                           </div>
                           <button type="submit" className="mt-3 rounded-full bg-pink-300 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-black transition hover:bg-white">Save update</button>
                         </form>
