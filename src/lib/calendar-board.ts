@@ -112,7 +112,7 @@ export function buildCalendarBoard({
       startsAt: appointment.startsAt,
       endsAt: appointment.endsAt,
       status: coerceOwnedStatus(appointment.status),
-      source: appointment.source === "call_agent" || appointment.source === "booksy" || appointment.source === "manual" ? appointment.source : "website",
+      source: appointment.source === "booksy" || appointment.source === "manual" ? appointment.source : "website",
       notes: appointment.notes,
     })),
   );

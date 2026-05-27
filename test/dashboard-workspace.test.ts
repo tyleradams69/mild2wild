@@ -53,7 +53,7 @@ describe("dashboard workspace", () => {
     expect(staffModel.editableProfiles[0]).toMatchObject({ title: "Nail Artist", serviceNames: expect.arrayContaining(["Custom Nail Art"]) });
   });
 
-  it("combines booking requests and call-agent transfers into a routed inbox", () => {
+  it("normalizes website booking requests into a routed inbox", () => {
     const inbox = buildDashboardLeadInbox({
       session: ownerSession,
       staffMembers,
@@ -73,36 +73,10 @@ describe("dashboard workspace", () => {
           notes: "Chrome flames.",
         },
       ],
-      callAgentLeads: [
-        {
-          id: "call-1",
-          customer_name: "Riley",
-          customer_phone: "555-0303",
-          requested_service: "small tattoo consult",
-          preferred_staff_slug: "team-member-10",
-          preferred_time: "Saturday",
-          summary: "Riley wants a fine-line tattoo consult and asked for Saturday.",
-          transferred_to: "Caitlin (business owner) at 440-654-7085",
-          text_summary_recipient: "+14406547085",
-          text_summary_status: "pending",
-          lead_status: "waiting_on_client",
-          internal_notes: "Needs Saturday consult options before follow-up.",
-          created_at: "2026-06-02T19:00:00.000Z",
-        },
-      ],
-    });
+   });
 
-    expect(inbox).toHaveLength(2);
-    expect(inbox[0]).toMatchObject({
-      source: "Call agent",
-      customerName: "Riley",
-      routedStaffName: "Team Member 10",
-      statusLabel: "Transferred to Caitlin (business owner) at 440-654-7085",
-      workflowStatusLabel: "Waiting on client",
-      internalNote: "Needs Saturday consult options before follow-up.",
-      ownerAlertLabel: expect.stringContaining("Owner alert summary: Pending"),
-    });
-    expect(inbox[1]).toMatchObject({ source: "Booking form", customerName: "Maya Rose", routedStaffName: "Caitlin", workflowStatusLabel: "Contacted" });
+    expect(inbox).toHaveLength(1);
+    expect(inbox[0]).toMatchObject({ source: "Booking form", customerName: "Maya Rose", routedStaffName: "Caitlin", workflowStatusLabel: "Contacted" });
   });
 
   it("keeps staff inbox scoped to their own routed requests", () => {
@@ -113,11 +87,8 @@ describe("dashboard workspace", () => {
       appointments: [
         { id: "appt-nails", customer_name: "Maya", service_slug: "custom-nail-art", staff_slug: "team-member-13", starts_at: "2026-06-01T18:00:00.000Z", status: "requested" },
       ],
-      callAgentLeads: [
-        { id: "call-tattoo", customer_name: "Riley", requested_service: "tattoo", preferred_staff_slug: "team-member-10", summary: "Tattoo consult", created_at: "2026-06-01T17:00:00.000Z" },
-      ],
     });
 
-    expect(inbox.map((lead) => lead.id)).toEqual(["call-tattoo"]);
+    expect(inbox.map((lead) => lead.id)).toEqual([]);
   });
 });

@@ -70,20 +70,6 @@ create table public.appointments (
   created_at timestamptz not null default now()
 );
 
-create table public.call_agent_leads (
-  id uuid primary key default gen_random_uuid(),
-  customer_name text not null,
-  customer_phone text,
-  requested_service text not null,
-  preferred_staff_slug text,
-  preferred_time text,
-  summary text not null,
-  transferred_to text,
-  text_summary_recipient text not null default '+14406547085',
-  text_summary_body text,
-  text_summary_status text not null default 'pending' check (text_summary_status in ('pending', 'sent', 'failed', 'skipped')),
-  created_at timestamptz not null default now()
-);
 
 create table public.products (
   id uuid primary key default gen_random_uuid(),
@@ -103,7 +89,6 @@ alter table public.staff_service_categories enable row level security;
 alter table public.staff_services enable row level security;
 alter table public.staff_social_links enable row level security;
 alter table public.appointments enable row level security;
-alter table public.call_agent_leads enable row level security;
 alter table public.products enable row level security;
 
 -- Public marketing reads.

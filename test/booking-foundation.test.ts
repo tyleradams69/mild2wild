@@ -3,9 +3,7 @@ import { services, staffMembers } from "../src/lib/studio-data";
 import {
   buildAppointmentInsert,
   buildBookingServiceGroups,
-  buildCallAgentLeadInsert,
   validateBookingRequest,
-  validateCallAgentLead,
 } from "../src/lib/booking-foundation";
 import { serviceCategories } from "../src/lib/studio-data";
 
@@ -96,33 +94,6 @@ describe("booking foundation", () => {
       ends_at: "2026-06-01T18:30:00.000Z",
       status: "requested",
       notes: "Placement consult.",
-    });
-  });
-
-  it("normalizes AI call-agent lead intake into a concise transfer record", () => {
-    const valid = validateCallAgentLead({
-      customerName: "Jules",
-      customerPhone: "555-0222",
-      requestedService: "pink chrome nail art",
-      preferredStaffSlug: "team-member-01",
-      preferredTime: "Friday afternoon",
-      summary: "Jules wants pink chrome flames with Luna next Friday afternoon.",
-    });
-
-    expect(valid.ok).toBe(true);
-    if (!valid.ok) throw new Error("expected lead to validate");
-    expect(buildCallAgentLeadInsert(valid.value)).toEqual({
-      customer_name: "Jules",
-      customer_phone: "555-0222",
-      requested_service: "pink chrome nail art",
-      preferred_staff_slug: "team-member-01",
-      preferred_time: "Friday afternoon",
-      summary: "Jules wants pink chrome flames with Luna next Friday afternoon.",
-      transferred_to: "Caitlin (business owner) at 440-654-7085",
-      text_summary_recipient: "+14406547085",
-      text_summary_body:
-        "Mild 2 Wild call summary\nClient: Jules\nPhone: 555-0222\nService: pink chrome nail art\nPreferred staff: team-member-01\nPreferred time: Friday afternoon\nNotes: Jules wants pink chrome flames with Luna next Friday afternoon.",
-      text_summary_status: "pending",
     });
   });
 });

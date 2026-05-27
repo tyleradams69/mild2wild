@@ -23,7 +23,6 @@ Create a Supabase project, then apply these SQL files in order:
 supabase/migrations/20260525210000_mild2wild_schema.sql
 supabase/migrations/20260525211500_seed_mild2wild_foundation.sql
 supabase/migrations/20260525213000_owned_calendar_system.sql
-supabase/migrations/20260525214500_call_agent_owner_sms_summary.sql
 ```
 
 Verify the following tables exist:
@@ -36,7 +35,6 @@ staff_service_categories
 staff_services
 staff_social_links
 appointments
-call_agent_leads
 products
 clients
 appointment_audit_events

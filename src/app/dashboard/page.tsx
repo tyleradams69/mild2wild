@@ -7,7 +7,6 @@ import { PageShell, SectionEyebrow } from "@/components/site";
 import { dashboardSessionCookieName, parseSignedDashboardSession } from "@/lib/auth-session";
 import { buildCalendarBoard, calendarActionStatuses, normalizeCalendarStatus, type CalendarBoardAppointment } from "@/lib/calendar-board";
 import { buildCalendarDashboardModel } from "@/lib/calendar-access";
-import { businessOwnerCallRouting } from "@/lib/call-agent-config";
 import { buildDashboardLeadInbox, buildProfileEditorModel } from "@/lib/dashboard-workspace";
 import { canEditOwnedAppointment } from "@/lib/owned-calendar-system";
 import { getStaffBySlug, serviceCategories, staffMembers } from "@/lib/studio-data";
@@ -208,23 +207,6 @@ export default async function DashboardPage() {
         notes: "Wants chrome flame nail art and asked for Caitlin if available.",
       },
     ],
-    callAgentLeads: [
-      {
-        id: "demo-call-1",
-        customer_name: "Riley",
-        customer_phone: "555-0303",
-        requested_service: "Fine-line tattoo consult",
-        preferred_staff_slug: "team-member-10",
-        preferred_time: "Saturday afternoon",
-        summary: "Call agent collected the consult request and told Riley the shop would follow up with timing options.",
-        transferred_to: businessOwnerCallRouting.transferLabel,
-        text_summary_recipient: businessOwnerCallRouting.phoneE164,
-        text_summary_status: "pending",
-        lead_status: "waiting_on_client",
-        internal_notes: "Needs Saturday consult options before follow-up.",
-        created_at: "2026-06-02T19:00:00.000Z",
-      },
-    ],
   });
   const identityChipLabel = dashboardModel.canManageAllCalendars ? "Owner Admin" : (dashboardModel.profileAvatar?.title ?? dashboardModel.sessionLabel);
   const primaryCalendarSlug =
@@ -303,7 +285,7 @@ export default async function DashboardPage() {
             </div>
             <p className="mt-4 text-white/65">
               {dashboardModel.canManageAllCalendars
-                ? "Can manage all calendars, staff profiles, services, products, and call-agent leads."
+                ? "Can manage all calendars, staff profiles, services, products, and booking requests."
                 : "Can view the portal but only edit their own profile, availability, and bookings."}
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
@@ -323,10 +305,10 @@ export default async function DashboardPage() {
           </article>
 
           <article className="neon-card rounded-[2rem] p-6" style={{ boxShadow: "0 0 70px #4DDCE522" }}>
-            <SectionEyebrow color="#4DDCE5">Call-agent handoff</SectionEyebrow>
-            <h2 className="brand-display text-3xl font-black uppercase">Lead intake can route to the right person.</h2>
+            <SectionEyebrow color="#4DDCE5">Website booking flow</SectionEyebrow>
+            <h2 className="brand-display text-3xl font-black uppercase">Booking requests route to the right calendar.</h2>
             <p className="mt-4 text-white/65">
-              The worker agent can collect name, requested service, and appointment notes, then hand the call to the shop with context already attached. Service-specific routing uses the same staff/category model as the public pages.
+              The site collects customer details, requested services, staff preference, and appointment notes through the website form. Those requests stay in the dashboard so Caitlin can follow up from the website workflow.
             </p>
           </article>
         </div>
@@ -337,9 +319,9 @@ export default async function DashboardPage() {
           <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
               <SectionEyebrow color="#FFE45C">Lead inbox</SectionEyebrow>
-              <h2 className="brand-display text-4xl font-black uppercase">Bookings + call-agent transfers.</h2>
+              <h2 className="brand-display text-4xl font-black uppercase">Website booking requests.</h2>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-white/60">
-                Public booking requests and worker-agent call handoffs land in one routed queue so Caitlin can see who needs a follow-up and which staff lane owns it.
+                Public website booking requests land in one routed queue so Caitlin can see who needs a follow-up and which staff lane owns it.
               </p>
             </div>
             <span className="rounded-full bg-yellow-200 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-black">{leadInbox.length} open</span>
@@ -347,7 +329,7 @@ export default async function DashboardPage() {
           <div className="mt-6 space-y-3">
             {leadInbox.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-white/15 bg-black/40 p-6 text-sm leading-6 text-white/58">
-                No open requests for this login yet. New booking requests and call-agent handoffs will appear here when they are routed to this calendar lane.
+                No open requests for this login yet. New website booking requests will appear here when they are routed to this calendar lane.
               </div>
             ) : leadInbox.map((lead) => (
               <div key={lead.id} className="rounded-3xl border border-white/10 bg-black/50 p-4">

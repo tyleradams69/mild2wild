@@ -36,20 +36,19 @@ From a client-facing launch perspective, the site still reads like a polished pr
 
 ## High-priority findings
 
-### 1. Public booking and call-agent lead APIs fail on production
+### 1. Public booking API fails on production
 
 Severity: High
 Category: Functional / Launch blocker
 
 Observed:
 - POST /api/booking-requests returned HTTP 500 with: Booking data has not been seeded yet.
-- POST /api/call-agent-leads returned HTTP 500 with: Could not save call-agent lead.
 
 Client impact:
-A real customer may fill out the booking form but the backend cannot save the request. The call-agent lead endpoint also cannot persist leads.
+A real customer may fill out the booking form but the backend cannot save the request.
 
 Recommendation:
-Before public launch, connect/seed the production Supabase database and verify both endpoints create records successfully. If the site is still only a demo, make the booking form show a clear demo-safe message instead of silently failing or exposing backend errors.
+Before public launch, connect/seed the production Supabase database and verify the booking endpoint creates records successfully. If the site is still only a demo, make the booking form show a clear demo-safe message instead of silently failing or exposing backend errors.
 
 ### 2. Public pages contain internal/prototype copy
 
@@ -57,7 +56,7 @@ Severity: High
 Category: Content / Trust
 
 Examples:
-- Homepage: mentions protected calendars and AI call-agent handoff in a product-spec way.
+- Homepage: mentions protected calendars and booking workflow in a product-spec way.
 - Staff page: “The real names and bios can drop in later.”
 - Booking page: “The final system can swap this prototype endpoint...”
 - Tour page: “Embed YouTube/Vimeo or host a walkthrough video here.”
@@ -135,7 +134,7 @@ Severity: Medium
 Category: Legal / Trust / Content
 
 Observed:
-The page says it is draft policy copy and instructs Caitlin to approve before publishing. Several sections use tentative language around deposits, age/minor rules, and AI call-agent behavior.
+The page says it is draft policy copy and instructs Caitlin to approve before publishing. Several sections use tentative language around deposits, age/minor rules, and website booking behavior.
 
 Recommendation:
 Rewrite as final client-facing shop policy copy. Remove internal approval notes. Finalize deposit/cancellation/no-show terms and tattoo age/ID/consent policy.
@@ -216,7 +215,7 @@ Legal page intro:
 
 ## Recommended next fixes in order
 
-1. Fix production Supabase seeding/config so booking and call-agent endpoints work.
+1. Fix production Supabase seeding/config so booking endpoint works.
 2. Remove public internal/prototype/draft copy across the site.
 3. Clean up login page: no prefilled real email, no Supabase/temporary-password notes.
 4. Replace placeholder staff names/bios or hide unfinished profiles.

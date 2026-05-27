@@ -9,7 +9,6 @@ The app is built around the client vision:
 - owner/admin dashboard visibility across all staff
 - employee logins scoped to their own profile/calendar lane
 - first-party calendar foundation so the shop does not need every employee's Google Calendar or Calendly API
-- AI call-agent handoff routing to Caitlin with saved owner alert summaries and optional Telegram alerts
 - legal/policy page for booking, tattoo consent, deposits, privacy, and aftercare basics
 - Booksy import-ready architecture for later client/appointment migration
 
@@ -54,15 +53,12 @@ SUPABASE_URL=
 SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 HERMES_DASHBOARD_SESSION_SECRET=
-TELEGRAM_BOT_TOKEN=
-TELEGRAM_OWNER_CHAT_ID=
 ```
 
 Notes:
 - `NEXT_PUBLIC_*` values are browser-visible and must only contain public Supabase anon config.
 - `SUPABASE_SERVICE_ROLE_KEY` is server-only. Never expose it in client code.
 - `HERMES_DASHBOARD_SESSION_SECRET` should be a strong random value in production.
-- `TELEGRAM_BOT_TOKEN` and `TELEGRAM_OWNER_CHAT_ID` are optional. If missing, call-agent leads still save to the dashboard and return `telegramAlertQueued: false`.
 
 ## Supabase setup
 
@@ -71,7 +67,6 @@ Apply migrations in order from `supabase/migrations/`:
 1. `20260525210000_mild2wild_schema.sql`
 2. `20260525211500_seed_mild2wild_foundation.sql`
 3. `20260525213000_owned_calendar_system.sql`
-4. `20260525214500_call_agent_owner_sms_summary.sql`
 
 These create:
 - service categories
@@ -81,9 +76,7 @@ These create:
 - staff social links
 - products
 - appointments
-- call-agent leads
 - first-party calendar tables for clients, appointment audit events, and Booksy import tracking
-- call-agent owner alert summary fields for dashboard follow-up and optional Telegram delivery
 
 After applying schema changes in Supabase, run:
 
@@ -112,16 +105,8 @@ Calendar design:
 - appointments belong to a staff calendar lane
 - owner/admin can manage all lanes
 - staff can only manage their own lane
-- public booking requests and call-agent leads route into the same model
+- public website booking requests route into the same appointment model
 - Booksy will be treated as an import source, not the ongoing source of truth
-
-Call-agent design:
-- transfer destination: Caitlin, business owner, 440-654-7085
-- persisted transfer label: `Caitlin (business owner) at 440-654-7085`
-- text summary recipient: `+14406547085`
-- generated alert summary includes client name, phone, requested service, preferred staff, preferred time, and notes
-- Telegram can deliver owner phone alerts without Twilio approval; setup notes live in `docs/telegram-owner-alerts.md`
-- `text_summary_status` starts as `pending`; these columns are currently used as generic owner-alert summary storage and can still support SMS later if desired
 
 Current Booksy status:
 - Booksy import parser/domain foundation exists and is tested.
@@ -146,14 +131,12 @@ npm run security:audit
 
 ```text
 src/lib/studio-data.ts                         static service/staff foundation
-src/lib/call-agent-config.ts                   owner transfer + text-summary routing
 src/lib/booking-foundation.ts                  public booking validation + insert mapping
 src/lib/calendar-access.ts                     owner/staff calendar permissions
 src/lib/owned-calendar-system.ts               first-party calendar + Booksy import helpers
 src/lib/supabase-auth.ts                       Supabase dashboard login mapping
 src/app/dashboard/page.tsx                     owner/staff dashboard
 src/app/api/booking-requests/route.ts          public booking request API
-src/app/api/call-agent-leads/route.ts          call-agent lead API
 supabase/migrations/                           production database setup
 supabase/schema.sql                            starter schema reference
 ```
@@ -172,7 +155,6 @@ Before production launch:
 - test owner login
 - test staff login
 - test public booking request
-- test call-agent lead endpoint
 - test staff profile editing
 - test role-scoped calendar visibility
 

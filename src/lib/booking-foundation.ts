@@ -1,4 +1,3 @@
-import { buildOwnerTextSummary, businessOwnerCallRouting } from "./call-agent-config";
 import type { ServiceCategory, StaffMember, StudioService } from "./studio-data";
 
 export type BookingRequestInput = {
@@ -23,30 +22,6 @@ export type ValidatedBookingRequest = {
   notes: string | null;
 };
 
-export type CallAgentLeadInput = {
-  customerName?: unknown;
-  customerPhone?: unknown;
-  requestedService?: unknown;
-  preferredStaffSlug?: unknown;
-  preferredTime?: unknown;
-  summary?: unknown;
-  transferredTo?: unknown;
-  textSummaryRecipient?: unknown;
-  textSummaryBody?: unknown;
-};
-
-export type ValidatedCallAgentLead = {
-  customerName: string;
-  customerPhone: string | null;
-  requestedService: string;
-  preferredStaffSlug: string | null;
-  preferredTime: string | null;
-  summary: string;
-  transferredTo: string;
-  textSummaryRecipient: string;
-  textSummaryBody: string;
-  textSummaryStatus: "pending";
-};
 
 type ValidationResult<T> = { ok: true; value: T } | { ok: false; errors: string[] };
 
@@ -196,64 +171,5 @@ export function buildAppointmentInsert(request: ValidatedBookingRequest, maps: I
     ends_at: request.endsAt,
     status: "requested" as const,
     notes: request.notes,
-  };
-}
-
-export function validateCallAgentLead(input: CallAgentLeadInput): ValidationResult<ValidatedCallAgentLead> {
-  const errors: string[] = [];
-  const customerName = asTrimmedString(input.customerName);
-  const customerPhone = nullableString(input.customerPhone);
-  const requestedService = asTrimmedString(input.requestedService);
-  const preferredStaffSlug = nullableString(input.preferredStaffSlug);
-  const preferredTime = nullableString(input.preferredTime);
-  const summary = asTrimmedString(input.summary);
-  const transferredTo = nullableString(input.transferredTo) ?? businessOwnerCallRouting.transferLabel;
-  const textSummaryRecipient = nullableString(input.textSummaryRecipient) ?? businessOwnerCallRouting.phoneE164;
-  const textSummaryBody = nullableString(input.textSummaryBody);
-
-  if (!customerName) errors.push("Customer name is required.");
-  if (!requestedService) errors.push("Requested service is required.");
-  if (!summary) errors.push("Transfer summary is required.");
-
-  if (errors.length > 0) return { ok: false, errors };
-
-  return {
-    ok: true,
-    value: {
-      customerName,
-      customerPhone,
-      requestedService,
-      preferredStaffSlug,
-      preferredTime,
-      summary,
-      transferredTo,
-      textSummaryRecipient,
-      textSummaryBody:
-        textSummaryBody ??
-        buildOwnerTextSummary({
-          customerName,
-          customerPhone,
-          requestedService,
-          preferredStaffSlug,
-          preferredTime,
-          summary,
-        }),
-      textSummaryStatus: "pending",
-    },
-  };
-}
-
-export function buildCallAgentLeadInsert(lead: ValidatedCallAgentLead) {
-  return {
-    customer_name: lead.customerName,
-    customer_phone: lead.customerPhone,
-    requested_service: lead.requestedService,
-    preferred_staff_slug: lead.preferredStaffSlug,
-    preferred_time: lead.preferredTime,
-    summary: lead.summary,
-    transferred_to: lead.transferredTo,
-    text_summary_recipient: lead.textSummaryRecipient,
-    text_summary_body: lead.textSummaryBody,
-    text_summary_status: lead.textSummaryStatus,
   };
 }

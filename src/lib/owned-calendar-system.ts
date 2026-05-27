@@ -1,7 +1,7 @@
 import type { DashboardAuthSession } from "./auth-session";
 
 export type OwnedAppointmentStatus = "requested" | "confirmed" | "checked_in" | "completed" | "cancelled" | "no_show" | "blocked";
-export type OwnedAppointmentSource = "manual" | "website" | "call_agent" | "booksy";
+export type OwnedAppointmentSource = "manual" | "website" | "booksy";
 
 export type OwnedCalendarAppointment = {
   id: string;

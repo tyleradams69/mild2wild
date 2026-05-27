@@ -31,26 +31,9 @@ export type DashboardAppointmentRow = {
   notes?: string | null;
 };
 
-export type DashboardCallAgentLeadRow = {
-  id: string;
-  customer_name?: string | null;
-  customer_phone?: string | null;
-  requested_service?: string | null;
-  preferred_staff_slug?: string | null;
-  preferred_staff_name?: string | null;
-  preferred_time?: string | null;
-  summary?: string | null;
-  transferred_to?: string | null;
-  text_summary_recipient?: string | null;
-  text_summary_status?: string | null;
-  lead_status?: string | null;
-  internal_notes?: string | null;
-  created_at?: string | null;
-};
-
 export type DashboardInboxItem = {
   id: string;
-  source: "Booking form" | "Call agent";
+  source: "Booking form";
   customerName: string;
   contact: string;
   serviceLabel: string;
@@ -90,13 +73,11 @@ export function buildDashboardLeadInbox({
   staffMembers,
   services,
   appointments,
-  callAgentLeads,
 }: {
   session: DashboardAuthSession;
   staffMembers: StaffMember[];
   services: StudioService[];
   appointments: DashboardAppointmentRow[];
-  callAgentLeads: DashboardCallAgentLeadRow[];
 }): DashboardInboxItem[] {
   const canSeeLead = (staffSlug: string | null) => session.role === "owner" || (!!staffSlug && staffSlug === session.staffSlug);
 
@@ -129,49 +110,11 @@ export function buildDashboardLeadInbox({
     })
     .filter((item) => canSeeLead(item.routedStaffSlug));
 
-  const callItems = callAgentLeads
-    .map((row): DashboardInboxItem => {
-      const routedStaffSlug = row.preferred_staff_slug ?? null;
-      const staff = routedStaffSlug ? staffMembers.find((item) => item.slug === routedStaffSlug) : undefined;
-      const status = buildCallAgentStatus(row);
-      const workflow = buildLeadWorkflowSummary(row.lead_status, row.internal_notes);
-      return {
-        id: row.id,
-        source: "Call agent",
-        customerName: clean(row.customer_name) || "Caller",
-        contact: clean(row.customer_phone) || "Phone missing",
-        serviceLabel: clean(row.requested_service) || "Service TBD",
-        routedStaffSlug,
-        routedStaffName: clean(row.preferred_staff_name) || staff?.name || "Front desk",
-        requestedFor: clean(row.preferred_time) || "Time TBD",
-        summary: clean(row.summary) || "Call-agent transfer needs review.",
-        statusLabel: status.statusLabel,
-        workflowStatus: workflow.status,
-        workflowStatusLabel: workflow.label,
-        workflowTone: workflow.tone,
-        nextAction: workflow.nextAction,
-        internalNote: workflow.notePreview,
-        ownerAlertLabel: status.ownerAlertLabel,
-        sortTime: row.created_at ?? "",
-      };
-    })
-    .filter((item) => canSeeLead(item.routedStaffSlug));
-
-  return [...appointmentItems, ...callItems].sort((a, b) => b.sortTime.localeCompare(a.sortTime));
+  return appointmentItems.sort((a, b) => b.sortTime.localeCompare(a.sortTime));
 }
 
 function clean(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
-}
-
-function buildCallAgentStatus(row: DashboardCallAgentLeadRow) {
-  const transfer = clean(row.transferred_to);
-  const alertRecipient = clean(row.text_summary_recipient);
-  const alertStatus = clean(row.text_summary_status) || "pending";
-  const statusLabel = transfer ? `Transferred to ${transfer}` : "Needs follow-up";
-  const ownerAlertLabel = alertRecipient ? `Owner alert summary: ${humanizeSlug(alertStatus)} to ${alertRecipient}` : `Owner alert summary: ${humanizeSlug(alertStatus)}`;
-
-  return { statusLabel, ownerAlertLabel };
 }
 
 function humanizeSlug(value: string) {

@@ -50,11 +50,9 @@ Use this after Tyler gets more details from the owner/client.
    - staff slug mapping for each user
    - verify owner can see all calendars and staff can only see their own
 
-8. Update call-agent provider details
-   - keep Telegram owner alerts as the notification layer
-   - choose the actual voice/call provider when ready
-   - provide the provider with `POST /api/call-agent-leads`
-   - confirm alert wording with Caitlin
+8. Website-only scope confirmed
+   - external automation and alerting removed from scope
+   - keep booking and dashboard follow-up inside the website workflow
 
 ## Current no-client-info polish already done
 
@@ -74,5 +72,4 @@ Use this after Tyler gets more details from the owner/client.
 - Run `npm test && npm run lint && npm run build`
 - Browser-check `/`, `/book`, `/staff`, one staff profile, one service page, `/products`, `/tour`, `/legal`
 - Submit one QA booking request and clean it up
-- Submit one QA call-agent lead and confirm Telegram alert, then clean it up
 - Search public pages for internal words: prototype, draft, temporary, final system, client-supplied, Supabase, staff-service mapping

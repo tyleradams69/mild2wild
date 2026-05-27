@@ -71,7 +71,7 @@ begin
       and conrelid = 'public.appointments'::regclass
   ) then
     alter table public.appointments
-      add constraint appointments_source_check check (source in ('manual', 'website', 'call_agent', 'booksy'));
+      add constraint appointments_source_check check (source in ('manual', 'website', 'booksy'));
   end if;
 end $$;
 

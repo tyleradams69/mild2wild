@@ -4,7 +4,7 @@
 
 **Goal:** Replace dependence on Google Calendar/Calendly per-employee APIs with a first-party Mild 2 Wild calendar system where every staff member has their own login/calendar, owner/admin can manage all calendars, and existing client/appointment data can be imported from Booksy exports.
 
-**Architecture:** Keep authorization centered on the existing signed dashboard session and staff slug. Add a first-party appointment/calendar domain model, Supabase-backed tables for production, and a local/testable import seam for Booksy CSV exports. The public booking flow, dashboard lead inbox, staff calendars, and call-agent handoff should all read/write the same appointment data.
+**Architecture:** Keep authorization centered on the existing signed dashboard session and staff slug. Add a first-party appointment/calendar domain model, Supabase-backed tables for production, and a local/testable import seam for Booksy CSV exports. The public booking flow, dashboard lead inbox, and staff calendars should all read/write the same appointment data.
 
 **Tech Stack:** Next.js App Router, TypeScript, Vitest, Supabase/Postgres, server actions/route handlers, local JSON fallback only for development.
 
@@ -98,13 +98,12 @@
 - Moves must check service compatibility and time conflicts.
 - Every change writes an audit event.
 
-### Task 6: Wire public booking and call-agent intake to owned calendar
+### Task 6: Wire public booking intake to owned calendar
 
-**Objective:** New website bookings and worker-agent calls become appointments/leads in the same system.
+**Objective:** New website bookings become appointments/leads in the same system.
 
 **Files:**
 - Modify: `src/app/api/booking-requests/route.ts`
-- Modify: `src/app/api/call-agent-leads/route.ts`
 - Modify: `src/components/booking-request-form.tsx`
 
 **Behavior:**

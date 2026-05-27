@@ -129,11 +129,10 @@ Service categories to confirm:
 - Should staff edit their own bios/photos/social links?
 - Should owner approve staff profile edits before publishing?
 
-## 10. Call-agent / worker-agent intake
+## 10. Website-only intake
 
-- Final transfer phone number:
-- Final Telegram alert chat/group owner:
-- Backup SMS summary recipient, if SMS is added later:
+- Confirm preferred website contact/booking form fields:
+- Confirm dashboard follow-up owner/staff routing:
 - Business greeting/script preferences:
 - Required fields the agent must collect:
   - Name
@@ -150,7 +149,6 @@ Service categories to confirm:
 - When should the agent only take a message?
 - Any phrases or promises the agent should avoid?
 - Alert/voice provider preference:
-  - Telegram bot alerts
   - Twilio
   - Telnyx
   - Bland/Retell/Vapi/etc.
@@ -194,4 +192,4 @@ Before public launch, owner should approve:
 - Tour/about/charity content
 - Business address/hours/phone/social links
 - Dashboard login users and permissions
-- Call-agent script and transfer/Telegram alert destination
+- Website booking form copy and dashboard follow-up routing
