@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PageShell, SectionEyebrow, ServiceCategoryCard, StaffCard } from "@/components/site";
+import { PageShell, PaintSplat, SectionEyebrow, ServiceCategoryCard, StaffCard } from "@/components/site";
 import { productHighlights, serviceCategories, staffMembers } from "@/lib/studio-data";
 
 export default function Home() {
@@ -9,8 +9,9 @@ export default function Home() {
     <PageShell>
       <section className="mx-auto max-w-7xl px-5 py-14 md:py-20">
         <div className="scrollwork neon-card group overflow-hidden rounded-[3rem] border-pink-300/40 p-7 md:p-14">
-          <div className="paint-splash splash-yellow -left-10 top-10 hidden opacity-80 lg:block" />
-          <div className="paint-splash splash-green bottom-6 right-8 hidden opacity-80 lg:block" />
+          <PaintSplat color="#f1c535" accent="#ffe781" variant="bubble" className="absolute -left-24 top-20 hidden w-60 -rotate-12 opacity-82 lg:block" />
+          <PaintSplat color="#68b844" accent="#a9ef7a" variant="window" className="absolute -bottom-8 -right-10 hidden w-56 rotate-12 opacity-82 lg:block" />
+          <PaintSplat color="#e786c5" accent="#ffc5e7" variant="long" className="absolute right-4 top-2 hidden w-44 rotate-[22deg] opacity-68 xl:block" />
           <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
               <SectionEyebrow color="#ffcae6">Tattoos • Salon • Spa • Rainbow Studio</SectionEyebrow>
@@ -47,8 +48,8 @@ export default function Home() {
                   className="group/service relative overflow-hidden rounded-[2rem] border-[3px] border-black bg-white/80 p-5 shadow-[6px_7px_0_#17130f] transition hover:-translate-y-1"
                   style={{ transform: `rotate(${[-2, 2, 1, -1][index]}deg)` }}
                 >
-                  <div className="paint-splash opacity-75" style={{ background: category.accent, width: "8rem", height: "7rem", right: "-2rem", top: "-2rem", clipPath: "polygon(40% 0, 54% 24%, 82% 5%, 74% 34%, 100% 42%, 72% 55%, 90% 84%, 58% 70%, 44% 100%, 35% 70%, 8% 88%, 25% 58%, 0 42%, 30% 34%, 17% 10%)" }} />
-                  <p className="brand-display relative z-10 mt-12 text-4xl uppercase text-black">{category.name}</p>
+                  <PaintSplat color={category.accent} variant={index % 2 === 0 ? "window" : "bubble"} className="absolute -right-10 -top-10 w-36 rotate-12 opacity-80" />
+                  <p className="brand-display relative z-10 mt-14 text-4xl uppercase text-black">{category.name}</p>
                   <p className="relative z-10 mt-4 text-xs font-black uppercase tracking-[0.18em] text-black/58">{category.staffLabel}</p>
                 </Link>
               ))}
