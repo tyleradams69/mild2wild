@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
-import type { CSSProperties } from "react";
 import { PageShell, SectionEyebrow } from "@/components/site";
 import { dashboardSessionCookieName, parseSignedDashboardSession } from "@/lib/auth-session";
 import { buildCalendarBoard, calendarActionStatuses, normalizeCalendarStatus, type CalendarBoardAppointment } from "@/lib/calendar-board";
@@ -445,14 +444,12 @@ export default async function DashboardPage() {
             return (
               <article
                 key={lane.staffSlug}
-                className="goo-calendar-panel flex max-h-[42rem] min-w-0 flex-col rounded-[1.8rem] border bg-black/70 p-5"
+                className="flex max-h-[42rem] min-w-0 flex-col rounded-[1.8rem] border bg-black/70 p-5"
                 style={{
-                  "--lane-color": lane.calendarColor,
-                  borderColor: lane.canEdit ? `${lane.calendarColor}55` : "rgba(255,255,255,0.1)",
+                  borderColor: lane.canEdit ? `${lane.calendarColor}88` : "rgba(255,255,255,0.1)",
                   boxShadow: lane.canEdit ? `0 0 55px ${lane.calendarColor}24` : "none",
-                } as CSSProperties}
+                }}
               >
-                {lane.canEdit ? <GooCalendarOutline /> : null}
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <span
@@ -533,35 +530,6 @@ export default async function DashboardPage() {
         </div>
       </section>
     </PageShell>
-  );
-}
-
-function GooCalendarOutline() {
-  return (
-    <svg className="goo-calendar-outline" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-      <path
-        d="M 8 3 H 34 C 36 3 36.5 5.4 38.3 5.4 C 40.1 5.4 40.7 3 42.8 3 H 92 Q 97 3 97 8 V 34 C 97 36.4 94.7 37.1 94.7 39.5 C 94.7 41.9 97 42.8 97 45.4 V 92 Q 97 97 92 97 H 68 C 65.6 97 65.1 94.3 62.9 94.3 C 60.7 94.3 60.2 97 57.8 97 H 8 Q 3 97 3 92 V 68 C 3 65.5 5.1 64.9 5.1 62.6 C 5.1 60.3 3 59.6 3 57.1 V 8 Q 3 3 8 3 Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="0.75"
-        vectorEffect="non-scaling-stroke"
-      />
-      <path
-        d="M 38.4 4.8 C 38.4 9.2 37.2 12.5 38.7 15.2 C 40.4 12.7 39.8 9.2 39.8 4.8"
-        fill="currentColor"
-        opacity="0.42"
-      />
-      <path
-        d="M 94.9 39.7 C 90.6 39.7 87.8 40.8 85.5 39.5 C 87.8 37.9 90.7 38.4 94.9 38.4"
-        fill="currentColor"
-        opacity="0.34"
-      />
-      <path
-        d="M 63 95.1 C 63 99.5 61.9 102.5 63.4 105 C 65 102.6 64.4 99.4 64.4 95.1"
-        fill="currentColor"
-        opacity="0.38"
-      />
-    </svg>
   );
 }
 

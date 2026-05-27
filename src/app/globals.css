@@ -87,21 +87,3 @@ body {
     radial-gradient(50% 100% at 50% 0%, transparent 62%, currentColor 63% 68%, transparent 69%) 0 0 / 64px 28px repeat-x;
   opacity: 0.75;
 }
-
-.goo-calendar-panel {
-  --lane-color: var(--purple);
-  position: relative;
-  isolation: isolate;
-  overflow: visible;
-  background: rgba(0, 0, 0, 0.72);
-}
-
-.goo-calendar-outline {
-  position: absolute;
-  inset: -0.45rem;
-  z-index: -1;
-  overflow: visible;
-  color: var(--lane-color);
-  opacity: 0.92;
-  filter: drop-shadow(0 0 0.85rem color-mix(in srgb, var(--lane-color) 42%, transparent));
-}
