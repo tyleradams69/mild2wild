@@ -40,9 +40,10 @@ describe("buildCalendarDayView", () => {
     expect(view.days[0].events.map((event) => event.appointment.clientName)).toEqual(["Avery Sample", "Jordan Demo"]);
   });
 
-  it("calculates event placement and duration inside the day timeline", () => {
+  it("calculates event placement and keeps short calendar cards tall enough for readable text", () => {
     const view = buildCalendarDayView([
       appointment({ startsAt: "2026-06-03T14:00:00.000Z", endsAt: "2026-06-03T15:15:00.000Z" }),
+      appointment({ id: "short", startsAt: "2026-06-03T16:00:00.000Z", endsAt: "2026-06-03T16:45:00.000Z" }),
     ]);
 
     const event = view.days[0].events[0];
@@ -52,7 +53,12 @@ describe("buildCalendarDayView", () => {
     expect(event.offsetMinutes).toBe(60);
     expect(event.durationMinutes).toBe(75);
     expect(event.topRem).toBeGreaterThan(4);
-    expect(event.heightRem).toBeGreaterThan(5);
+    expect(event.heightRem).toBeGreaterThanOrEqual(8);
+
+    const shortEvent = view.days[0].events[1];
+    expect(shortEvent.durationLabel).toBe("45m");
+    expect(shortEvent.heightRem).toBeGreaterThanOrEqual(8);
+    expect(shortEvent.topRem).toBeGreaterThanOrEqual(event.topRem + event.heightRem + 0.5);
   });
 
   it("assigns status-specific calendar block tones", () => {

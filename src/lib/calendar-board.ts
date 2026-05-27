@@ -80,6 +80,8 @@ export type CalendarDayView = {
 };
 
 const timelineHourHeightRem = 5.25;
+const minimumTimelineEventHeightRem = 9.5;
+const timelineEventGapRem = 0.5;
 
 export function normalizeCalendarStatus(value: unknown): CalendarActionStatus | null {
   if (typeof value !== "string") return null;
@@ -171,6 +173,7 @@ export function buildCalendarDayView(appointments: CalendarBoardCard[]): Calenda
       const hour = startsAtHour + index;
       return { hour, label: formatHourLabel(hour) };
     });
+    let previousEventBottomRem = 0;
     const events = dayAppointments.map((appointment) => {
       const start = partsInNewYork(appointment.startsAt);
       const end = partsInNewYork(appointment.endsAt);
@@ -178,6 +181,10 @@ export function buildCalendarDayView(appointments: CalendarBoardCard[]): Calenda
       const endMinutes = end.hour * 60 + end.minute;
       const offsetMinutes = Math.max(0, startMinutes - startsAtHour * 60);
       const durationMinutes = Math.max(15, endMinutes - startMinutes);
+      const naturalTopRem = (offsetMinutes / 60) * timelineHourHeightRem;
+      const heightRem = Math.max(minimumTimelineEventHeightRem, (durationMinutes / 60) * timelineHourHeightRem);
+      const topRem = Math.max(naturalTopRem, previousEventBottomRem > 0 ? previousEventBottomRem + timelineEventGapRem : 0);
+      previousEventBottomRem = topRem + heightRem;
       return {
         appointment,
         startLabel: formatTime(appointment.startsAt),
@@ -185,8 +192,8 @@ export function buildCalendarDayView(appointments: CalendarBoardCard[]): Calenda
         durationLabel: `${durationMinutes}m`,
         offsetMinutes,
         durationMinutes,
-        topRem: (offsetMinutes / 60) * timelineHourHeightRem,
-        heightRem: Math.max(3.5, (durationMinutes / 60) * timelineHourHeightRem),
+        topRem,
+        heightRem,
         tone: dayEventTone(appointment.status),
       };
     });
@@ -199,7 +206,7 @@ export function buildCalendarDayView(appointments: CalendarBoardCard[]): Calenda
       events,
       startsAtHour,
       endsAtHour,
-      heightRem: (endsAtHour - startsAtHour) * timelineHourHeightRem,
+      heightRem: Math.max((endsAtHour - startsAtHour) * timelineHourHeightRem, previousEventBottomRem),
     };
   });
 

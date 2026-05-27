@@ -191,17 +191,14 @@ export default async function StaffCalendarPage({ params }: { params: Promise<{ 
                                 <span className="rounded-full border border-white/20 px-3 py-1 text-[0.6rem] font-black uppercase tracking-[0.16em] text-white/70">{event.appointment.source}</span>
                                 <span className="rounded-full border border-white/20 px-3 py-1 text-[0.6rem] font-black uppercase tracking-[0.16em] text-white/70">{event.durationLabel}</span>
                               </div>
-                              <h4 className="mt-3 truncate text-xl font-black text-white md:text-2xl">{event.appointment.clientName}</h4>
-                              <p className="mt-1 text-sm font-bold text-white/70">{event.appointment.serviceName}</p>
+                              <h4 className="mt-3 truncate text-xl font-black leading-tight text-white md:text-2xl">{event.appointment.clientName}</h4>
+                              <p className="mt-1 line-clamp-2 text-sm font-bold leading-5 text-white/70 md:text-base">{event.appointment.serviceName}</p>
                             </div>
                             <div className="shrink-0 rounded-2xl bg-black/35 px-4 py-3 text-left md:text-right">
                               <p className="text-sm font-black text-white">{event.startLabel}</p>
                               <p className="text-xs font-bold text-white/55">to {event.endLabel}</p>
                             </div>
                           </div>
-                          <p className="mt-3 text-xs leading-5 text-white/65 md:text-sm">{event.appointment.contactLabel}</p>
-                          {event.appointment.notes ? <p className="mt-2 line-clamp-2 text-xs leading-5 text-white/70 md:text-sm">{event.appointment.notes}</p> : null}
-                          {event.appointment.internalNotes ? <p className="mt-3 rounded-xl border border-white/10 bg-black/25 p-3 text-xs leading-5 text-white/70">Internal note: {event.appointment.internalNotes}</p> : null}
                         </div>
                       ))}
                     </div>
