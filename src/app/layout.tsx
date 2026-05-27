@@ -24,16 +24,29 @@ const marker = Permanent_Marker({
   weight: "400",
 });
 
+const siteUrl = "https://mild2wild.vercel.app";
+
+const localBusinessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": ["BeautySalon", "TattooParlor"],
+  name: "Mild 2 Wild",
+  url: siteUrl,
+  image: `${siteUrl}/og-image.svg`,
+  description:
+    "A colorful tattoo, nail, hair, aesthetics, spa, and retail studio with website booking requests and staff profile pages.",
+  makesOffer: ["Tattoo consultations", "Flash tattoos", "Custom nail art", "Gel manicures", "Hair color", "Cuts and styling", "Facials", "Brow and lash services"],
+};
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mild2wild.vercel.app"),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Mild 2 Wild | Tattoos, Salon & Spa",
+    default: "Mild 2 Wild | Tattoos, Nails, Hair & Spa",
     template: "%s | Mild 2 Wild",
   },
   description:
-    "A bright, bold booking site for tattoos, nails, hair, spa services, staff profiles, shop policies, and retail favorites.",
+    "Request tattoos, custom nails, hair color, salon services, aesthetics, spa care, and aftercare favorites from Mild 2 Wild's colorful studio website.",
   applicationName: "Mild 2 Wild",
-  keywords: ["tattoos", "nails", "hair salon", "spa", "aesthetics", "booking", "Mild 2 Wild"],
+  keywords: ["tattoos", "tattoo parlor", "custom nails", "nail art", "hair salon", "spa", "aesthetics", "booking", "Mild 2 Wild"],
   authors: [{ name: "Mild 2 Wild" }],
   creator: "Mild 2 Wild",
   publisher: "Mild 2 Wild",
@@ -72,7 +85,14 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${display.variable} ${marker.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-[#f6f0e4] text-black">{children}</body>
+      <body className="min-h-full bg-[#f6f0e4] text-black">
+        <script
+          type="application/ld+json"
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

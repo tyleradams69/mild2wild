@@ -51,9 +51,17 @@ describe("Mild 2 Wild service and staff rules", () => {
     expect(staffMembers.find((staff) => staff.slug === "team-member-12")?.isMascot).toBe(true);
   });
 
+  it("keeps public staff names customer-facing instead of placeholder labels", () => {
+    const publicStaff = staffMembers.filter((staff) => !staff.isMascot);
+
+    expect(publicStaff.some((staff) => staff.name === "Caitlin")).toBe(true);
+    expect(publicStaff.every((staff) => !/^Team Member \d+$/i.test(staff.name))).toBe(true);
+  });
+
   it("maps Caitlin to team member 13 as a nail artist", () => {
     const caitlin = getStaffBySlug("team-member-13");
 
+    expect(caitlin?.name).toBe("Caitlin");
     expect(caitlin?.title).toBe("Nail Artist");
     expect(caitlin?.serviceCategorySlugs).toEqual(["nails"]);
     expect(caitlin?.photoUrl).toBe("/staff/team-member-13.jpg");

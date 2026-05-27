@@ -28,8 +28,8 @@ export default function Home() {
                 <Link href="/book" className="rounded-full border-[3px] border-black bg-pink-300 px-7 py-4 text-center font-black uppercase tracking-[0.2em] text-black shadow-[6px_7px_0_#17130f] transition hover:-translate-y-1 hover:bg-yellow-200">
                   Book Now
                 </Link>
-                <Link href="/dog-clicker" className="rounded-full border-[3px] border-black bg-yellow-200 px-7 py-4 text-center font-black uppercase tracking-[0.2em] text-black shadow-[6px_7px_0_#17130f] transition hover:-translate-y-1 hover:bg-cyan-200">
-                  Feed the Dog
+                <Link href="/dog-clicker" className="rounded-full border-[3px] border-black bg-white/70 px-7 py-4 text-center font-black uppercase tracking-[0.2em] text-black shadow-[5px_6px_0_#17130f] transition hover:-translate-y-1 hover:bg-yellow-100">
+                  Play Dog Game
                 </Link>
               </div>
               <div className="mt-8 grid gap-3 text-sm font-black uppercase tracking-[0.08em] text-black/72 sm:grid-cols-3">
@@ -132,7 +132,7 @@ export default function Home() {
           <div className="neon-card rounded-[2rem] p-7 lg:col-span-2">
             <SectionEyebrow color="#B99CFF">Tour the mural energy</SectionEyebrow>
             <h2 className="brand-display text-5xl uppercase text-black md:text-6xl">Shop walls, window splashes, tattoo flash, and community color.</h2>
-            <p className="mt-4 leading-8 text-black/65">The site now mirrors the actual salon language: chunky black outlines, paint-splash shapes on glass, custom character art, colorful portrait grids, and a friendly tattoo-parlor edge.</p>
+            <p className="mt-4 leading-8 text-black/65">Step into a bright, welcoming studio with chunky black outlines, paint-splash energy, custom character art, colorful portrait grids, and a friendly tattoo-parlor edge.</p>
           </div>
           <div className="neon-card rounded-[2rem] p-7">
             <SectionEyebrow color="#FFB347">Products</SectionEyebrow>

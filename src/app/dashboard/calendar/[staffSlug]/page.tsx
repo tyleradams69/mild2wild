@@ -11,9 +11,9 @@ import { createSupabaseServerClient } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
-const demoCalendarAppointments: CalendarBoardAppointment[] = [
+const fallbackCalendarAppointments: CalendarBoardAppointment[] = [
   {
-    id: "demo-booking-1",
+    id: "sample-booking-1",
     staffSlug: "team-member-13",
     serviceName: "Custom Nail Art",
     clientName: "Maya Rose",
@@ -27,7 +27,7 @@ const demoCalendarAppointments: CalendarBoardAppointment[] = [
     internalNotes: "Called once, send inspiration/photo examples before confirming deposit.",
   },
   {
-    id: "demo-calendar-2",
+    id: "sample-calendar-2",
     staffSlug: "team-member-10",
     serviceName: "Tattoo Consultation",
     clientName: "Riley Ink",
@@ -91,7 +91,7 @@ function mapAppointmentRow(row: AppointmentRelationRow): CalendarBoardAppointmen
 
 async function loadCalendarAppointments() {
   const supabase = createSupabaseServerClient();
-  if (!supabase) return demoCalendarAppointments;
+  if (!supabase) return fallbackCalendarAppointments;
 
   const { data, error } = await supabase
     .from("appointments")
@@ -99,9 +99,9 @@ async function loadCalendarAppointments() {
     .order("starts_at", { ascending: true })
     .limit(120);
 
-  if (error) return demoCalendarAppointments;
+  if (error) return fallbackCalendarAppointments;
   const mapped = ((data ?? []) as AppointmentRelationRow[]).map(mapAppointmentRow).filter((row): row is CalendarBoardAppointment => Boolean(row));
-  return mapped.length > 0 ? mapped : demoCalendarAppointments;
+  return mapped.length > 0 ? mapped : fallbackCalendarAppointments;
 }
 
 export default async function StaffCalendarPage({ params }: { params: Promise<{ staffSlug: string }> }) {

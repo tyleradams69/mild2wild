@@ -175,10 +175,29 @@ const categoryBio: Record<ServiceCategorySlug, string> = {
 };
 
 const categoryGallery: Record<ServiceCategorySlug, string[]> = {
-  nails: ["Portfolio image slot", "Signature set notes", "Favorite nail-art style"],
-  hair: ["Before/after slot", "Color specialty notes", "Styling portfolio slot"],
-  tattoo: ["Tattoo portfolio slot", "Flash sheet slot", "Consultation style notes"],
-  aesthetics: ["Treatment-room slot", "Skincare result notes", "Relaxation/service notes"],
+  nails: ["Custom sets", "Chrome details", "Hand-painted art"],
+  hair: ["Color work", "Cuts & styling", "Event-ready finishes"],
+  tattoo: ["Custom concepts", "Flash designs", "Consultation planning"],
+  aesthetics: ["Skincare", "Brows & lashes", "Relaxing treatments"],
+};
+
+const publicStaffNames: Record<number, string> = {
+  1: "Luna Lacquer",
+  2: "Nova Nails",
+  3: "Raven Ink",
+  4: "Iris Aura",
+  5: "Poppy Polish",
+  6: "Violet Glow",
+  7: "Ace Needle",
+  8: "Sol Strands",
+  9: "Sunny Shears",
+  10: "Echo Ink",
+  11: "Ruby Rinse",
+  13: "Caitlin",
+  14: "Moxie Mani",
+  15: "Cherry Chrome",
+  16: "Pixie Polish",
+  17: "Sage Spa",
 };
 
 const categoryAccentRotation: Record<ServiceCategorySlug, string[]> = {
@@ -220,7 +239,7 @@ export const staffMembers: StaffMember[] = staffSeed.map(({ index, categorySlug,
 
   return {
     slug: `team-member-${paddedIndex}`,
-    name: isMascot ? "Shop Dog Mascot" : index === 13 ? "Caitlin" : `Team Member ${paddedIndex}`,
+    name: isMascot ? "Shop Dog Mascot" : (publicStaffNames[index] ?? `${categoryTitles[categorySlug as ServiceCategorySlug]} ${paddedIndex}`),
     title: isMascot ? "Shop Mascot" : categoryTitles[categorySlug as ServiceCategorySlug],
     bio: isMascot ? mascotBio : categoryBio[categorySlug as ServiceCategorySlug],
     photoUrl: `/staff/team-member-${paddedIndex}.jpg`,

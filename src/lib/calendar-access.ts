@@ -1,4 +1,4 @@
-import type { StaffMember } from "./studio-data";
+import { getStaffBySlug, type StaffMember } from "./studio-data";
 
 export type DashboardRole = "owner" | "staff";
 
@@ -40,12 +40,12 @@ export function createDemoDashboardSession(role: DashboardRole, staffSlug?: stri
     };
   }
 
-  const numericName = staffSlug?.replace("team-member-", "Team Member ") ?? "Staff Member";
+  const staff = staffSlug ? getStaffBySlug(staffSlug) : undefined;
 
   return {
     role,
     staffSlug,
-    displayName: numericName,
+    displayName: staff?.name ?? "Staff Member",
   };
 }
 

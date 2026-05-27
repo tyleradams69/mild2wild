@@ -64,7 +64,7 @@ Use this after Tyler gets more details from the owner/client.
 - booking page request tips
 - service pages use customer-friendly staff matching copy
 - products page avoids internal/future-build language
-- tour placeholder feels more intentional
+- tour coming-soon area feels more intentional
 - legal copy says owner alerts instead of text-only follow-up
 
 ## Final QA checklist after content update

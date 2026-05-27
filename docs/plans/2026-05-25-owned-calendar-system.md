@@ -108,7 +108,7 @@
 
 **Behavior:**
 - Public booking creates `requested` appointment.
-- Call-agent intake creates a routed lead or requested appointment depending on available time info.
+- Website follow-up keeps request context attached to the appointment.
 - Staff filtering remains service-specific.
 
 ### Task 7: Browser QA and launch handoff
@@ -122,5 +122,5 @@
 - Owner can move/reschedule with conflict prevention.
 - Booksy import creates clients + appointments and flags unresolved rows.
 - Public booking appears in the correct staff calendar.
-- Call-agent handoff appears with context.
+- Website follow-up context remains visible in the dashboard.
 - Tests/lint/build pass.

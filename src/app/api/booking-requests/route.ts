@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
   const supabase = createSupabaseServerClient();
   if (!supabase) {
-    return NextResponse.json({ ok: false, errors: ["Booking database is not configured."] }, { status: 503 });
+    return NextResponse.json({ ok: false, errors: ["Online booking is temporarily unavailable. Please contact the shop directly and we can help with this request."] }, { status: 503 });
   }
 
   const [{ data: staffRows, error: staffError }, { data: serviceRows, error: serviceError }] = await Promise.all([

@@ -28,7 +28,7 @@ describe("calendar access foundation", () => {
     const employee = createDemoDashboardSession("staff", "team-member-10");
     const model = buildCalendarDashboardModel(employee, staffMembers);
 
-    expect(model.sessionLabel).toBe("Team Member 10 staff login");
+    expect(model.sessionLabel).toBe("Echo Ink staff login");
     expect(model.visibleCalendars).toHaveLength(staffMembers.length);
     expect(model.visibleCalendars.find((calendar) => calendar.staffSlug === "team-member-10")?.canEdit).toBe(true);
     expect(model.visibleCalendars.find((calendar) => calendar.staffSlug === "team-member-11")?.canEdit).toBe(false);

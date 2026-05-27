@@ -55,7 +55,6 @@ export function SiteHeader() {
     ["Tour", "/tour"],
     ["Products", "/products"],
     ["Dog Game", "/dog-clicker"],
-    ["Book", "/book"],
     ["Login", "/login"],
   ];
 

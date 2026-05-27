@@ -1,6 +1,6 @@
 # Mild 2 Wild client information questionnaire
 
-Use this to gather the remaining owner-approved content. Anything not answered here can stay as safe placeholder copy until the client is ready.
+Use this to gather the remaining owner-approved content. Anything not answered here can stay as safe, customer-facing "coming soon" copy until the client is ready.
 
 ## 1. Business basics
 
@@ -132,27 +132,20 @@ Service categories to confirm:
 ## 10. Website-only intake
 
 - Confirm preferred website contact/booking form fields:
-- Confirm dashboard follow-up owner/staff routing:
-- Business greeting/script preferences:
-- Required fields the agent must collect:
   - Name
   - Phone
   - Email
   - Requested service
   - Preferred staff
   - Preferred date/time
-  - Budget
-  - Tattoo placement/size
-  - Inspiration/reference images
+  - Budget, if needed
+  - Tattoo placement/size, if needed
+  - Inspiration/reference image handling
   - Notes
-- When should the agent transfer immediately?
-- When should the agent only take a message?
-- Any phrases or promises the agent should avoid?
-- Alert/voice provider preference:
-  - Twilio
-  - Telnyx
-  - Bland/Retell/Vapi/etc.
-  - Other
+- Confirm dashboard follow-up owner/staff routing:
+- Who should receive new website booking notifications, if any?
+- Should staff receive notifications only for their own calendar?
+- Any phrases or promises the website should avoid?
 
 ## 11. Tour / about / community
 

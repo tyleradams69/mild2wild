@@ -38,7 +38,7 @@ describe("staff profile overrides", () => {
     });
     expect(caitlin?.socialLinks.find((link) => link.label === "Instagram")?.href).toBe("https://instagram.com/caitlin.nails");
     expect(caitlin?.socialLinks.map((link) => link.label)).not.toContain("Instagram coming soon");
-    expect(merged.find((staff) => staff.slug === "team-member-10")?.name).toBe("Team Member 10");
+    expect(merged.find((staff) => staff.slug === "team-member-10")?.name).toBe("Echo Ink");
   });
 
   it("normalizes editable form input and rejects missing required profile fields", () => {

@@ -23,9 +23,9 @@ async function readDashboardSession() {
   return parseSignedDashboardSession(cookieStore.get(dashboardSessionCookieName)?.value, getDashboardSessionSecret());
 }
 
-const demoCalendarAppointments: CalendarBoardAppointment[] = [
+const fallbackCalendarAppointments: CalendarBoardAppointment[] = [
   {
-    id: "demo-booking-1",
+    id: "sample-booking-1",
     staffSlug: "team-member-13",
     serviceName: "Custom Nail Art",
     clientName: "Maya Rose",
@@ -39,7 +39,7 @@ const demoCalendarAppointments: CalendarBoardAppointment[] = [
     internalNotes: "Called once, send inspiration/photo examples before confirming deposit.",
   },
   {
-    id: "demo-calendar-2",
+    id: "sample-calendar-2",
     staffSlug: "team-member-10",
     serviceName: "Tattoo Consultation",
     clientName: "Riley Ink",
@@ -94,7 +94,7 @@ function mapAppointmentRow(row: AppointmentRelationRow): CalendarBoardAppointmen
 
 async function loadCalendarAppointments() {
   const supabase = createSupabaseServerClient();
-  if (!supabase) return demoCalendarAppointments;
+  if (!supabase) return fallbackCalendarAppointments;
 
   const { data, error } = await supabase
     .from("appointments")
@@ -102,9 +102,9 @@ async function loadCalendarAppointments() {
     .order("starts_at", { ascending: true })
     .limit(80);
 
-  if (error) return demoCalendarAppointments;
+  if (error) return fallbackCalendarAppointments;
   const mapped = ((data ?? []) as AppointmentRelationRow[]).map(mapAppointmentRow).filter((row): row is CalendarBoardAppointment => Boolean(row));
-  return mapped.length > 0 ? mapped : demoCalendarAppointments;
+  return mapped.length > 0 ? mapped : fallbackCalendarAppointments;
 }
 
 async function updateAppointmentAction(formData: FormData) {
@@ -192,21 +192,19 @@ export default async function DashboardPage() {
     session,
     staffMembers: mergedStaffMembers,
     services,
-    appointments: [
-      {
-        id: "demo-booking-1",
-        customer_name: "Maya Rose",
-        customer_phone: "555-0101",
-        customer_email: "maya@example.com",
-        service_slug: "custom-nail-art",
-        staff_slug: "team-member-13",
-        starts_at: "2026-06-01T18:00:00.000Z",
-        status: "requested",
-        lead_status: "contacted",
-        internal_notes: "Called once, send inspiration/photo examples before confirming deposit.",
-        notes: "Wants chrome flame nail art and asked for Caitlin if available.",
-      },
-    ],
+    appointments: calendarAppointments.map((appointment) => ({
+      id: appointment.id,
+      customer_name: appointment.clientName,
+      customer_phone: appointment.clientPhone,
+      customer_email: appointment.clientEmail,
+      service_name: appointment.serviceName,
+      staff_slug: appointment.staffSlug,
+      starts_at: appointment.startsAt,
+      status: appointment.status,
+      lead_status: appointment.status === "requested" ? "new" : "contacted",
+      internal_notes: appointment.internalNotes,
+      notes: appointment.notes,
+    })),
   });
   const identityChipLabel = dashboardModel.canManageAllCalendars ? "Owner Admin" : (dashboardModel.profileAvatar?.title ?? dashboardModel.sessionLabel);
   const primaryCalendarSlug =

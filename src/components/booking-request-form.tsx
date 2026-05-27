@@ -48,14 +48,14 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
       if (!response.ok || !payload.ok) {
         setSubmission({
           status: "error",
-          message: payload.errors?.join(" ") ?? "Could not send that booking request yet.",
+          message: payload.errors?.join(" ") ?? "Could not send that booking request yet. Please contact the shop directly if the problem continues.",
         });
         return;
       }
 
       setSubmission({ status: "success", message: "Booking request sent. The shop will review the details and follow up to confirm availability." });
     } catch {
-      setSubmission({ status: "error", message: "Could not reach the booking endpoint. Please try again." });
+      setSubmission({ status: "error", message: "Could not reach online booking. Please try again or contact the shop directly." });
     }
   }
 
