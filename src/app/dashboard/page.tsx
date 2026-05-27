@@ -227,6 +227,12 @@ export default async function DashboardPage() {
     ],
   });
   const identityChipLabel = dashboardModel.canManageAllCalendars ? "Owner Admin" : (dashboardModel.profileAvatar?.title ?? dashboardModel.sessionLabel);
+  const primaryCalendarSlug =
+    session.staffSlug && dashboardModel.editableCalendarSlugs.includes(session.staffSlug)
+      ? session.staffSlug
+      : dashboardModel.editableCalendarSlugs[0] ?? dashboardModel.visibleCalendars[0]?.staffSlug;
+  const primaryCalendarHref = primaryCalendarSlug ? `/dashboard/calendar/${primaryCalendarSlug}` : "#calendar-board";
+  const primaryCalendarLabel = dashboardModel.canManageAllCalendars ? "Open Caitlin's calendar" : "Open my calendar";
   return (
     <PageShell>
       <section className="mx-auto max-w-7xl px-5 py-16">
@@ -237,6 +243,14 @@ export default async function DashboardPage() {
             <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
               Signed sessions now separate owner/admin access from individual employee logins. The owner can manage every calendar; employees can only edit their own schedule lane.
             </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="#calendar-board" className="rounded-full bg-cyan-200 px-6 py-4 text-sm font-black uppercase tracking-[0.18em] text-black shadow-lg shadow-cyan-400/20 transition hover:scale-[1.02] hover:bg-white">
+                Open all calendars ↓
+              </Link>
+              <Link href={primaryCalendarHref} className="rounded-full border border-white/15 px-6 py-4 text-sm font-black uppercase tracking-[0.18em] text-white/80 transition hover:bg-white hover:text-black">
+                {primaryCalendarLabel} →
+              </Link>
+            </div>
           </div>
           <div className="flex items-center gap-3 self-start rounded-full border border-white/10 bg-black/60 p-2 pr-4 shadow-2xl shadow-pink-500/10">
             {dashboardModel.profileAvatar ? (
@@ -386,7 +400,7 @@ export default async function DashboardPage() {
         </article>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 py-10">
+      <section id="calendar-board" className="mx-auto max-w-7xl scroll-mt-24 px-5 py-10">
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
           <div>
             <SectionEyebrow color="#4DDCE5">Calendar board</SectionEyebrow>
