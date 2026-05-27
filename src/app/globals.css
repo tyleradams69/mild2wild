@@ -92,11 +92,7 @@ body {
   --lane-color: var(--purple);
   position: relative;
   isolation: isolate;
-  border-color: color-mix(in srgb, var(--lane-color) 62%, transparent);
-  background:
-    radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--lane-color) 14%, transparent), transparent 14rem),
-    radial-gradient(circle at 84% 100%, color-mix(in srgb, var(--cyan) 10%, transparent), transparent 18rem),
-    rgba(0, 0, 0, 0.72);
+  background: rgba(0, 0, 0, 0.72);
 }
 
 .goo-calendar-panel::before,
@@ -104,35 +100,30 @@ body {
   content: "";
   position: absolute;
   pointer-events: none;
-  border-radius: inherit;
+  z-index: -1;
+  background: var(--lane-color);
+  opacity: 0.72;
+  filter: drop-shadow(0 0 0.7rem color-mix(in srgb, var(--lane-color) 45%, transparent));
 }
 
 .goo-calendar-panel::before {
-  z-index: 2;
-  inset: -2px;
-  padding: 2px;
-  background:
-    radial-gradient(1.8rem 1.1rem at 8% 0%, var(--lane-color) 0 62%, transparent 64%),
-    radial-gradient(2.6rem 1.25rem at 25% 100%, var(--lane-color) 0 56%, transparent 58%),
-    radial-gradient(1.45rem 2.15rem at 100% 22%, var(--lane-color) 0 58%, transparent 60%),
-    radial-gradient(2rem 1.05rem at 78% 0%, var(--lane-color) 0 52%, transparent 54%),
-    radial-gradient(1.25rem 2.3rem at 0% 70%, var(--lane-color) 0 56%, transparent 58%),
-    linear-gradient(135deg, var(--lane-color), color-mix(in srgb, var(--hot-pink) 50%, var(--lane-color)), var(--lane-color));
-  filter: drop-shadow(0 0 0.55rem color-mix(in srgb, var(--lane-color) 45%, transparent));
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  opacity: 0.88;
+  width: 4.25rem;
+  height: 1.15rem;
+  left: 16%;
+  top: -0.42rem;
+  border-radius: 999px 999px 55% 55%;
+  box-shadow:
+    18rem 0.2rem 0 -0.28rem var(--lane-color),
+    30rem 19.5rem 0 -0.35rem var(--lane-color);
 }
 
 .goo-calendar-panel::after {
-  z-index: -1;
-  inset: -1.2rem;
-  background:
-    radial-gradient(3.8rem 2.2rem at 16% 2%, color-mix(in srgb, var(--lane-color) 28%, transparent), transparent 72%),
-    radial-gradient(2.8rem 4.4rem at 100% 30%, color-mix(in srgb, var(--lane-color) 20%, transparent), transparent 70%),
-    radial-gradient(5rem 2.4rem at 58% 100%, color-mix(in srgb, var(--hot-pink) 18%, transparent), transparent 72%);
-  filter: blur(0.65rem);
-  opacity: 0.9;
+  width: 1.15rem;
+  height: 4.1rem;
+  right: -0.42rem;
+  top: 21%;
+  border-radius: 55% 999px 999px 55%;
+  box-shadow:
+    -34rem 12rem 0 -0.22rem var(--lane-color),
+    -20rem 38rem 0 -0.38rem var(--lane-color);
 }
