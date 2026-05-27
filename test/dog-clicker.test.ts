@@ -14,6 +14,8 @@ describe("dog treat clicker", () => {
       "Spa Day Snack",
       "Wild Deluxe Treat",
     ]);
+    expect(dogClickerTreats.map((treat) => treat.treatShape)).toEqual(["biscuit", "bone", "sparkle", "crown"]);
+    expect(dogClickerTreats.map((treat) => treat.treatColor)).toEqual(["#f7c66d", "#87dcff", "#ff9bd4", "#c9ff8f"]);
     expect(dogClickerTreats.every((treat, index, treats) => index === 0 || treat.unlockAt > treats[index - 1].unlockAt)).toBe(true);
   });
 });

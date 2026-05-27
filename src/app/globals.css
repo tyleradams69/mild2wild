@@ -245,6 +245,156 @@ body::after {
   opacity: 0.85;
 }
 
+.treat-icon {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.2rem;
+  color: #17130f;
+  font-size: 1.15rem;
+  font-weight: 900;
+  line-height: 1;
+  transform-origin: center;
+}
+
+.treat-biscuit {
+  border-radius: 999px;
+}
+
+.treat-biscuit > span::before,
+.treat-biscuit > span::after {
+  content: "";
+  position: absolute;
+  width: 0.28rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: #7b4c27;
+  box-shadow: 0.65rem 0.22rem 0 #7b4c27, -0.58rem 0.3rem 0 #7b4c27;
+}
+
+.treat-bone {
+  width: 3.1rem;
+  border-radius: 999px;
+}
+
+.treat-bone::before,
+.treat-bone::after {
+  content: "";
+  position: absolute;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 3px solid #17130f;
+  border-radius: 999px;
+  background: inherit;
+}
+
+.treat-bone::before {
+  left: -0.42rem;
+  box-shadow: 0 1rem 0 -0.1rem #17130f;
+}
+
+.treat-bone::after {
+  right: -0.42rem;
+  box-shadow: 0 1rem 0 -0.1rem #17130f;
+}
+
+.treat-sparkle {
+  width: 2.45rem;
+  height: 2.45rem;
+  clip-path: polygon(50% 0%, 62% 35%, 100% 50%, 62% 65%, 50% 100%, 38% 65%, 0% 50%, 38% 35%);
+}
+
+.treat-crown {
+  width: 2.8rem;
+  height: 2.4rem;
+  border-radius: 0.65rem 0.65rem 1rem 1rem;
+}
+
+.treat-projectile {
+  left: var(--start-x);
+  top: var(--start-y);
+  transform: translate(-50%, -50%) rotate(var(--treat-rotate));
+  animation: treat-flight 7.4s cubic-bezier(0.12, 0.82, 0.12, 1) forwards;
+  will-change: left, top, opacity, transform;
+}
+
+.dog-eat-stage {
+  animation: dog-nom 1.05s cubic-bezier(0.18, 0.85, 0.22, 1.2);
+  transform-origin: 52% 43%;
+}
+
+.dog-mouth-pop {
+  animation: dog-mouth-pop 6.2s ease-out;
+}
+
+.dog-nom-bubble {
+  animation: dog-nom-bubble 6.4s ease-out;
+}
+
+@keyframes treat-flight {
+  0% {
+    left: var(--start-x);
+    top: var(--start-y);
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2) rotate(var(--treat-rotate));
+  }
+  22% {
+    left: 42%;
+    top: 58%;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08) rotate(calc(var(--treat-rotate) + 150deg));
+  }
+  36% {
+    left: var(--end-x);
+    top: var(--end-y);
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.78) rotate(calc(var(--treat-rotate) + 270deg));
+  }
+  86% {
+    left: var(--end-x);
+    top: var(--end-y);
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.64) rotate(calc(var(--treat-rotate) + 300deg));
+  }
+  100% {
+    left: var(--end-x);
+    top: var(--end-y);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.18) rotate(calc(var(--treat-rotate) + 330deg));
+  }
+}
+
+@keyframes dog-nom {
+  0% { transform: scale(1) rotate(0deg); }
+  18% { transform: scale(1.08) translateY(-7px) rotate(-2.2deg); }
+  42% { transform: scale(0.97) translateY(3px) rotate(1.8deg); }
+  68% { transform: scale(1.035) translateY(-2px) rotate(-0.8deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes dog-mouth-pop {
+  0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.15); }
+  12% { opacity: 0.96; transform: translate(-50%, -50%) scale(1.22); }
+  82% { opacity: 0.78; transform: translate(-50%, -50%) scale(0.82); }
+}
+
+@keyframes dog-nom-bubble {
+  0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.45) rotate(-8deg); }
+  12% { opacity: 1; transform: translate(-50%, -72%) scale(1.05) rotate(4deg); }
+  82% { opacity: 1; transform: translate(-50%, -92%) scale(1) rotate(-3deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .treat-projectile,
+  .dog-eat-stage,
+  .dog-mouth-pop,
+  .dog-nom-bubble {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
 .footer-mural {
   background:
     radial-gradient(circle at 16% 28%, rgba(255, 139, 200, 0.34), transparent 12rem),
