@@ -437,14 +437,14 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="mt-8 grid gap-5 xl:grid-cols-3">
+        <div className="mt-8 grid items-start gap-5 xl:grid-cols-3">
           {calendarBoard.visibleLanes.map((lane) => {
             const staff = getStaffBySlug(lane.staffSlug);
             const category = serviceCategories.find((item) => item.slug === staff?.serviceCategorySlugs[0]);
             return (
               <article
                 key={lane.staffSlug}
-                className="rounded-[1.8rem] border bg-black/70 p-5"
+                className="flex max-h-[42rem] flex-col overflow-hidden rounded-[1.8rem] border bg-black/70 p-5"
                 style={{
                   borderColor: lane.canEdit ? `${lane.calendarColor}88` : "rgba(255,255,255,0.1)",
                   boxShadow: lane.canEdit ? `0 0 55px ${lane.calendarColor}24` : "none",
@@ -492,7 +492,7 @@ export default async function DashboardPage() {
                   </form>
                 ) : null}
 
-                <div className="mt-5 space-y-3">
+                <div className="mt-5 min-h-0 flex-1 space-y-3 overflow-y-auto pr-2 [scrollbar-color:#4DDCE5_rgba(255,255,255,0.08)]">
                   {lane.appointments.length === 0 ? (
                     <div className="rounded-3xl border border-dashed border-white/15 bg-black/40 p-5 text-sm leading-6 text-white/55">No appointments in this lane yet.</div>
                   ) : lane.appointments.map((appointment) => (
