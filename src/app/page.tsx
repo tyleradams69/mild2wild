@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { DogTreatIcon } from "@/components/dog-treat-icon";
 import { PageShell, PaintSplat, SectionEyebrow, ServiceCategoryCard, StaffCard } from "@/components/site";
 import { getDogClickerMascot } from "@/lib/dog-clicker";
 import { productHighlights, serviceCategories, staffMembers } from "@/lib/studio-data";
@@ -62,7 +63,9 @@ export default function Home() {
                       <p className="text-xs font-black uppercase tracking-[0.2em] text-black/55">New tab</p>
                       <p className="brand-display text-3xl uppercase text-black">Dog Treat Clicker</p>
                     </div>
-                    <span className="rounded-full border-[3px] border-black bg-cyan-200 px-4 py-2 text-2xl shadow-[4px_5px_0_#17130f]">🦴</span>
+                    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-[3px] border-black bg-cyan-200 shadow-[4px_5px_0_#17130f]">
+                      <DogTreatIcon icon="bone" className="h-9 w-9" />
+                    </span>
                   </div>
                 </Link>
 

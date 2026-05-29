@@ -1,6 +1,8 @@
+export type DogTreatIconName = "bone" | "rainbow" | "spark" | "crown";
+
 export type DogClickerTreat = {
   name: string;
-  emoji: string;
+  icon: DogTreatIconName;
   unlockAt: number;
   rewardText: string;
 };
@@ -8,25 +10,25 @@ export type DogClickerTreat = {
 export const dogClickerTreats: DogClickerTreat[] = [
   {
     name: "Tiny Biscuit",
-    emoji: "🦴",
+    icon: "bone",
     unlockAt: 0,
     rewardText: "A polite little crunch.",
   },
   {
     name: "Rainbow Bone",
-    emoji: "🌈",
+    icon: "rainbow",
     unlockAt: 25,
     rewardText: "Tail wag mode: activated.",
   },
   {
     name: "Spa Day Snack",
-    emoji: "✨",
+    icon: "spark",
     unlockAt: 75,
     rewardText: "Mascot is feeling pampered.",
   },
   {
     name: "Wild Deluxe Treat",
-    emoji: "👑",
+    icon: "crown",
     unlockAt: 150,
     rewardText: "The shop dog now owns the parlor.",
   },

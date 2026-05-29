@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { dogClickerTreats, getDogClickerMascot, getUnlockedTreat } from "@/lib/dog-clicker";
+import { DogTreatIcon } from "@/components/dog-treat-icon";
 
 export function DogClickerGame() {
   const mascot = getDogClickerMascot();
@@ -24,14 +25,14 @@ export function DogClickerGame() {
         {floatingTreats.map((item) => (
           <span
             key={item}
-            className="absolute rounded-full border-2 border-black bg-yellow-200 px-3 py-1 text-xl shadow-[3px_4px_0_#17130f]"
+            className="absolute flex h-10 w-14 items-center justify-center rounded-full border-2 border-black bg-yellow-100 shadow-[3px_4px_0_#17130f]"
             style={{
               left: `${(item * 17 + 8) % 92}%`,
               top: `${(item * 23 + 10) % 88}%`,
               rotate: `${(item % 2 === 0 ? 1 : -1) * (8 + item * 2)}deg`,
             }}
           >
-            🦴
+            <DogTreatIcon icon="bone" className="h-7 w-7" />
           </span>
         ))}
       </div>
@@ -73,8 +74,9 @@ export function DogClickerGame() {
         </div>
 
         <div className="relative mx-auto w-full max-w-xl">
-          <div className="absolute -left-6 top-8 rounded-full border-[3px] border-black bg-yellow-200 px-5 py-3 font-black uppercase tracking-[0.16em] text-black shadow-[5px_6px_0_#17130f]">
-            {unlockedTreat.emoji} {unlockedTreat.name}
+          <div className="absolute -left-4 top-8 flex items-center rounded-full border-[3px] border-black bg-yellow-200 px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-black shadow-[5px_6px_0_#17130f] sm:-left-6 sm:px-5 sm:tracking-[0.16em]">
+            <DogTreatIcon icon={unlockedTreat.icon} className="mr-2 h-6 w-6" />
+            {unlockedTreat.name}
           </div>
           <button
             type="button"
