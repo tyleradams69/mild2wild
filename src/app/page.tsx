@@ -22,7 +22,7 @@ export default function Home() {
                 Pastel window art, tattoo flash, real artists, and one very feedable shop dog.
               </p>
               <p className="mt-6 max-w-2xl text-base leading-7 text-black/68 md:mt-7 md:text-xl md:leading-8">
-                A hand-painted salon/parlor world where every service lane feels intentional: nails, tattoos, hair, aesthetics, spa care, retail favorites, and request-first booking without losing the mural-wall personality.
+                A hand-painted salon/parlor world where every service feels intentional: nails, tattoos, hair, aesthetics, spa care, retail favorites, and request-first booking without losing the mural-wall personality.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <Link href="/book" className="rounded-full border-[3px] border-black bg-pink-300 px-7 py-4 text-center font-black uppercase tracking-[0.2em] text-black shadow-[6px_7px_0_#17130f] transition hover:-translate-y-1 hover:bg-yellow-200">
@@ -33,7 +33,7 @@ export default function Home() {
                 </Link>
               </div>
               <div className="mt-8 grid gap-3 text-sm font-black uppercase tracking-[0.08em] text-black/72 sm:grid-cols-3">
-                {["Tattoo parlor included", "Pastel service lanes", "Dog treat game"].map((item, index) => (
+                {["Tattoo parlor included", "Color-coded services", "Dog treat game"].map((item, index) => (
                   <div key={item} className="rounded-2xl border-[3px] border-black px-4 py-3 shadow-[4px_5px_0_#17130f]" style={{ background: ["#d5c4ff", "#c7f2ff", "#caff9b"][index] }}>
                     {item}
                   </div>
@@ -83,10 +83,10 @@ export default function Home() {
       <div className="wavy-divider text-pink-300" />
 
       <section id="services" className="mx-auto max-w-7xl px-5 py-16">
-        <SectionEyebrow>Choose your lane</SectionEyebrow>
+        <SectionEyebrow>Choose your service</SectionEyebrow>
         <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
           <h2 className="brand-display max-w-3xl text-5xl uppercase text-black md:text-7xl">Four color-coded worlds. One shop.</h2>
-          <p className="max-w-md text-lg leading-8 text-black/62">Nails, hair, tattoo, and aesthetics each keep their own pastel lane so guests can scan fast without losing the hand-painted shop personality.</p>
+          <p className="max-w-md text-lg leading-8 text-black/62">Nails, hair, tattoo, and aesthetics each keep their own pastel category so guests can scan fast without losing the hand-painted shop personality.</p>
         </div>
         <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
           {serviceCategories.map((category) => (
@@ -114,7 +114,7 @@ export default function Home() {
         <SectionEyebrow color="#95df68">How requests work</SectionEyebrow>
         <div className="grid gap-6 md:grid-cols-3">
           {[
-            ["Pick the service", "Guests choose the appointment lane first so staff choices stay relevant to nails, hair, tattoo, aesthetics, or spa."],
+            ["Pick the service", "Guests choose the appointment type first so staff choices stay relevant to nails, hair, tattoo, aesthetics, or spa."],
             ["Match the right person", "The site shows only team members connected to that service, then stores the request for follow-up."],
             ["Confirm details", "The shop confirms timing, pricing, deposits, consultations, and any service-specific prep before anything is final."],
           ].map(([title, copy], index) => (

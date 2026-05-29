@@ -165,13 +165,13 @@ const categoryTitles: Record<ServiceCategorySlug, string> = {
 
 const categoryBio: Record<ServiceCategorySlug, string> = {
   nails:
-    "Bio coming soon. This nail artist offers color-forward sets, detailed nail art, and appointment options for guests who want a look that fits their style.",
+    "This nail artist offers color-forward sets, detailed nail art, and appointment options for guests who want a look that fits their style.",
   hair:
-    "Bio coming soon. This stylist helps guests plan cuts, color, transformations, and finishing details that match their look and routine.",
+    "This stylist helps guests plan cuts, color, transformations, and finishing details that match their look and routine.",
   tattoo:
-    "Bio coming soon. This tattoo artist is available for consultation-first projects, flash ideas, placement planning, and portfolio review.",
+    "This tattoo artist is available for consultation-first projects, flash ideas, placement planning, and portfolio review.",
   aesthetics:
-    "Bio coming soon. This beauty specialist supports spa, skincare, brow, lash, and self-care services with a calm client-first approach.",
+    "This beauty specialist supports spa, skincare, brow, lash, and self-care services with a calm client-first approach.",
 };
 
 const categoryGallery: Record<ServiceCategorySlug, string[]> = {

@@ -10,8 +10,8 @@ export default function TourPage() {
           <div className="neon-card flex min-h-72 items-center justify-center overflow-hidden rounded-[2rem] border-cyan-300/30 p-5 text-center sm:aspect-video sm:rounded-[3rem] sm:p-8">
             <div className="relative z-10">
               <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-cyan-200/40 bg-cyan-200/10 text-4xl text-cyan-100">▶</div>
-              <p className="brand-display text-3xl font-black uppercase text-cyan-200 sm:text-4xl md:text-5xl">Video Tour Coming Soon</p>
-              <p className="mt-4 text-white/60">A walk-through video will live here once the final shop footage is ready.</p>
+              <p className="brand-display text-3xl font-black uppercase text-cyan-200 sm:text-4xl md:text-5xl">Shop Tour Preview</p>
+              <p className="mt-4 text-white/60">A full video walkthrough can be added when final shop footage is ready.</p>
               <div className="mt-6 flex flex-wrap justify-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-white/50">
                 <span className="rounded-full border border-white/10 px-3 py-2">Shop walkthrough</span>
                 <span className="rounded-full border border-white/10 px-3 py-2">Team story</span>
