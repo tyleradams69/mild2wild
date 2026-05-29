@@ -1,4 +1,4 @@
-import { PageShell, SectionEyebrow } from "@/components/site";
+import { PageShell, PaintSplat, SectionEyebrow } from "@/components/site";
 
 function errorCopy(error?: string) {
   if (!error) return null;
@@ -20,7 +20,9 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
     <PageShell>
       <section className="mx-auto max-w-3xl px-5 py-16">
         <SectionEyebrow color="#F06BD6">Team login</SectionEyebrow>
-        <h1 className="brand-display max-w-4xl text-5xl font-black uppercase md:text-7xl">Sign in to the dashboard.</h1>
+        <h1 className="brand-display max-w-4xl text-4xl font-black uppercase min-[420px]:text-5xl md:text-7xl">
+          Sign in to the <span className="block">dashboard.</span>
+        </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-white/65">
           Authorized team members can sign in to manage appointments and schedules.
         </p>
@@ -31,33 +33,46 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
           </div>
         ) : null}
 
-        <form action="/api/dashboard-login" method="post" className="neon-card mt-10 grid gap-6 rounded-[2rem] p-6" style={{ boxShadow: "0 0 70px #F06BD622" }}>
-          <label className="rounded-3xl border border-white/10 bg-black/50 p-5">
-            <span className="block text-xs font-black uppercase tracking-[0.24em] text-white/45">Email</span>
-            <input
-              name="email"
-              type="email"
-              autoComplete="email"
-              placeholder="you@example.com"
-              className="mt-3 w-full rounded-2xl border border-white/10 bg-black px-4 py-3 font-bold text-white outline-none focus:border-pink-300"
-              required
-            />
-          </label>
+        <form
+          action="/api/dashboard-login"
+          method="post"
+          className="neon-card relative mx-1 mt-10 grid overflow-hidden rounded-[2rem] bg-[#fff7e8] p-5 shadow-[8px_9px_0_#17130f,0_0_0_8px_#F06BD633,0_26px_60px_rgba(40,26,20,0.2)] sm:mx-0 sm:p-6"
+        >
+          <PaintSplat color="#F06BD6" variant="window" className="absolute -right-10 -top-12 w-40 rotate-12 opacity-40" />
+          <PaintSplat color="#4DDCE5" variant="bubble" className="absolute -bottom-14 -left-10 w-40 -rotate-12 opacity-35" />
 
-          <label className="rounded-3xl border border-white/10 bg-black/50 p-5">
-            <span className="block text-xs font-black uppercase tracking-[0.24em] text-white/45">Password</span>
-            <input
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              className="mt-3 w-full rounded-2xl border border-white/10 bg-black px-4 py-3 font-bold text-white outline-none focus:border-pink-300"
-              required
-            />
-          </label>
+          <div className="relative z-10 grid gap-5 pb-1">
+            <div className="rounded-[1.6rem] border-2 border-black bg-pink-100/85 p-4 shadow-[4px_5px_0_#17130f] sm:p-5">
+              <label>
+                <span className="block text-xs font-black uppercase tracking-[0.24em] text-black/65">Email</span>
+                <input
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  className="mt-3 w-full rounded-2xl border-2 border-black bg-[#fffaf0] px-4 py-3 font-bold text-black shadow-[3px_4px_0_#17130f] outline-none placeholder:text-black/50 focus:border-pink-500 focus:bg-white"
+                  required
+                />
+              </label>
+            </div>
 
-          <button className="rounded-full bg-white px-6 py-4 text-sm font-black uppercase tracking-[0.22em] text-black transition hover:bg-pink-300" type="submit">
-            Sign in
-          </button>
+            <div className="rounded-[1.6rem] border-2 border-black bg-cyan-100/85 p-4 shadow-[4px_5px_0_#17130f] sm:p-5">
+              <label>
+                <span className="block text-xs font-black uppercase tracking-[0.24em] text-black/65">Password</span>
+                <input
+                  name="password"
+                  type="password"
+                  autoComplete="current-password"
+                  className="mt-3 w-full rounded-2xl border-2 border-black bg-[#fffaf0] px-4 py-3 font-bold text-black shadow-[3px_4px_0_#17130f] outline-none focus:border-cyan-500 focus:bg-white"
+                  required
+                />
+              </label>
+            </div>
+
+            <button className="shop-tag bg-lime-200 px-6 py-4 text-sm font-black uppercase tracking-[0.22em] transition hover:-translate-y-0.5 hover:bg-yellow-200" type="submit">
+              Sign in
+            </button>
+          </div>
         </form>
       </section>
     </PageShell>
