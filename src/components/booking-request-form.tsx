@@ -18,7 +18,7 @@ const fieldShells = [
 ];
 
 const fieldShellBase = "grid min-w-0 gap-2 rounded-[1.35rem] border-2 border-black p-4 text-sm font-black uppercase tracking-[0.08em] text-black/65 shadow-[4px_5px_0_#17130f] transition";
-const controlBase = "w-full min-w-0 max-w-full rounded-2xl border-2 border-black bg-[#fffaf0] px-3 py-3 font-bold normal-case tracking-normal text-black shadow-[3px_4px_0_#17130f] outline-none placeholder:text-black/55 focus:bg-white";
+const controlBase = "block w-[calc(100%-0.35rem)] min-w-0 max-w-[calc(100%-0.35rem)] rounded-2xl border-2 border-black bg-[#fffaf0] px-3 py-3 font-bold normal-case tracking-normal text-black shadow-[3px_4px_0_#17130f] outline-none placeholder:text-black/55 focus:bg-white";
 
 export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }) {
   const serviceOptions = groups.flatMap((group) => group.services.map((service) => ({ ...service, categoryName: group.name, accent: group.accent })));
@@ -165,10 +165,12 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
 }
 
 function Input({ label, name, type = "text", required = false, tone = 0 }: { label: string; name: string; type?: string; required?: boolean; tone?: number }) {
+  const mobileDateClass = type === "datetime-local" ? "appearance-none pr-2 text-[16px] leading-tight" : "";
+
   return (
     <label className={`${fieldShellBase} ${fieldShells[tone % fieldShells.length]}`}>
       {label}
-      <input name={name} type={type} required={required} className={`${controlBase} focus:border-lime-500`} />
+      <input name={name} type={type} required={required} className={`${controlBase} ${mobileDateClass} focus:border-lime-500`} />
     </label>
   );
 }

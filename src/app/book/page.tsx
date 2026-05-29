@@ -10,7 +10,7 @@ const bookingNotes = [
 ];
 
 const helpCards = [
-  ["Pick the lane", "Choose a service first to see matching team members.", "#ffcae6"],
+  ["Pick the service", "Choose a service first to see matching team members.", "#ffcae6"],
   ["Describe the vibe", "If you are unsure, describe the look or experience you want in the notes.", "#c7f2ff"],
   ["We match it up", "The shop can recommend the best fit when confirming your request.", "#d9ffb8"],
 ];
@@ -79,13 +79,10 @@ export default function BookPage() {
               className="neon-card min-w-0 overflow-hidden rounded-[2rem] p-5"
               style={{ boxShadow: `7px 8px 0 #17130f, 0 0 0 7px ${group.accent}33, 0 24px 54px rgba(40, 26, 20, 0.18)` }}
             >
-              <div className="mb-4 flex items-center justify-between gap-3">
+              <div className="mb-4">
                 <h3 className="brand-display text-2xl font-black uppercase text-black">
                   {group.name}
                 </h3>
-                <span className="service-sticker rounded-full px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.16em]" style={{ background: group.accent }}>
-                  {group.services.length} lanes
-                </span>
               </div>
               <ul className="space-y-2.5 text-sm">
                 {group.services.flatMap((service, serviceIndex) =>
