@@ -47,11 +47,11 @@ const policies = [
 export default function LegalPage() {
   return (
     <PageShell>
-      <section className="mx-auto max-w-7xl px-5 py-16">
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-5 md:py-16">
         <SectionEyebrow color="#FFE45C">Legal & policies</SectionEyebrow>
         <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
           <div className="neon-card rounded-[2rem] p-7">
-            <h1 className="brand-display text-5xl font-black uppercase md:text-7xl">Shop policies, consent, and privacy basics.</h1>
+            <h1 className="brand-display text-4xl font-black uppercase sm:text-5xl md:text-7xl">Shop policies, consent, and privacy basics.</h1>
             <p className="mt-6 text-lg leading-8 text-white/65">
               Please review these policies before booking. They help Mild 2 Wild provide safe, professional service and set clear expectations around appointments, consent, pricing, privacy, and aftercare.
             </p>

@@ -60,27 +60,27 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
   }
 
   return (
-    <div className="neon-card rounded-[2rem] p-6" style={{ boxShadow: `0 0 70px ${selectedService?.accent ?? "#79D94D"}22` }}>
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
-        <div>
+    <div className="neon-card w-full min-w-0 max-w-full rounded-[2rem] p-5 sm:p-6" style={{ boxShadow: `0 0 70px ${selectedService?.accent ?? "#79D94D"}22` }}>
+      <div className="flex min-w-0 flex-col justify-between gap-4 md:flex-row md:items-start">
+        <div className="min-w-0">
           <h2 className="brand-display text-3xl font-black uppercase">Request a booking</h2>
           <p className="mt-3 text-sm leading-6 text-white/62">
             Select a service to see matching team members. Submitting this form does not confirm an appointment; the shop will contact you to finalize availability, pricing, and any deposit requirements.
           </p>
         </div>
         {selectedService ? (
-          <span className="rounded-full px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-black" style={{ background: selectedService.accent }}>
+          <span className="w-fit max-w-full rounded-full px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-black" style={{ background: selectedService.accent }}>
             {selectedService.categoryName}
           </span>
         ) : null}
       </div>
 
-      <form action={submitBooking} className="mt-7 grid gap-4">
-        <div className="grid gap-4 md:grid-cols-2">
-          <label className="grid gap-2 rounded-2xl border border-white/10 bg-black/45 p-4 text-sm font-bold text-white/75">
+      <form action={submitBooking} className="mt-7 grid min-w-0 gap-4">
+        <div className="grid min-w-0 gap-4 md:grid-cols-2">
+          <label className="grid min-w-0 gap-2 rounded-2xl border border-white/10 bg-black/45 p-4 text-sm font-bold text-white/75">
             Service
             <select
-              className="rounded-xl border border-white/10 bg-black px-3 py-3 text-white outline-none focus:border-pink-300"
+              className="w-full min-w-0 max-w-full rounded-xl border border-white/10 bg-black px-3 py-3 text-white outline-none focus:border-pink-300"
               value={selectedServiceSlug}
               onChange={(event) => handleServiceChange(event.target.value)}
             >
@@ -96,10 +96,10 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
             </select>
           </label>
 
-          <label className="grid gap-2 rounded-2xl border border-white/10 bg-black/45 p-4 text-sm font-bold text-white/75">
+          <label className="grid min-w-0 gap-2 rounded-2xl border border-white/10 bg-black/45 p-4 text-sm font-bold text-white/75">
             Staff member
             <select
-              className="rounded-xl border border-white/10 bg-black px-3 py-3 text-white outline-none focus:border-cyan-300"
+              className="w-full min-w-0 max-w-full rounded-xl border border-white/10 bg-black px-3 py-3 text-white outline-none focus:border-cyan-300"
               value={selectedStaffSlug}
               onChange={(event) => setSelectedStaffSlug(event.target.value)}
             >
@@ -113,7 +113,7 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
         </div>
 
         {selectedService ? (
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/65">
+          <div className="min-w-0 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white/65">
             <p className="font-black uppercase tracking-[0.18em] text-white">{selectedService.name}</p>
             <p className="mt-2">{selectedService.description}</p>
             <p className="mt-2 text-white/45">
@@ -122,19 +122,19 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
           </div>
         ) : null}
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid min-w-0 gap-4 md:grid-cols-2">
           <Input name="customerName" label="Your name" required />
           <Input name="customerPhone" label="Phone" />
           <Input name="customerEmail" label="Email" type="email" />
           <Input name="startsAt" label="Preferred date/time" type="datetime-local" required />
         </div>
 
-        <label className="grid gap-2 rounded-2xl border border-white/10 bg-black/45 p-4 text-sm font-bold text-white/75">
+        <label className="grid min-w-0 gap-2 rounded-2xl border border-white/10 bg-black/45 p-4 text-sm font-bold text-white/75">
           Notes
-          <textarea name="notes" className="min-h-28 rounded-xl border border-white/10 bg-black px-3 py-3 text-white outline-none focus:border-lime-300" placeholder="Tell us the idea, placement, design, inspiration, or anything the staff should know." />
+          <textarea name="notes" className="min-h-28 w-full min-w-0 max-w-full rounded-xl border border-white/10 bg-black px-3 py-3 text-white outline-none focus:border-lime-300" placeholder="Tell us the idea, placement, design, inspiration, or anything the staff should know." />
         </label>
 
-        <button className="rounded-full bg-white px-6 py-4 text-sm font-black uppercase tracking-[0.22em] text-black transition hover:bg-lime-300 disabled:cursor-not-allowed disabled:opacity-50" disabled={submission.status === "submitting"} type="submit">
+        <button className="w-full rounded-full bg-white px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-black transition hover:bg-lime-300 disabled:cursor-not-allowed disabled:opacity-50 sm:tracking-[0.22em]" disabled={submission.status === "submitting"} type="submit">
           {submission.status === "submitting" ? "Sending..." : "Send booking request"}
         </button>
 
@@ -150,9 +150,9 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
 
 function Input({ label, name, type = "text", required = false }: { label: string; name: string; type?: string; required?: boolean }) {
   return (
-    <label className="grid gap-2 rounded-2xl border border-white/10 bg-black/45 p-4 text-sm font-bold text-white/75">
+    <label className="grid min-w-0 gap-2 rounded-2xl border border-white/10 bg-black/45 p-4 text-sm font-bold text-white/75">
       {label}
-      <input name={name} type={type} required={required} className="rounded-xl border border-white/10 bg-black px-3 py-3 text-white outline-none focus:border-lime-300" />
+      <input name={name} type={type} required={required} className="w-full min-w-0 max-w-full rounded-xl border border-white/10 bg-black px-3 py-3 text-white outline-none focus:border-lime-300" />
     </label>
   );
 }

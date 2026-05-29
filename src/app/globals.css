@@ -34,9 +34,14 @@
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
+  position: relative;
+  width: 100%;
   margin: 0;
   color: var(--foreground);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
@@ -46,6 +51,8 @@ body {
     radial-gradient(circle at 82% 64%, rgba(121, 223, 255, 0.26), transparent 14rem),
     linear-gradient(135deg, rgba(255, 247, 232, 0.94), rgba(218, 213, 201, 0.96));
   min-height: 100vh;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body::before {
@@ -73,6 +80,21 @@ body::after {
     radial-gradient(circle at 100% 28%, rgba(246, 162, 207, 0.55) 0 7rem, transparent 7.1rem),
     radial-gradient(circle at 70% 96%, rgba(149, 223, 104, 0.42) 0 6rem, transparent 6.1rem);
   filter: blur(1px);
+}
+
+body > header,
+body > main,
+body > footer {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+@supports not (overflow-x: clip) {
+  body > header,
+  body > main,
+  body > footer {
+    overflow-x: hidden;
+  }
 }
 
 ::selection {
@@ -309,6 +331,11 @@ main select[class*="bg-black"] {
 }
 
 @media (max-width: 760px) {
+  .brand-display {
+    letter-spacing: 0.018em;
+    line-height: 0.96;
+  }
+
   .paint-outline {
     text-shadow:
       2px 2px 0 var(--outline),
@@ -320,5 +347,29 @@ main select[class*="bg-black"] {
   .neon-card,
   .paint-card {
     box-shadow: 5px 6px 0 rgba(23, 19, 15, 0.9), 0 18px 34px var(--soft-shadow);
+  }
+}
+
+@media (max-width: 480px) {
+  .shop-tag {
+    box-shadow: 3px 4px 0 var(--outline);
+  }
+
+  main section,
+  main .grid > *,
+  main .flex > *,
+  .neon-card,
+  .paint-card {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  main h1,
+  main h2,
+  main h3,
+  main p,
+  main a,
+  main span {
+    overflow-wrap: anywhere;
   }
 }

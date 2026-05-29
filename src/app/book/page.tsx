@@ -8,39 +8,39 @@ export default function BookPage() {
 
   return (
     <PageShell>
-      <section className="mx-auto max-w-7xl px-5 py-16">
+      <section className="mx-auto w-full max-w-7xl overflow-hidden px-4 py-12 sm:px-5 md:py-16">
         <SectionEyebrow color="#79D94D">Request an appointment</SectionEyebrow>
-        <h1 className="brand-display max-w-5xl text-5xl font-black uppercase md:text-7xl">Choose a service, select your preferred team member, and request a booking.</h1>
+        <h1 className="brand-display max-w-5xl break-words text-[2.35rem] font-black uppercase leading-[0.92] min-[390px]:text-4xl sm:text-5xl md:text-7xl">Choose a service, select your preferred team member, and request a booking.</h1>
         <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
           Pick the appointment type you want and we&apos;ll show the artists, stylists, and specialists available for that service. The shop will follow up to confirm timing, pricing, and any deposit details.
         </p>
-        <div className="mt-8 grid gap-3 md:grid-cols-3">
+        <div className="mt-8 grid min-w-0 gap-3 md:grid-cols-3">
           {[
             "One request can include inspiration and notes.",
             "Staff choices update based on the selected service.",
             "Timing is reviewed before the appointment is confirmed.",
           ].map((item) => (
-            <div key={item} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-sm font-bold text-white/68">
+            <div key={item} className="min-w-0 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm font-bold text-white/68">
               ✦ {item}
             </div>
           ))}
         </div>
 
-        <div className="mt-10 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="mt-10 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
           <BookingRequestForm groups={bookingGroups} />
 
-          <div className="grid gap-6">
-            <div className="neon-card rounded-[2rem] p-6">
+          <div className="grid min-w-0 gap-6">
+            <div className="neon-card min-w-0 rounded-[2rem] p-6">
               <h2 className="brand-display text-3xl font-black uppercase">What happens next</h2>
               <p className="mt-4 text-white/65">
                 After you send a request, Mild 2 Wild reviews the details and contacts you to confirm availability. Some tattoo, color, and specialty services may require a consultation before the appointment is finalized.
               </p>
-              <div className="mt-6 rounded-2xl border border-lime-300/30 bg-lime-300/10 p-4 text-lime-100">
+              <div className="mt-6 rounded-2xl border border-lime-400/40 bg-lime-200/45 p-4 font-bold text-black/70">
                 Tip: include inspiration, placement, size, preferred timing, and whether you have a favorite team member.
               </div>
             </div>
 
-            <div className="neon-card rounded-[2rem] p-6">
+            <div className="neon-card min-w-0 rounded-[2rem] p-6">
               <h2 className="brand-display text-3xl font-black uppercase">Need help choosing?</h2>
               <div className="mt-5 grid gap-3">
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-4">Choose a service first to see matching team members.</div>
@@ -51,9 +51,9 @@ export default function BookPage() {
           </div>
         </div>
 
-        <div className="mt-10 grid gap-5 md:grid-cols-4">
+        <div className="mt-10 grid min-w-0 gap-5 md:grid-cols-4">
           {bookingGroups.map((group) => (
-            <section key={group.slug} className="neon-card rounded-[2rem] p-5">
+            <section key={group.slug} className="neon-card min-w-0 rounded-[2rem] p-5">
               <h3 className="brand-display text-2xl font-black uppercase" style={{ color: group.accent }}>
                 {group.name}
               </h3>

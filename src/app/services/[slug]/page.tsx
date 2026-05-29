@@ -35,20 +35,20 @@ export default async function ServiceCategoryPage({ params }: { params: Promise<
 
   return (
     <PageShell>
-      <section className="mx-auto max-w-7xl px-5 py-16">
-        <div className="neon-card rounded-[3rem] p-8 md:p-12" style={{ boxShadow: `0 0 80px ${category.accent}22` }}>
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-5 md:py-16">
+        <div className="neon-card rounded-[2rem] p-5 sm:rounded-[3rem] sm:p-8 md:p-12" style={{ boxShadow: `0 0 80px ${category.accent}22` }}>
           <SectionEyebrow color={category.accent}>{category.name}</SectionEyebrow>
-          <h1 className="brand-display max-w-5xl text-5xl font-black uppercase md:text-7xl">{category.headline}</h1>
+          <h1 className="brand-display max-w-5xl text-4xl font-black uppercase sm:text-5xl md:text-7xl">{category.headline}</h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/68">{category.description}</p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/book"
-              className="inline-block rounded-full px-7 py-4 font-black uppercase tracking-[0.2em] text-black"
+              className="inline-block rounded-full px-5 py-4 text-sm font-black uppercase tracking-[0.16em] text-black sm:px-7 sm:tracking-[0.2em]"
               style={{ background: category.accent }}
             >
               Book {category.name}
             </Link>
-            <a href="#service-staff" className="inline-block rounded-full border border-white/15 px-7 py-4 font-black uppercase tracking-[0.2em] text-white/80">
+            <a href="#service-staff" className="inline-block rounded-full border border-white/15 px-5 py-4 text-sm font-black uppercase tracking-[0.16em] text-white/80 sm:px-7 sm:tracking-[0.2em]">
               Meet the right staff
             </a>
           </div>

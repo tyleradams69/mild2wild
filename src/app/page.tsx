@@ -10,18 +10,18 @@ export default function Home() {
 
   return (
     <PageShell>
-      <section className="mx-auto max-w-7xl px-5 py-14 md:py-20">
-        <div className="scrollwork neon-card group overflow-hidden rounded-[3rem] border-pink-300/40 p-7 md:p-14">
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-5 md:py-20">
+        <div className="scrollwork neon-card group overflow-hidden rounded-[2rem] border-pink-300/40 p-5 sm:rounded-[3rem] sm:p-7 md:p-14">
           <div className="grid gap-12 lg:grid-cols-[0.98fr_1.02fr] lg:items-center">
             <div>
               <SectionEyebrow color="#ffcae6">Tattoos • Salon • Spa • Rainbow Studio</SectionEyebrow>
-              <h1 className="brand-display paint-outline max-w-4xl text-7xl uppercase leading-none text-[#ff8bc8] md:text-9xl">
+              <h1 className="brand-display paint-outline max-w-4xl text-6xl uppercase leading-none text-[#ff8bc8] sm:text-7xl md:text-9xl">
                 Mild<span className="text-[#ffe26f]">2</span><span className="text-[#79dfff]">Wild</span>
               </h1>
-              <p className="marker-script mt-3 text-2xl text-black/80 md:text-3xl">
+              <p className="marker-script mt-3 text-xl text-black/80 sm:text-2xl md:text-3xl">
                 Pastel window art, tattoo flash, real artists, and one very feedable shop dog.
               </p>
-              <p className="mt-7 max-w-2xl text-lg leading-8 text-black/68 md:text-xl">
+              <p className="mt-6 max-w-2xl text-base leading-7 text-black/68 md:mt-7 md:text-xl md:leading-8">
                 A hand-painted salon/parlor world where every service lane feels intentional: nails, tattoos, hair, aesthetics, spa care, retail favorites, and request-first booking without losing the mural-wall personality.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -42,7 +42,7 @@ export default function Home() {
             </div>
 
             <div className="relative">
-              <div className="relative overflow-hidden rounded-[2.8rem] border-[5px] border-black bg-[#d7eef2] p-5 shadow-[10px_12px_0_#17130f]">
+              <div className="relative overflow-hidden rounded-[2rem] border-[4px] border-black bg-[#d7eef2] p-4 shadow-[6px_7px_0_#17130f] sm:rounded-[2.8rem] sm:border-[5px] sm:p-5 sm:shadow-[10px_12px_0_#17130f]">
                 <div className="absolute left-0 right-0 top-0 z-10 h-10 border-b-[4px] border-black bg-[#f6f0e4]">
                   <div className="mx-auto mt-3 h-2 w-28 rounded-full bg-black/18" />
                 </div>
@@ -66,10 +66,10 @@ export default function Home() {
                   </div>
                 </Link>
 
-                <div className="relative z-20 mt-5 grid grid-cols-2 gap-3">
+                <div className="relative z-20 mt-5 grid gap-3 sm:grid-cols-2">
                   {serviceCategories.map((category) => (
                     <Link key={category.slug} href={`/services/${category.slug}`} className="rounded-2xl border-[3px] border-black bg-white/88 px-4 py-3 shadow-[4px_5px_0_#17130f] transition hover:-translate-y-1" style={{ background: category.accent }}>
-                      <p className="brand-display text-2xl uppercase text-black">{category.name}</p>
+                      <p className="brand-display text-xl uppercase text-black sm:text-2xl">{category.name}</p>
                       <p className="text-[0.65rem] font-black uppercase tracking-[0.16em] text-black/65">{category.staffLabel}</p>
                     </Link>
                   ))}

@@ -57,11 +57,12 @@ export function SiteHeader() {
     ["Dog Game", "/dog-clicker"],
     ["Login", "/login"],
   ];
+  const mobileLinks = links.filter(([label]) => label !== "Login");
 
   return (
-    <header className="sticky top-0 z-50 border-b-[3px] border-black bg-[#fff7e8]/92 backdrop-blur-xl">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4">
-        <Link href="/" className="brand-display shrink-0 text-2xl uppercase tracking-[0.08em] text-black sm:text-3xl">
+    <header className="sticky top-0 z-50 w-full max-w-full overflow-x-clip border-b-[3px] border-black bg-[#fff7e8]/92 backdrop-blur-xl">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-1.5 px-3 py-4 sm:gap-4 sm:px-5">
+        <Link href="/" className="brand-display min-w-0 shrink text-lg uppercase tracking-[0.04em] text-black min-[360px]:text-xl sm:text-2xl md:text-3xl">
           Mild<span className="text-pink-500">2</span>Wild
         </Link>
         <div className="hidden items-center gap-3 text-xs font-black uppercase tracking-[0.18em] text-black/72 md:flex">
@@ -76,17 +77,25 @@ export function SiteHeader() {
             </Link>
           ))}
         </div>
-        <Link
-          href="/book"
-          className="shop-tag shrink-0 bg-pink-200 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] transition hover:-translate-y-0.5 hover:bg-yellow-200 sm:text-sm sm:tracking-[0.18em]"
-        >
-          Book Now
-        </Link>
+        <div className="flex shrink-0 items-center gap-1.5 min-[360px]:gap-2">
+          <Link
+            href="/login"
+            className="rounded-full border-2 border-black bg-lime-100 px-2 py-2 text-[0.62rem] font-black uppercase tracking-[0.06em] text-black shadow-[3px_4px_0_#17130f] transition hover:-translate-y-0.5 hover:bg-lime-200 min-[360px]:px-2.5 sm:px-3 sm:text-xs md:hidden"
+          >
+            Login
+          </Link>
+          <Link
+            href="/book"
+            className="shop-tag bg-pink-200 px-2 py-2 text-[0.62rem] font-black uppercase tracking-[0.06em] transition hover:-translate-y-0.5 hover:bg-yellow-200 min-[360px]:px-2.5 sm:px-4 sm:text-sm sm:tracking-[0.18em]"
+          >
+            Book Now
+          </Link>
+        </div>
       </nav>
       <div className="border-t-2 border-black/15 md:hidden">
-        <div className="mx-auto flex max-w-7xl gap-3 overflow-x-auto px-5 py-3 text-xs font-black uppercase tracking-[0.16em] text-black/75">
-          {links.filter(([label]) => label !== "Login").map(([label, href]) => (
-            <Link key={href} href={href} className="shrink-0 rounded-full border-2 border-black bg-white/70 px-3 py-2 shadow-[3px_4px_0_#17130f] transition hover:bg-pink-200 hover:text-black">
+        <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto overscroll-x-contain px-3 py-3 text-[0.68rem] font-black uppercase tracking-[0.12em] text-black/75 sm:gap-3 sm:px-5 sm:text-xs sm:tracking-[0.16em]">
+          {mobileLinks.map(([label, href]) => (
+            <Link key={href} href={href} className={`shrink-0 rounded-full border-2 border-black px-3 py-2 shadow-[3px_4px_0_#17130f] transition hover:bg-pink-200 hover:text-black ${label === "Login" ? "bg-lime-100 text-black" : "bg-white/70"}`}>
               {label}
             </Link>
           ))}
@@ -101,6 +110,7 @@ export function SiteFooter() {
     ["Services", "/#services"],
     ["Staff", "/staff"],
     ["Book", "/book"],
+    ["Login", "/login"],
     ["Policies", "/legal"],
   ];
 
@@ -202,7 +212,7 @@ export function StaffCard({ staff }: { staff: StaffMember }) {
 
 export function SectionEyebrow({ children, color = "#4DDCE5" }: { children: React.ReactNode; color?: string }) {
   return (
-    <p className="marker-script mb-4 inline-flex rotate-[-1deg] rounded-full border-[3px] border-black bg-white px-4 py-2 text-sm uppercase tracking-[0.08em] text-black shadow-[4px_5px_0_#17130f]" style={{ background: color }}>
+    <p className="marker-script mb-4 inline-flex max-w-full rotate-[-1deg] flex-wrap justify-center rounded-full border-[3px] border-black bg-white px-4 py-2 text-center text-sm leading-tight uppercase tracking-[0.06em] text-black shadow-[4px_5px_0_#17130f] sm:tracking-[0.08em]" style={{ background: color }}>
       {children}
     </p>
   );

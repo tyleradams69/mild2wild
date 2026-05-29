@@ -31,9 +31,9 @@ const productCards = [
 export default function ProductsPage() {
   return (
     <PageShell>
-      <section className="mx-auto max-w-7xl px-5 py-16">
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-5 md:py-16">
         <SectionEyebrow color="#FF7A1A">Retail wall</SectionEyebrow>
-        <h1 className="brand-display max-w-4xl text-5xl font-black uppercase md:text-7xl">Products that keep the appointment glow going.</h1>
+        <h1 className="brand-display max-w-4xl text-4xl font-black uppercase sm:text-5xl md:text-7xl">Products that keep the appointment glow going.</h1>
         <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
           Browse the product categories Mild 2 Wild can recommend during appointments. Guests can ask their artist, stylist, or specialist about the best aftercare and retail fit during their visit.
         </p>
