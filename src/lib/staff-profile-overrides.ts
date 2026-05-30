@@ -7,7 +7,9 @@ import {
   type PortfolioImage,
   type ServiceCategorySlug,
   type StaffMember,
+  type StaffProfileTheme,
 } from "./studio-data";
+import { getDefaultProfileDecorId, getDefaultProfileTemplateId, normalizeStaffProfileTheme } from "./staff-profile-themes";
 
 export type StaffProfileUpdate = {
   name: string;
@@ -17,6 +19,7 @@ export type StaffProfileUpdate = {
   tiktokUrl: string;
   gallery: string[];
   portfolioImages: PortfolioImage[];
+  profileTheme?: StaffProfileTheme;
 };
 
 export type StaffProfileOverrides = Record<string, StaffProfileUpdate>;
@@ -68,6 +71,7 @@ export function mergeStaffProfileOverrides(staffMembers: StaffMember[], override
       socialLinks,
       gallery: override.gallery.length > 0 ? override.gallery : staff.gallery,
       portfolioImages: override.portfolioImages.length > 0 ? override.portfolioImages : staff.portfolioImages,
+      profileTheme: override.profileTheme ?? staff.profileTheme,
     };
   });
 }
@@ -118,6 +122,7 @@ export function normalizeStaffProfileUpdate(input: Record<string, unknown>): Nor
   const tiktokUrl = normalizeOptionalUrl(input.tiktokUrl);
   const gallery = normalizeGallery(input.gallery ?? input.galleryNotes);
   const portfolioImagesResult = normalizePortfolioImages(input.portfolioImages);
+  const profileTheme = input.profileTheme === undefined ? undefined : normalizeStaffProfileTheme(input.profileTheme, "recommended");
   const errors: string[] = [];
 
   if (!name) errors.push("Profile name is required.");
@@ -138,6 +143,7 @@ export function normalizeStaffProfileUpdate(input: Record<string, unknown>): Nor
       tiktokUrl: tiktokUrl ?? "",
       gallery,
       portfolioImages: portfolioImagesResult.value,
+      ...(profileTheme ? { profileTheme } : {}),
     },
   };
 }
@@ -215,6 +221,7 @@ function buildCreatedStaffMember(profile: StaffProfileCreation): StaffMember {
   const socialLinks = [
     ...(profile.instagramUrl ? [{ label: "Instagram", href: profile.instagramUrl }] : []),
     ...(profile.tiktokUrl ? [{ label: "TikTok", href: profile.tiktokUrl }] : []),
+    { label: "View portfolio", href: "#portfolio" },
   ];
 
   return {
@@ -225,9 +232,13 @@ function buildCreatedStaffMember(profile: StaffProfileCreation): StaffMember {
     photoUrl: profile.photoUrl,
     serviceCategorySlugs: [profile.categorySlug],
     serviceSlugs: services.filter((service) => service.categorySlug === profile.categorySlug).map((service) => service.slug),
-    socialLinks: socialLinks.length > 0 ? socialLinks : [{ label: "Portfolio coming soon", href: "#" }],
+    socialLinks,
     gallery: profile.gallery.length > 0 ? profile.gallery : [serviceCategories.find((category) => category.slug === profile.categorySlug)?.name ?? "Staff profile"],
     portfolioImages: profile.portfolioImages.length > 0 ? profile.portfolioImages : undefined,
+    profileTheme: profile.profileTheme ?? {
+      template: getDefaultProfileTemplateId({ name: profile.name, serviceCategorySlugs: [profile.categorySlug] }),
+      decor: getDefaultProfileDecorId({ name: profile.name, serviceCategorySlugs: [profile.categorySlug] }),
+    },
     calendarColor: profile.calendarColor,
   };
 }

@@ -29,6 +29,45 @@ export type PortfolioImage = {
   label: string;
 };
 
+export type StaffProfileTemplateId =
+  | "recommended"
+  | "tattoo-flash-wall"
+  | "black-bone"
+  | "crimson-ink"
+  | "neon-street"
+  | "pastel-pop"
+  | "glossy-salon"
+  | "spa-glow"
+  | "rainbow-nails"
+  | "dark-comic"
+  | "clean-minimal"
+  | "gold-luxe"
+  | "lavender-aura";
+
+export type StaffProfileColorSlot = "primary" | "secondary" | "accent" | "blush" | "soft" | "deep" | "shadow" | "glow" | "ink";
+
+export type StaffProfileDecorId =
+  | "classic-sparkles"
+  | "skull-flash"
+  | "ember-nebula"
+  | "cherry-bomb"
+  | "cosmic-aura"
+  | "butterfly-glow"
+  | "chrome-stars"
+  | "botanical-vines"
+  | "lightning-pop"
+  | "moon-magic"
+  | "drip-graffiti"
+  | "halo-bubbles"
+  | "ribbon-hearts"
+  | "flash-daggers";
+
+export type StaffProfileTheme = {
+  template: StaffProfileTemplateId;
+  decor?: StaffProfileDecorId;
+  colors?: Partial<Record<StaffProfileColorSlot, string>>;
+};
+
 export type StaffMember = {
   slug: string;
   name: string;
@@ -40,6 +79,7 @@ export type StaffMember = {
   socialLinks: SocialLink[];
   gallery: string[];
   portfolioImages?: PortfolioImage[];
+  profileTheme?: StaffProfileTheme;
   calendarColor: string;
   isMascot?: boolean;
 };
@@ -324,7 +364,7 @@ export const staffMembers: StaffMember[] = staffSeed.map(({ index, categorySlug,
     serviceSlugs: categorySlug ? serviceSlugsByCategory[categorySlug] : [],
     socialLinks: [
       { label: "Instagram coming soon", href: "#" },
-      { label: "Portfolio coming soon", href: "#" },
+      { label: "View portfolio", href: "#portfolio" },
     ],
     gallery: isMascot
       ? ["Shop dog mascot", "Schwebels story", "Tour-page cameo"]

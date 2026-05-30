@@ -38,10 +38,11 @@ export default async function StaffIndexPage() {
               <Link
                 key={category.slug}
                 href={`/services/${category.slug}`}
-                className="rounded-full border border-white/10 px-3 py-2 text-[0.68rem] font-black uppercase tracking-[0.14em] text-white/70 transition hover:text-black sm:px-4 sm:text-xs sm:tracking-[0.18em]"
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-2 text-[0.68rem] font-black uppercase tracking-[0.14em] text-white/70 transition hover:text-black sm:px-4 sm:text-xs sm:tracking-[0.18em]"
                 style={{ borderColor: `${category.accent}55` }}
               >
-                <span style={{ color: category.accent }}>{count}</span> {category.staffLabel}
+                <span style={{ color: category.accent }}>{count}</span>
+                <span>{category.staffLabel}</span>
               </Link>
             );
           })}

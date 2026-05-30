@@ -1,9 +1,15 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { promises as fs } from "fs";
+import * as path from "path";
 import { PageShell, SectionEyebrow } from "@/components/site";
+import { StaffPortfolioEditor } from "@/components/staff-portfolio-editor";
+import { StaffProfileDesignEditor } from "@/components/staff-profile-design-editor";
 import { dashboardSessionCookieName, parseSignedDashboardSession } from "@/lib/auth-session";
-import { serviceCategories, services, staffMembers, type PortfolioImage } from "@/lib/studio-data";
+import { createSupabaseServerClient } from "@/lib/supabase";
+import { serviceCategories, services, staffMembers, type PortfolioImage, type StaffProfileColorSlot } from "@/lib/studio-data";
+import { getDefaultProfileDecorId, getDefaultProfileTemplateId, normalizeStaffProfileTheme, staffProfileColorSlots } from "@/lib/staff-profile-themes";
 import {
   buildProfileEditModel,
   normalizeStaffProfileUpdate,
@@ -17,26 +23,85 @@ function getDashboardSessionSecret() {
   return process.env.HERMES_DASHBOARD_SESSION_SECRET ?? "m2w-dashboard-dev-session-secret";
 }
 
-const blankPortfolioSlots = 4;
-
-function buildPortfolioSlots(portfolioImages: PortfolioImage[] | undefined) {
-  return [
-    ...(portfolioImages ?? []),
-    ...Array.from({ length: blankPortfolioSlots }, () => ({ src: "", alt: "", label: "" })),
-  ];
-}
-
-function collectPortfolioImages(formData: FormData) {
+async function collectPortfolioImages(formData: FormData, staffSlug: string) {
   const slotCount = Number.parseInt(String(formData.get("portfolioSlotCount") ?? "0"), 10);
-  return Array.from({ length: Number.isFinite(slotCount) ? slotCount : 0 }, (_, index) => {
+  const currentRows = await Promise.all(Array.from({ length: Number.isFinite(slotCount) ? slotCount : 0 }, async (_, index) => {
     const enabled = formData.get(`portfolioEnabled-${index}`) === "on";
+    const uploadedSrc = await savePortfolioUpload(formData.get(`portfolioFile-${index}`), staffSlug, index);
     return enabled
       ? {
-          src: formData.get(`portfolioSrc-${index}`),
+          src: uploadedSrc || formData.get(`portfolioSrc-${index}`),
           label: formData.get(`portfolioLabel-${index}`),
           alt: formData.get(`portfolioAlt-${index}`),
         }
       : { src: "", label: "", alt: "" };
+  }));
+  const appendedRows = await collectNewPortfolioUploads(formData, staffSlug, currentRows.length);
+  return [...currentRows, ...appendedRows];
+}
+
+async function collectNewPortfolioUploads(formData: FormData, staffSlug: string, startIndex: number): Promise<PortfolioImage[]> {
+  const files = formData.getAll("portfolioNewFiles");
+  const rows: PortfolioImage[] = [];
+  for (const [index, value] of files.entries()) {
+    const src = await savePortfolioUpload(value, staffSlug, startIndex + index);
+    if (!src) continue;
+    const number = startIndex + rows.length + 1;
+    rows.push({
+      src,
+      label: `Portfolio work ${number}`,
+      alt: `Portfolio work example ${number} by Mild 2 Wild staff.`,
+    });
+  }
+  return rows;
+}
+
+async function savePortfolioUpload(value: FormDataEntryValue | null, staffSlug: string, index: number) {
+  if (!(value instanceof File) || value.size === 0) return "";
+  if (!value.type.startsWith("image/")) return "";
+  const extension = imageExtensionForType(value.type, value.name);
+  const fileName = `${staffSlug}-portfolio-${Date.now()}-${index + 1}.${extension}`;
+  const arrayBuffer = await value.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  const supabaseUrl = await savePortfolioUploadToSupabase(buffer, value.type, staffSlug, fileName);
+  if (supabaseUrl) return supabaseUrl;
+  const directory = path.join(process.cwd(), "public", "staff", staffSlug, "portfolio");
+  await fs.mkdir(directory, { recursive: true });
+  await fs.writeFile(path.join(directory, fileName), buffer);
+  return `/staff/${staffSlug}/portfolio/${fileName}`;
+}
+
+async function savePortfolioUploadToSupabase(buffer: Buffer, contentType: string, staffSlug: string, fileName: string) {
+  const bucket = process.env.STAFF_PORTFOLIO_BUCKET?.trim();
+  if (!bucket) return "";
+  const supabase = createSupabaseServerClient();
+  if (!supabase) return "";
+  const storagePath = `${staffSlug}/${fileName}`;
+  const { error } = await supabase.storage.from(bucket).upload(storagePath, buffer, {
+    contentType,
+    upsert: false,
+  });
+  if (error) return "";
+  const { data } = supabase.storage.from(bucket).getPublicUrl(storagePath);
+  return data.publicUrl;
+}
+
+function imageExtensionForType(type: string, fallbackName: string) {
+  if (type === "image/png") return "png";
+  if (type === "image/webp") return "webp";
+  if (type === "image/gif") return "gif";
+  const fallbackExtension = fallbackName.toLowerCase().match(/\.([a-z0-9]{2,5})$/)?.[1];
+  return fallbackExtension && /^[a-z0-9]+$/.test(fallbackExtension) ? fallbackExtension : "jpg";
+}
+
+function collectProfileTheme(formData: FormData) {
+  const colors = Object.fromEntries(
+    staffProfileColorSlots.map(({ key }) => [key, formData.get(`profileThemeColor-${key}`)]),
+  ) as Record<StaffProfileColorSlot, FormDataEntryValue | null>;
+  return normalizeStaffProfileTheme({
+    template: formData.get("profileThemeTemplate"),
+    decor: formData.get("profileThemeDecor"),
+    colors,
   });
 }
 
@@ -65,8 +130,8 @@ export default async function StaffEditPage({ params, searchParams }: { params: 
   const categories = serviceCategories.filter((category) => profile.serviceCategorySlugs.includes(category.slug));
   const instagramUrl = profile.socialLinks.find((link) => link.label === "Instagram")?.href ?? "";
   const tiktokUrl = profile.socialLinks.find((link) => link.label === "TikTok")?.href ?? "";
-  const portfolioSlots = buildPortfolioSlots(profile.portfolioImages);
-
+  const defaultProfileTemplate = getDefaultProfileTemplateId(profile);
+  const defaultProfileDecor = getDefaultProfileDecorId(profile);
   async function saveProfileAction(formData: FormData) {
     "use server";
 
@@ -82,7 +147,8 @@ export default async function StaffEditPage({ params, searchParams }: { params: 
       instagramUrl: formData.get("instagramUrl"),
       tiktokUrl: formData.get("tiktokUrl"),
       galleryNotes: formData.get("galleryNotes"),
-      portfolioImages: collectPortfolioImages(formData),
+      portfolioImages: await collectPortfolioImages(formData, slug),
+      profileTheme: collectProfileTheme(formData),
     });
 
     if (!normalized.ok) redirect(`/dashboard/staff/${slug}/edit?error=invalid`);
@@ -144,47 +210,9 @@ export default async function StaffEditPage({ params, searchParams }: { params: 
               <span className="mt-2 block text-xs font-bold leading-5 text-white/42">One short note per line. These feed the public profile&apos;s portfolio notes panel.</span>
             </label>
 
-            <div className="mt-6 rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-4">
-              <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end">
-                <div>
-                  <p className="text-xs font-black uppercase tracking-[0.2em] text-white/45">Portfolio showcase</p>
-                  <h2 className="brand-display mt-1 text-2xl font-black uppercase text-white">Featured work</h2>
-                </div>
-                <p className="max-w-md text-xs font-bold leading-5 text-white/45">Use public image paths like /staff/serenity/example.jpg or full https URLs. Uncheck a row to hide it.</p>
-              </div>
-              <input type="hidden" name="portfolioSlotCount" value={portfolioSlots.length} />
-              <div className="mt-4 grid gap-4">
-                {portfolioSlots.map((image, index) => {
-                  const isExisting = Boolean(image.src);
-                  return (
-                    <div key={`${image.src || "blank"}-${index}`} className="rounded-3xl border border-white/10 bg-black/35 p-4">
-                      <div className="flex flex-col gap-3 md:flex-row md:items-start">
-                        <label className="flex items-center gap-3 rounded-full bg-white/10 px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white/70">
-                          <input name={`portfolioEnabled-${index}`} type="checkbox" defaultChecked={isExisting} className="h-4 w-4 accent-pink-300" />
-                          Show
-                        </label>
-                        <div className="grid flex-1 gap-3">
-                          <label>
-                            <span className="text-[0.68rem] font-black uppercase tracking-[0.18em] text-white/40">Image path / URL</span>
-                            <input name={`portfolioSrc-${index}`} defaultValue={image.src} placeholder="/staff/name/work-01.jpg" className="mt-1 w-full rounded-2xl border border-white/10 bg-black/70 px-4 py-3 text-sm text-white outline-none placeholder:text-white/25 focus:border-pink-200/60" />
-                          </label>
-                          <div className="grid gap-3 md:grid-cols-[0.45fr_0.55fr]">
-                            <label>
-                              <span className="text-[0.68rem] font-black uppercase tracking-[0.18em] text-white/40">Short label</span>
-                              <input name={`portfolioLabel-${index}`} defaultValue={image.label} placeholder="Chrome French set" className="mt-1 w-full rounded-2xl border border-white/10 bg-black/70 px-4 py-3 text-sm text-white outline-none placeholder:text-white/25 focus:border-pink-200/60" />
-                            </label>
-                            <label>
-                              <span className="text-[0.68rem] font-black uppercase tracking-[0.18em] text-white/40">Alt description</span>
-                              <input name={`portfolioAlt-${index}`} defaultValue={image.alt} placeholder="Brief description for accessibility" className="mt-1 w-full rounded-2xl border border-white/10 bg-black/70 px-4 py-3 text-sm text-white outline-none placeholder:text-white/25 focus:border-pink-200/60" />
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            <StaffProfileDesignEditor initialTheme={profile.profileTheme} defaultTemplate={defaultProfileTemplate} defaultDecor={defaultProfileDecor} />
+
+            <StaffPortfolioEditor initialImages={profile.portfolioImages ?? []} />
 
             <button type="submit" className="mt-6 rounded-full bg-pink-300 px-6 py-3 text-sm font-black uppercase tracking-[0.18em] text-black transition hover:bg-white">Save profile</button>
           </form>

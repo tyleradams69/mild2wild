@@ -89,8 +89,8 @@ export function BookingRequestForm({ groups, initialStaffSlug }: { groups: Booki
           </p>
         </div>
         {selectedService ? (
-          <span className="service-sticker w-fit max-w-full rounded-full px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-black" style={{ background: selectedService.accent }}>
-            {selectedService.categoryName}
+          <span className="w-fit max-w-full rounded-full border-2 border-black px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-black shadow-[3px_4px_0_#17130f]" style={{ background: selectedService.accent }}>
+            Selected category: {selectedService.categoryName}
           </span>
         ) : null}
       </div>
