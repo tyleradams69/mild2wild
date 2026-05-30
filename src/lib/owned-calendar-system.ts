@@ -79,6 +79,23 @@ export function normalizeBooksyCsvRow(row: Record<string, unknown>): BooksyCsvRo
   };
 }
 
+export function parseCalendarLocalDateTimeInput(value: string, timeZone = "America/New_York") {
+  const match = value.trim().match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
+  if (!match) return null;
+  const [, yearValue, monthValue, dayValue, hourValue, minuteValue] = match;
+  const year = Number(yearValue);
+  const month = Number(monthValue);
+  const day = Number(dayValue);
+  const hour = Number(hourValue);
+  const minute = Number(minuteValue);
+  if (![year, month, day, hour, minute].every(Number.isFinite)) return null;
+  if (month < 1 || month > 12 || day < 1 || day > 31 || hour < 0 || hour > 23 || minute < 0 || minute > 59) return null;
+
+  const utcGuess = Date.UTC(year, month - 1, day, hour, minute);
+  const offsetMinutes = getTimezoneOffsetMinutes(new Date(utcGuess), timeZone);
+  return new Date(utcGuess - offsetMinutes * 60_000).toISOString();
+}
+
 export function buildBooksyAppointmentImport(
   row: BooksyCsvRow,
   options: { staffSlugByBooksyName: Map<string, string>; defaultTimezone: string },

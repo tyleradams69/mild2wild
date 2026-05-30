@@ -3,6 +3,8 @@ import { services, staffMembers } from "../src/lib/studio-data";
 import {
   buildAppointmentInsert,
   buildBookingServiceGroups,
+  filterBookingServiceGroupsForStaff,
+  resolveInitialBookingSelection,
   validateBookingRequest,
 } from "../src/lib/booking-foundation";
 import { serviceCategories } from "../src/lib/studio-data";
@@ -32,6 +34,36 @@ describe("booking foundation", () => {
     );
   });
 
+  it("prefills the booking form to a requested staff member and compatible service", () => {
+    const groups = buildBookingServiceGroups({ serviceCategories, services, staffMembers });
+
+    expect(resolveInitialBookingSelection(groups, "team-member-10")).toEqual({
+      serviceSlug: "tattoo-consult",
+      staffSlug: "team-member-10",
+    });
+  });
+
+  it("limits Book with me choices to the requested staff member's services", () => {
+    const groups = buildBookingServiceGroups({ serviceCategories, services, staffMembers });
+    const filtered = filterBookingServiceGroupsForStaff(groups, "team-member-10");
+    const visibleServices = filtered.flatMap((group) => group.services.map((service) => service.slug));
+    const visibleStaff = filtered.flatMap((group) => group.services.flatMap((service) => service.compatibleStaff.map((staff) => staff.slug)));
+
+    expect(filtered.map((group) => group.slug)).toEqual(["tattoo"]);
+    expect(visibleServices).toEqual(["tattoo-consult", "flash-tattoo"]);
+    expect([...new Set(visibleStaff)]).toEqual(["team-member-10"]);
+  });
+
+  it("falls back to all booking choices when the requested staff member is unavailable", () => {
+    const groups = buildBookingServiceGroups({ serviceCategories, services, staffMembers });
+
+    expect(filterBookingServiceGroupsForStaff(groups, "team-member-12")).toBe(groups);
+    expect(resolveInitialBookingSelection(groups, "team-member-12")).toEqual({
+      serviceSlug: "custom-nail-art",
+      staffSlug: "team-member-01",
+    });
+  });
+
   it("accepts a valid appointment only when the selected staff offers the selected service", () => {
     const result = validateBookingRequest(
       {
@@ -49,6 +81,24 @@ describe("booking foundation", () => {
     expect(result.ok).toBe(true);
     if (!result.ok) throw new Error("expected booking to validate");
     expect(result.value.durationMinutes).toBe(30);
+    expect(result.value.endsAt).toBe("2026-06-01T18:30:00.000Z");
+  });
+
+  it("parses browser datetime-local booking requests as New York shop time", () => {
+    const result = validateBookingRequest(
+      {
+        customerName: "Maya Rose",
+        customerPhone: "555-0101",
+        serviceSlug: "tattoo-consult",
+        staffSlug: "team-member-10",
+        startsAt: "2026-06-01T14:00",
+      },
+      { services, staffMembers },
+    );
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) throw new Error("expected booking to validate");
+    expect(result.value.startsAt).toBe("2026-06-01T18:00:00.000Z");
     expect(result.value.endsAt).toBe("2026-06-01T18:30:00.000Z");
   });
 

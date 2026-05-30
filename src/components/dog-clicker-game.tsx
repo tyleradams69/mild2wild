@@ -40,10 +40,10 @@ export function DogClickerGame() {
       <div className="relative z-10 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div>
           <p className="marker-script inline-flex rotate-[-1deg] rounded-full border-[3px] border-black bg-pink-200 px-4 py-2 text-sm uppercase text-black shadow-[4px_5px_0_#17130f]">
-            Shop dog treat lab
+            Schwebels treat lab
           </p>
           <h1 className="brand-display mt-5 text-6xl uppercase leading-none text-black md:text-8xl">
-            Feed the Mascot
+            Feed Schwebels
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-8 text-black/68 md:text-xl">{mascot.tagline}</p>
 

@@ -2,7 +2,7 @@ import type { DashboardAuthSession } from "./auth-session";
 import { canEditOwnedAppointment, filterOwnedAppointmentsForSession, type OwnedAppointmentStatus } from "./owned-calendar-system";
 import type { StaffMember } from "./studio-data";
 
-export const calendarActionStatuses = ["requested", "confirmed", "completed", "cancelled"] as const;
+export const calendarActionStatuses = ["requested", "confirmed", "checked_in", "completed", "cancelled", "no_show", "blocked"] as const;
 export type CalendarActionStatus = (typeof calendarActionStatuses)[number];
 
 export type CalendarBoardAppointment = {
@@ -87,6 +87,12 @@ export function normalizeCalendarStatus(value: unknown): CalendarActionStatus | 
   if (typeof value !== "string") return null;
   const normalized = value.trim().toLowerCase().replace(/[-\s]+/g, "_");
   return calendarActionStatuses.includes(normalized as CalendarActionStatus) ? (normalized as CalendarActionStatus) : null;
+}
+
+export function formatDateTimeInputInNewYork(value: string) {
+  const parts = partsInNewYork(value);
+  if (!parts.year) return "";
+  return `${parts.year}-${pad(parts.month)}-${pad(parts.day)}T${pad(parts.hour)}:${pad(parts.minute)}`;
 }
 
 export function buildCalendarBoard({
@@ -242,8 +248,10 @@ function labelForStatus(value: string) {
 function toneForStatus(value: string) {
   const normalized = value.trim().toLowerCase().replace(/[-\s]+/g, "_");
   if (normalized === "confirmed") return "bg-lime-200 text-black";
+  if (normalized === "checked_in") return "bg-emerald-200 text-black";
   if (normalized === "completed") return "bg-cyan-200 text-black";
-  if (normalized === "cancelled") return "bg-white/15 text-white/55";
+  if (normalized === "cancelled" || normalized === "no_show") return "bg-white/15 text-white/55";
+  if (normalized === "blocked") return "bg-purple-200 text-black";
   return "bg-yellow-200 text-black";
 }
 
@@ -295,6 +303,10 @@ function formatHourLabel(hour: number) {
   if (hour < 12) return `${hour} AM`;
   if (hour === 12) return "12 PM";
   return `${hour - 12} PM`;
+}
+
+function pad(value: number) {
+  return String(value).padStart(2, "0");
 }
 
 function formatDate(value: string) {

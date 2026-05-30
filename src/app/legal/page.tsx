@@ -1,5 +1,17 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell, SectionEyebrow } from "@/components/site";
+
+export const metadata: Metadata = {
+  title: "Shop Policies",
+  description: "Review Mild 2 Wild booking, consultation, cancellation, pricing, privacy, tattoo consent, product, and aftercare policy basics before requesting an appointment.",
+  alternates: { canonical: "/legal" },
+  openGraph: {
+    title: "Shop Policies | Mild 2 Wild",
+    description: "Read Mild 2 Wild policy basics for booking requests, consultations, consent, cancellations, pricing, privacy, and aftercare.",
+    url: "/legal",
+  },
+};
 
 const policies = [
   {

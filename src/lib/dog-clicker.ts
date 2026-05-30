@@ -24,23 +24,23 @@ export const dogClickerTreats: DogClickerTreat[] = [
     name: "Spa Day Snack",
     icon: "spark",
     unlockAt: 75,
-    rewardText: "Mascot is feeling pampered.",
+    rewardText: "Schwebels is feeling pampered.",
   },
   {
     name: "Wild Deluxe Treat",
     icon: "crown",
     unlockAt: 150,
-    rewardText: "The shop dog now owns the parlor.",
+    rewardText: "Schwebels now owns the parlor.",
   },
 ];
 
 export function getDogClickerMascot() {
   return {
-    name: "Shop Dog Mascot",
-    title: "Treat Clicker Mascot",
+    name: "Schwebels",
+    title: "Shop Dog Treat Clicker Mascot",
     image: "/staff/team-member-12.jpg",
     route: "/dog-clicker",
-    tagline: "Tap the shop dog. Feed treats. Unlock maximum tail-wag energy.",
+    tagline: "Tap Schwebels. Feed treats. Unlock maximum tail-wag energy.",
   };
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { BookingServiceGroup } from "@/lib/booking-foundation";
+import { filterBookingServiceGroupsForStaff, resolveInitialBookingSelection, type BookingServiceGroup } from "@/lib/booking-foundation";
 
 type SubmissionState =
   | { status: "idle" }
@@ -20,12 +20,14 @@ const fieldShells = [
 const fieldShellBase = "grid min-w-0 gap-2 rounded-[1.35rem] border-2 border-black p-4 text-sm font-black uppercase tracking-[0.08em] text-black/65 shadow-[4px_5px_0_#17130f] transition";
 const controlBase = "block w-[calc(100%-0.35rem)] min-w-0 max-w-[calc(100%-0.35rem)] rounded-2xl border-2 border-black bg-[#fffaf0] px-3 py-3 font-bold normal-case tracking-normal text-black shadow-[3px_4px_0_#17130f] outline-none placeholder:text-black/55 focus:bg-white";
 
-export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }) {
-  const serviceOptions = groups.flatMap((group) => group.services.map((service) => ({ ...service, categoryName: group.name, accent: group.accent })));
-  const [selectedServiceSlug, setSelectedServiceSlug] = useState(serviceOptions[0]?.slug ?? "");
+export function BookingRequestForm({ groups, initialStaffSlug }: { groups: BookingServiceGroup[]; initialStaffSlug?: string }) {
+  const visibleGroups = filterBookingServiceGroupsForStaff(groups, initialStaffSlug);
+  const serviceOptions = visibleGroups.flatMap((group) => group.services.map((service) => ({ ...service, categoryName: group.name, accent: group.accent })));
+  const initialSelection = resolveInitialBookingSelection(visibleGroups, initialStaffSlug);
+  const [selectedServiceSlug, setSelectedServiceSlug] = useState(initialSelection.serviceSlug);
   const selectedService = serviceOptions.find((service) => service.slug === selectedServiceSlug) ?? serviceOptions[0];
   const compatibleStaff = selectedService?.compatibleStaff ?? [];
-  const [selectedStaffSlug, setSelectedStaffSlug] = useState(compatibleStaff[0]?.slug ?? "");
+  const [selectedStaffSlug, setSelectedStaffSlug] = useState(initialSelection.staffSlug);
   const [submission, setSubmission] = useState<SubmissionState>({ status: "idle" });
 
   function handleServiceChange(serviceSlug: string) {
@@ -37,8 +39,7 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
   async function submitBooking(formData: FormData) {
     setSubmission({ status: "submitting" });
 
-    const startsAtValue = formData.get("startsAt")?.toString() ?? "";
-    const startsAt = startsAtValue ? new Date(startsAtValue).toISOString() : "";
+    const startsAt = formData.get("startsAt")?.toString() ?? "";
 
     try {
       const response = await fetch("/api/booking-requests", {
@@ -54,7 +55,7 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
           notes: formData.get("notes")?.toString(),
         }),
       });
-      const payload = (await response.json()) as { ok?: boolean; errors?: string[] };
+      const payload = (await response.json()) as { ok?: boolean; errors?: string[]; appointment?: { id?: string } };
 
       if (!response.ok || !payload.ok) {
         setSubmission({
@@ -64,7 +65,10 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
         return;
       }
 
-      setSubmission({ status: "success", message: "Booking request sent. The shop will review the details and follow up to confirm availability." });
+      setSubmission({
+        status: "success",
+        message: `Booking request sent${payload.appointment?.id ? ` (request ${payload.appointment.id})` : ""}. The shop will review the details in the dashboard and follow up to confirm availability.`,
+      });
     } catch {
       setSubmission({ status: "error", message: "Could not reach online booking. Please try again or contact the shop directly." });
     }
@@ -100,7 +104,7 @@ export function BookingRequestForm({ groups }: { groups: BookingServiceGroup[] }
               value={selectedServiceSlug}
               onChange={(event) => handleServiceChange(event.target.value)}
             >
-              {groups.map((group) => (
+              {visibleGroups.map((group) => (
                 <optgroup key={group.slug} label={group.name}>
                   {group.services.map((service) => (
                     <option key={service.slug} value={service.slug}>

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { DogClickerGame } from "@/components/dog-clicker-game";
 import { DogTreatIcon } from "@/components/dog-treat-icon";
@@ -5,6 +6,17 @@ import { PageShell, SectionEyebrow } from "@/components/site";
 import { dogClickerTreats } from "@/lib/dog-clicker";
 
 const treatCardAccents = ["#ffcae6", "#c7f2ff", "#fff1a8", "#d5c4ff"];
+
+export const metadata: Metadata = {
+  title: "Schwebels Treat Clicker",
+  description: "Play Mild 2 Wild's Schwebels treat clicker game, meet the shop dog mascot, and jump back into booking with the human team.",
+  alternates: { canonical: "/dog-clicker" },
+  openGraph: {
+    title: "Schwebels Treat Clicker | Mild 2 Wild",
+    description: "Feed Schwebels treats in Mild 2 Wild's playful shop dog game before booking the human team.",
+    url: "/dog-clicker",
+  },
+};
 
 export default function DogClickerPage() {
   return (

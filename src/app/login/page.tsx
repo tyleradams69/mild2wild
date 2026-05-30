@@ -1,4 +1,15 @@
+import type { Metadata } from "next";
+import Image from "next/image";
 import { PageShell, PaintSplat, SectionEyebrow } from "@/components/site";
+import { staffMembers } from "@/lib/studio-data";
+import { readStoredStaffMembers } from "@/lib/staff-profile-overrides";
+
+export const metadata: Metadata = {
+  title: "Team Login",
+  description: "Authorized Mild 2 Wild team login for managing appointments, schedules, and staff profiles.",
+  robots: { index: false, follow: false },
+  alternates: { canonical: "/login" },
+};
 
 function errorCopy(error?: string) {
   if (!error) return null;
@@ -12,9 +23,23 @@ function errorCopy(error?: string) {
   return messages[error] ?? "Could not create that login session.";
 }
 
-export default async function LoginPage({ searchParams }: { searchParams?: Promise<{ error?: string }> }) {
+function safeLoginNext(value?: string) {
+  const next = value?.trim() ?? "";
+  if (!next || !next.startsWith("/dashboard") || next.startsWith("//")) return "/dashboard";
+  return next;
+}
+
+function safeStaffSlug(value?: string) {
+  const slug = value?.trim() ?? "";
+  return /^team-member-\d{2,3}$/.test(slug) ? slug : "";
+}
+
+export default async function LoginPage({ searchParams }: { searchParams?: Promise<{ error?: string; staff?: string; next?: string }> }) {
   const params = await searchParams;
   const message = errorCopy(params?.error);
+  const staffSlug = safeStaffSlug(params?.staff);
+  const staffProfile = (await readStoredStaffMembers(staffMembers)).find((staff) => staff.slug === staffSlug && !staff.isMascot);
+  const next = safeLoginNext(params?.next || (staffProfile ? `/dashboard/staff/${staffProfile.slug}/edit` : "/dashboard"));
 
   return (
     <PageShell>
@@ -24,8 +49,21 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
           Sign in to the <span className="block">dashboard.</span>
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-white/65">
-          Authorized team members can sign in to manage appointments and schedules.
+          Authorized team members can sign in to manage appointments, schedules, profile copy, and portfolio showcases.
         </p>
+
+        {staffProfile ? (
+          <div className="mt-8 flex items-center gap-4 rounded-[2rem] border border-pink-200/30 bg-white/[0.06] p-4 shadow-2xl shadow-pink-500/10">
+            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-[1.4rem] border-2 border-pink-200 bg-black shadow-[4px_5px_0_#F06BD6]">
+              <Image src={staffProfile.photoUrl} alt={`${staffProfile.name} profile photo`} fill sizes="80px" className="object-cover" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-black uppercase tracking-[0.22em] text-pink-100/70">Signing in for</p>
+              <p className="brand-display mt-1 text-2xl font-black uppercase text-white">{staffProfile.name}</p>
+              <p className="mt-1 text-sm font-bold text-white/55">You&apos;ll land on this profile editor after your account is verified.</p>
+            </div>
+          </div>
+        ) : null}
 
         {message ? (
           <div className="mt-8 rounded-3xl border border-pink-300/40 bg-pink-500/10 p-4 text-sm font-bold text-pink-100">
@@ -38,6 +76,8 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
           method="post"
           className="neon-card relative mx-1 mt-10 grid overflow-hidden rounded-[2rem] bg-[#fff7e8] p-5 shadow-[8px_9px_0_#17130f,0_0_0_8px_#F06BD633,0_26px_60px_rgba(40,26,20,0.2)] sm:mx-0 sm:p-6"
         >
+          <input type="hidden" name="staff" value={staffProfile?.slug ?? ""} />
+          <input type="hidden" name="next" value={next} />
           <PaintSplat color="#F06BD6" variant="window" className="absolute -right-10 -top-12 w-40 rotate-12 opacity-40" />
           <PaintSplat color="#4DDCE5" variant="bubble" className="absolute -bottom-14 -left-10 w-40 -rotate-12 opacity-35" />
 

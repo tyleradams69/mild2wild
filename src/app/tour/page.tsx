@@ -1,4 +1,16 @@
+import type { Metadata } from "next";
 import { PageShell, SectionEyebrow } from "@/components/site";
+
+export const metadata: Metadata = {
+  title: "Shop Tour",
+  description: "Tour Mild 2 Wild's colorful tattoo, nail, hair, aesthetics, and spa studio and learn what makes the shop different.",
+  alternates: { canonical: "/tour" },
+  openGraph: {
+    title: "Shop Tour | Mild 2 Wild",
+    description: "See the studio vibe, team story, and colorful multi-service shop experience at Mild 2 Wild.",
+    url: "/tour",
+  },
+};
 
 export default function TourPage() {
   return (

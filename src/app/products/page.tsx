@@ -1,4 +1,16 @@
+import type { Metadata } from "next";
 import { PageShell, SectionEyebrow } from "@/components/site";
+
+export const metadata: Metadata = {
+  title: "Products & Aftercare",
+  description: "Browse Mild 2 Wild product categories including tattoo aftercare, nail cuticle oils, salon hair care, spa skincare, and gift cards.",
+  alternates: { canonical: "/products" },
+  openGraph: {
+    title: "Products & Aftercare | Mild 2 Wild",
+    description: "Explore retail and aftercare categories recommended by the Mild 2 Wild team.",
+    url: "/products",
+  },
+};
 
 const productCards = [
   {

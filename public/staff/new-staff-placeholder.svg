@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1125" role="img" aria-labelledby="title desc">
+  <title id="title">Mild 2 Wild new staff profile placeholder</title>
+  <desc id="desc">A pastel comic-style placeholder portrait for a future staff member.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#ffcae6"/>
+      <stop offset="0.45" stop-color="#c7f2ff"/>
+      <stop offset="1" stop-color="#fff0a3"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="42%" r="48%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="900" height="1125" fill="#17130f"/>
+  <rect x="42" y="42" width="816" height="1041" rx="84" fill="url(#bg)" stroke="#17130f" stroke-width="18"/>
+  <circle cx="720" cy="175" r="125" fill="#f06bd6" opacity="0.42" stroke="#17130f" stroke-width="10"/>
+  <circle cx="160" cy="850" r="145" fill="#79d94d" opacity="0.38" stroke="#17130f" stroke-width="10"/>
+  <path d="M214 682c36-118 119-190 236-190s201 72 236 190v115H214V682Z" fill="#fff7e8" stroke="#17130f" stroke-width="16"/>
+  <circle cx="450" cy="370" r="145" fill="#fff7e8" stroke="#17130f" stroke-width="16"/>
+  <path d="M329 350c35-90 102-135 201-135 68 30 107 84 116 161-63-38-126-57-189-57-52 0-95 10-128 31Z" fill="#f06bd6" stroke="#17130f" stroke-width="14"/>
+  <circle cx="392" cy="382" r="12" fill="#17130f"/>
+  <circle cx="508" cy="382" r="12" fill="#17130f"/>
+  <path d="M402 455c34 24 69 24 104 0" fill="none" stroke="#17130f" stroke-width="12" stroke-linecap="round"/>
+  <rect x="170" y="808" width="560" height="150" rx="42" fill="#17130f" opacity="0.88"/>
+  <text x="450" y="875" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="52" font-weight="900" fill="#fff7e8">NEW STAFF</text>
+  <text x="450" y="927" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#ffcae6">add portrait when ready</text>
+  <path d="M181 203h92M227 157v92M660 919h88M704 875v88" stroke="#17130f" stroke-width="14" stroke-linecap="round"/>
+  <rect width="900" height="1125" fill="url(#glow)" opacity="0.42"/>
+</svg>

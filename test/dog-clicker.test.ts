@@ -5,7 +5,8 @@ describe("dog treat clicker", () => {
   it("uses the shop dog mascot image and defines feedable treat milestones", () => {
     const mascot = getDogClickerMascot();
 
-    expect(mascot.name).toBe("Shop Dog Mascot");
+    expect(mascot.name).toBe("Schwebels");
+    expect(mascot.tagline).toContain("Schwebels");
     expect(mascot.image).toBe("/staff/team-member-12.jpg");
     expect(mascot.route).toBe("/dog-clicker");
     expect(dogClickerTreats.map((treat) => treat.name)).toEqual([

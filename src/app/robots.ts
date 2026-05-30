@@ -1,13 +1,12 @@
 import type { MetadataRoute } from "next";
-
-const siteUrl = "https://mild2wild.vercel.app";
+import { siteUrl } from "@/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/dashboard", "/dashboard/", "/api/"],
+      disallow: ["/dashboard", "/dashboard/", "/api/", "/login"],
     },
     sitemap: `${siteUrl}/sitemap.xml`,
   };

@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { buildProfileEditModel, mergeStaffProfileOverrides, normalizeStaffProfileUpdate } from "../src/lib/staff-profile-overrides";
+import {
+  appendCreatedStaffProfiles,
+  buildProfileEditModel,
+  mergeStaffProfileOverrides,
+  normalizeStaffProfileCreation,
+  normalizeStaffProfileUpdate,
+} from "../src/lib/staff-profile-overrides";
 import { ownerAdminProfile, type DashboardAuthSession } from "../src/lib/auth-session";
 import { staffMembers } from "../src/lib/studio-data";
 
@@ -27,6 +33,8 @@ describe("staff profile overrides", () => {
         bio: "Custom bio written in the dashboard.",
         instagramUrl: "https://instagram.com/caitlin.nails",
         tiktokUrl: "",
+        gallery: ["Chrome sets", "Fine detail work"],
+        portfolioImages: [{ src: "/staff/caitlin/work-01.jpg", alt: "Chrome nails by Caitlin.", label: "Chrome nails" }],
       },
     });
 
@@ -38,7 +46,43 @@ describe("staff profile overrides", () => {
     });
     expect(caitlin?.socialLinks.find((link) => link.label === "Instagram")?.href).toBe("https://instagram.com/caitlin.nails");
     expect(caitlin?.socialLinks.map((link) => link.label)).not.toContain("Instagram coming soon");
-    expect(merged.find((staff) => staff.slug === "team-member-10")?.name).toBe("Echo Ink");
+    expect(caitlin?.gallery).toEqual(["Chrome sets", "Fine detail work"]);
+    expect(caitlin?.portfolioImages?.[0]).toMatchObject({ src: "/staff/caitlin/work-01.jpg", label: "Chrome nails" });
+    expect(merged.find((staff) => staff.slug === "team-member-10")?.name).toBe("Surge");
+  });
+
+  it("creates new owner-added staff profiles from the same public profile template", () => {
+    const creation = normalizeStaffProfileCreation(
+      {
+        name: "New Hire",
+        title: "Hair Stylist",
+        bio: "A public bio Caitlin can paste when a new employee joins.",
+        categorySlug: "hair",
+        photoUrl: "",
+        calendarColor: "#ffb84d",
+        galleryNotes: "Color work\nEvent styling",
+        instagramUrl: "@newhirehair",
+      },
+      staffMembers,
+    );
+
+    expect(creation).toMatchObject({ ok: true, value: { slug: "team-member-18", categorySlug: "hair" } });
+    if (!creation.ok) throw new Error("Expected new staff creation to be valid.");
+
+    const merged = appendCreatedStaffProfiles(staffMembers, { [creation.value.slug]: creation.value });
+    const newHire = merged.find((staff) => staff.slug === "team-member-18");
+
+    expect(newHire).toMatchObject({
+      slug: "team-member-18",
+      name: "New Hire",
+      title: "Hair Stylist",
+      photoUrl: "/staff/new-staff-placeholder.svg",
+      serviceCategorySlugs: ["hair"],
+      serviceSlugs: ["vivids-color", "cut-style"],
+      gallery: ["Color work", "Event styling"],
+      calendarColor: "#FFB84D",
+    });
+    expect(newHire?.socialLinks.find((link) => link.label === "Instagram")?.href).toBe("https://newhirehair");
   });
 
   it("normalizes editable form input and rejects missing required profile fields", () => {
@@ -48,6 +92,8 @@ describe("staff profile overrides", () => {
       bio: " A longer dashboard-editable bio. ",
       instagramUrl: " instagram.com/caitlin.nails ",
       tiktokUrl: " ",
+      galleryNotes: " Chrome sets \n Fine details ",
+      portfolioImages: [{ src: "/staff/caitlin/work-01.jpg", label: " Chrome nails ", alt: " Silver chrome nail art. " }],
     });
 
     expect(result).toEqual({
@@ -58,6 +104,8 @@ describe("staff profile overrides", () => {
         bio: "A longer dashboard-editable bio.",
         instagramUrl: "https://instagram.com/caitlin.nails",
         tiktokUrl: "",
+        gallery: ["Chrome sets", "Fine details"],
+        portfolioImages: [{ src: "/staff/caitlin/work-01.jpg", label: "Chrome nails", alt: "Silver chrome nail art." }],
       },
     });
 

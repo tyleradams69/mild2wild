@@ -3,6 +3,7 @@ import {
   buildAppointmentInsert,
   validateBookingRequest,
 } from "@/lib/booking-foundation";
+import { readStoredStaffMembers } from "@/lib/staff-profile-overrides";
 import { services, staffMembers } from "@/lib/studio-data";
 import { createSupabaseServerClient } from "@/lib/supabase";
 
@@ -14,7 +15,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, errors: ["Request body must be valid JSON."] }, { status: 400 });
   }
 
-  const validation = validateBookingRequest(body && typeof body === "object" ? body : {}, { services, staffMembers });
+  const validation = validateBookingRequest(body && typeof body === "object" ? body : {}, { services, staffMembers: await readStoredStaffMembers(staffMembers) });
   if (!validation.ok) {
     return NextResponse.json({ ok: false, errors: validation.errors }, { status: 400 });
   }

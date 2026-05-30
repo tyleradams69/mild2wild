@@ -1,20 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 230" fill="none">
-  <g opacity=".58" fill="#3d3934" stroke="#3d3934" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" transform="translate(3 4)">
-    <path d="M43 111C45 80 75 60 105 67C121 31 162 31 175 63C207 55 232 79 226 110C253 121 242 157 213 158C211 190 175 197 157 170C130 201 90 189 89 154C55 161 29 139 43 111Z"/>
-    <ellipse cx="31" cy="88" rx="20" ry="12" transform="rotate(-38 31 88)"/>
-    <ellipse cx="61" cy="43" rx="19" ry="14" transform="rotate(24 61 43)"/>
-    <ellipse cx="202" cy="43" rx="19" ry="13" transform="rotate(-22 202 43)"/>
-    <ellipse cx="236" cy="134" rx="14" ry="19" transform="rotate(31 236 134)"/>
-    <ellipse cx="74" cy="189" rx="15" ry="22" transform="rotate(34 74 189)"/>
-    <circle cx="219" cy="188" r="14"/>
+  <defs>
+    <linearGradient id="paint-blue_window_svg" x1="36" y1="34" x2="226" y2="202" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.32"/>
+      <stop offset="0.23" stop-color="#39aeea"/>
+      <stop offset="1" stop-color="#177fb8"/>
+    </linearGradient>
+    <filter id="soft-blue_window_svg" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="3" dy="5" stdDeviation="3" flood-color="#2a2118" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+  <g transform="translate(130.0 115.0) rotate(2) translate(-130.0 -115.0)">
+    <g opacity="0.22" fill="#177fb8" stroke="#177fb8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" transform="translate(3 5)">
+
+    <path d="M40 133C31 96 62 64 99 71C114 38 153 39 169 70C203 52 237 76 229 113C257 128 246 164 214 163C207 197 165 202 149 171C120 198 81 180 86 145C62 153 45 148 40 133Z"/>
+    <ellipse cx="33" cy="103" rx="18" ry="11" transform="rotate(-18 33 103)"/>
+    <ellipse cx="66" cy="51" rx="15" ry="20" transform="rotate(20 66 51)"/>
+    <ellipse cx="190" cy="44" rx="24" ry="12" transform="rotate(-29 190 44)"/>
+    <ellipse cx="236" cy="142" rx="18" ry="12" transform="rotate(58 236 142)"/>
+    <ellipse cx="68" cy="185" rx="13" ry="20" transform="rotate(17 68 185)"/>
+    <circle cx="211" cy="190" r="12"/>
+    </g>
+    <g filter="url(#soft-blue_window_svg)" fill="url(#paint-blue_window_svg)" stroke="#177fb8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+
+    <path d="M40 133C31 96 62 64 99 71C114 38 153 39 169 70C203 52 237 76 229 113C257 128 246 164 214 163C207 197 165 202 149 171C120 198 81 180 86 145C62 153 45 148 40 133Z"/>
+    <ellipse cx="33" cy="103" rx="18" ry="11" transform="rotate(-18 33 103)"/>
+    <ellipse cx="66" cy="51" rx="15" ry="20" transform="rotate(20 66 51)"/>
+    <ellipse cx="190" cy="44" rx="24" ry="12" transform="rotate(-29 190 44)"/>
+    <ellipse cx="236" cy="142" rx="18" ry="12" transform="rotate(58 236 142)"/>
+    <ellipse cx="68" cy="185" rx="13" ry="20" transform="rotate(17 68 185)"/>
+    <circle cx="211" cy="190" r="12"/>
+    </g>
+  <g fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" opacity="0.42">
+    <path d="M73 112C91 88 126 86 140 103"/>
+    <path d="M154 89C171 76 193 79 204 94"/>
   </g>
-  <g fill="#39aeea" stroke="#211d19" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M43 111C45 80 75 60 105 67C121 31 162 31 175 63C207 55 232 79 226 110C253 121 242 157 213 158C211 190 175 197 157 170C130 201 90 189 89 154C55 161 29 139 43 111Z"/>
-    <ellipse cx="31" cy="88" rx="20" ry="12" transform="rotate(-38 31 88)"/>
-    <ellipse cx="61" cy="43" rx="19" ry="14" transform="rotate(24 61 43)"/>
-    <ellipse cx="202" cy="43" rx="19" ry="13" transform="rotate(-22 202 43)"/>
-    <ellipse cx="236" cy="134" rx="14" ry="19" transform="rotate(31 236 134)"/>
-    <ellipse cx="74" cy="189" rx="15" ry="22" transform="rotate(34 74 189)"/>
-    <circle cx="219" cy="188" r="14"/>
+  <g fill="#ffffff" opacity="0.38">
+    <ellipse cx="113" cy="100" rx="10" ry="6" transform="rotate(-18 113 100)"/>
+    <circle cx="187" cy="121" r="5"/>
+  </g>
   </g>
 </svg>

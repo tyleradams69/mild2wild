@@ -1,10 +1,26 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell, SectionEyebrow, StaffCard } from "@/components/site";
 import { serviceCategories, staffMembers } from "@/lib/studio-data";
+import { readStoredStaffMembers } from "@/lib/staff-profile-overrides";
 
-export default function StaffIndexPage() {
-  const mascotProfiles = staffMembers.filter((staff) => staff.isMascot);
-  const employeeProfiles = staffMembers.filter((staff) => !staff.isMascot);
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Meet the Team",
+  description: "Meet the Mild 2 Wild artists, stylists, nail techs, tattoo artists, aesthetics specialists, and shop mascot before requesting an appointment.",
+  alternates: { canonical: "/staff" },
+  openGraph: {
+    title: "Meet the Team | Mild 2 Wild",
+    description: "Explore Mild 2 Wild staff profiles by service category and request an appointment with the right team member.",
+    url: "/staff",
+  },
+};
+
+export default async function StaffIndexPage() {
+  const mergedStaffMembers = await readStoredStaffMembers(staffMembers);
+  const mascotProfiles = mergedStaffMembers.filter((staff) => staff.isMascot);
+  const employeeProfiles = mergedStaffMembers.filter((staff) => !staff.isMascot);
 
   return (
     <PageShell>
@@ -17,7 +33,7 @@ export default function StaffIndexPage() {
 
         <div className="mt-8 flex flex-wrap gap-3">
           {serviceCategories.map((category) => {
-            const count = staffMembers.filter((staff) => staff.serviceCategorySlugs.includes(category.slug)).length;
+            const count = mergedStaffMembers.filter((staff) => staff.serviceCategorySlugs.includes(category.slug)).length;
             return (
               <Link
                 key={category.slug}
@@ -35,25 +51,18 @@ export default function StaffIndexPage() {
           <div className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.03] p-5">
             <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-end">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.28em] text-lime-300">Shop mascot</p>
-                <h2 className="brand-display mt-2 text-3xl font-black uppercase">Meet the shop mascot</h2>
+                <p className="text-xs font-black uppercase tracking-[0.28em] text-lime-300">Shop dog mascot</p>
+                <h2 className="brand-display mt-2 text-3xl font-black uppercase">Meet Schwebels</h2>
               </div>
-              <p className="max-w-xl text-sm leading-6 text-white/55">
-                The shop dog is part of the Mild 2 Wild personality, but this profile is for brand fun only and cannot be booked for appointments.
-              </p>
             </div>
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {mascotProfiles.map((staff) => (
-                <StaffCard key={staff.slug} staff={staff} />
-              ))}
+            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {mascotProfiles.map((staff) => <StaffCard key={staff.slug} staff={staff} />)}
             </div>
           </div>
         ) : null}
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {employeeProfiles.map((staff) => (
-            <StaffCard key={staff.slug} staff={staff} />
-          ))}
+        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {employeeProfiles.map((staff) => <StaffCard key={staff.slug} staff={staff} />)}
         </div>
       </section>
     </PageShell>

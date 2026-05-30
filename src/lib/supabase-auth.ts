@@ -1,6 +1,8 @@
 import { timingSafeEqual } from "node:crypto";
 import { ownerAdminProfile, type DashboardAuthSession } from "./auth-session";
+import { readStoredStaffMembers } from "./staff-profile-overrides";
 import { staffMembers } from "./studio-data";
+import type { StaffMember } from "./studio-data";
 
 type SupabaseAuthEnv = Record<string, string | undefined>;
 
@@ -109,7 +111,7 @@ export function buildSupabasePasswordGrantRequest(env: SupabaseAuthEnv, email: s
   };
 }
 
-export function dashboardSessionFromSupabaseUser(user: SupabasePasswordGrantUser, now = Date.now()): DashboardAuthSession | null {
+export function dashboardSessionFromSupabaseUser(user: SupabasePasswordGrantUser, now = Date.now(), availableStaffMembers: StaffMember[] = staffMembers): DashboardAuthSession | null {
   const email = normalizeEmail(user.email);
   const metadata = user.user_metadata;
   const displayName = metadataString(metadata, ["full_name", "name", "displayName"]) || user.email || "Dashboard user";
@@ -125,7 +127,7 @@ export function dashboardSessionFromSupabaseUser(user: SupabasePasswordGrantUser
   }
 
   const staffSlug = metadataString(metadata, ["staff_slug", "staffSlug"]);
-  const staff = staffMembers.find((member) => member.slug === staffSlug && !member.isMascot);
+  const staff = availableStaffMembers.find((member) => member.slug === staffSlug && !member.isMascot);
   if (!staff) return null;
 
   return {
@@ -170,7 +172,8 @@ export async function authenticateDashboardUser(
   if (!response.ok) return fallbackSession ? { ok: true, session: fallbackSession } : { ok: false, error: "invalid_credentials" };
 
   const payload = (await response.json().catch(() => null)) as SupabasePasswordGrantResponse | null;
-  const session = payload?.user ? dashboardSessionFromSupabaseUser(payload.user, now) : null;
+  const availableStaffMembers = await readStoredStaffMembers(staffMembers);
+  const session = payload?.user ? dashboardSessionFromSupabaseUser(payload.user, now, availableStaffMembers) : null;
   if (!session) return { ok: false, error: "unauthorized_user" };
 
   return { ok: true, session };

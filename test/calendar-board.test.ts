@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DashboardAuthSession } from "../src/lib/auth-session";
-import { buildCalendarBoard, calendarActionStatuses, normalizeCalendarStatus } from "../src/lib/calendar-board";
+import { buildCalendarBoard, calendarActionStatuses, formatDateTimeInputInNewYork, normalizeCalendarStatus } from "../src/lib/calendar-board";
 import { staffMembers } from "../src/lib/studio-data";
 
 const ownerSession: DashboardAuthSession = {
@@ -73,9 +73,15 @@ describe("calendar board", () => {
     }));
   });
 
-  it("normalizes allowed calendar status changes and rejects unsupported statuses", () => {
-    expect(calendarActionStatuses).toEqual(["requested", "confirmed", "completed", "cancelled"]);
+  it("formats existing appointment times for dashboard edit controls in shop time", () => {
+    expect(formatDateTimeInputInNewYork("2026-06-03T18:30:00.000Z")).toBe("2026-06-03T14:30");
+    expect(formatDateTimeInputInNewYork("bad-input")).toBe("");
+  });
+
+  it("normalizes all business calendar status changes and rejects unsupported statuses", () => {
+    expect(calendarActionStatuses).toEqual(["requested", "confirmed", "checked_in", "completed", "cancelled", "no_show", "blocked"]);
     expect(normalizeCalendarStatus(" completed ")).toBe("completed");
-    expect(normalizeCalendarStatus("no_show")).toBeNull();
+    expect(normalizeCalendarStatus("no show")).toBe("no_show");
+    expect(normalizeCalendarStatus("needs_reschedule")).toBeNull();
   });
 });

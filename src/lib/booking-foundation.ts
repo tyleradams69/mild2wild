@@ -1,4 +1,5 @@
 import type { ServiceCategory, StaffMember, StudioService } from "./studio-data";
+import { parseCalendarLocalDateTimeInput } from "./owned-calendar-system";
 
 export type BookingRequestInput = {
   customerName?: unknown;
@@ -70,6 +71,15 @@ function addMinutes(isoDate: string, minutes: number) {
   return date.toISOString();
 }
 
+function parseBookingStartTime(value: string) {
+  if (!value) return null;
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value)) {
+    return parseCalendarLocalDateTimeInput(value);
+  }
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+}
+
 export function validateBookingRequest(input: BookingRequestInput, dataset: BookingDataset): ValidationResult<ValidatedBookingRequest> {
   const errors: string[] = [];
   const customerName = asTrimmedString(input.customerName);
@@ -79,6 +89,7 @@ export function validateBookingRequest(input: BookingRequestInput, dataset: Book
   const staffSlug = asTrimmedString(input.staffSlug);
   const notes = nullableString(input.notes);
   const startsAtRaw = asTrimmedString(input.startsAt);
+  const startsAt = parseBookingStartTime(startsAtRaw);
 
   if (!customerName) errors.push("Customer name is required.");
   if (!customerPhone && !customerEmail) errors.push("Customer phone or email is required.");
@@ -89,8 +100,7 @@ export function validateBookingRequest(input: BookingRequestInput, dataset: Book
   const staff = dataset.staffMembers.find((item) => item.slug === staffSlug);
   if (!staff) errors.push("Selected staff member is not available.");
 
-  const startsAtDate = new Date(startsAtRaw);
-  if (!startsAtRaw || Number.isNaN(startsAtDate.getTime())) {
+  if (!startsAt) {
     errors.push("Valid appointment start time is required.");
   }
 
@@ -98,11 +108,9 @@ export function validateBookingRequest(input: BookingRequestInput, dataset: Book
     errors.push("Selected staff member does not offer that service.");
   }
 
-  if (errors.length > 0 || !service) {
+  if (errors.length > 0 || !service || !startsAt) {
     return { ok: false, errors };
   }
-
-  const startsAt = startsAtDate.toISOString();
 
   return {
     ok: true,
@@ -154,6 +162,39 @@ export function buildBookingServiceGroups({
           })),
       })),
   }));
+}
+
+export function filterBookingServiceGroupsForStaff(groups: BookingServiceGroup[], requestedStaffSlug?: string): BookingServiceGroup[] {
+  const staffSlug = requestedStaffSlug?.trim() ?? "";
+  if (!staffSlug) return groups;
+
+  const filteredGroups = groups
+    .map((group) => ({
+      ...group,
+      services: group.services
+        .filter((service) => service.compatibleStaff.some((staff) => staff.slug === staffSlug))
+        .map((service) => ({
+          ...service,
+          compatibleStaff: service.compatibleStaff.filter((staff) => staff.slug === staffSlug),
+        })),
+    }))
+    .filter((group) => group.services.length > 0);
+
+  return filteredGroups.length > 0 ? filteredGroups : groups;
+}
+
+export function resolveInitialBookingSelection(groups: BookingServiceGroup[], requestedStaffSlug?: string) {
+  const serviceOptions = groups.flatMap((group) => group.services);
+  const fallbackService = serviceOptions[0];
+  const fallbackStaffSlug = fallbackService?.compatibleStaff[0]?.slug ?? "";
+  const staffSlug = requestedStaffSlug?.trim() ?? "";
+
+  const matchingService = serviceOptions.find((service) => service.compatibleStaff.some((staff) => staff.slug === staffSlug));
+
+  return {
+    serviceSlug: matchingService?.slug ?? fallbackService?.slug ?? "",
+    staffSlug: matchingService ? staffSlug : fallbackStaffSlug,
+  };
 }
 
 export function buildAppointmentInsert(request: ValidatedBookingRequest, maps: IdMaps) {

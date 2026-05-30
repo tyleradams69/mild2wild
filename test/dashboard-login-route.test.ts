@@ -19,7 +19,12 @@ describe("dashboard login route", () => {
       ),
     );
 
-    const body = new URLSearchParams({ email: ownerAdminProfile.email, password: "123456" });
+    const body = new URLSearchParams({
+      email: ownerAdminProfile.email,
+      password: "123456",
+      staff: "team-member-14",
+      next: "/dashboard/staff/team-member-14/edit",
+    });
     const request = new NextRequest("http://127.0.0.1:3002/api/dashboard-login", {
       method: "POST",
       headers: { "content-type": "application/x-www-form-urlencoded", host: "127.0.0.1:3002" },
@@ -29,7 +34,7 @@ describe("dashboard login route", () => {
     const response = await POST(request);
 
     expect(response.status).toBe(303);
-    expect(response.headers.get("location")).toBe("/dashboard");
+    expect(response.headers.get("location")).toBe("/dashboard/staff/team-member-14/edit");
     expect(response.headers.get("set-cookie")).toContain(dashboardSessionCookieName);
     expect(response.headers.get("set-cookie")).not.toContain("Secure");
     expect(fetcher).toHaveBeenCalledOnce();

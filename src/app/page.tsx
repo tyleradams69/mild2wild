@@ -20,7 +20,7 @@ export default function Home() {
                 Mild<span className="text-[#ffe26f]">2</span><span className="text-[#79dfff]">Wild</span>
               </h1>
               <p className="marker-script mt-3 text-xl text-black/80 sm:text-2xl md:text-3xl">
-                Pastel window art, tattoo flash, real artists, and one very feedable shop dog.
+                Pastel window art, tattoo flash, real artists, and one very feedable shop dog named Schwebels.
               </p>
               <p className="mt-6 max-w-2xl text-base leading-7 text-black/68 md:mt-7 md:text-xl md:leading-8">
                 A hand-painted salon/parlor world where every service feels intentional: nails, tattoos, hair, aesthetics, spa care, retail favorites, and request-first booking without losing the mural-wall personality.
@@ -34,7 +34,7 @@ export default function Home() {
                 </Link>
               </div>
               <div className="mt-8 grid gap-3 text-sm font-black uppercase tracking-[0.08em] text-black/72 sm:grid-cols-3">
-                {["Tattoo parlor included", "Color-coded services", "Dog treat game"].map((item, index) => (
+                {["Tattoo parlor included", "Color-coded services", "Schwebels treat game"].map((item, index) => (
                   <div key={item} className="rounded-2xl border-[3px] border-black px-4 py-3 shadow-[4px_5px_0_#17130f]" style={{ background: ["#d5c4ff", "#c7f2ff", "#caff9b"][index] }}>
                     {item}
                   </div>
@@ -61,7 +61,7 @@ export default function Home() {
                   <div className="mt-4 flex items-center justify-between gap-3">
                     <div>
                       <p className="text-xs font-black uppercase tracking-[0.2em] text-black/55">New tab</p>
-                      <p className="brand-display text-3xl uppercase text-black">Dog Treat Clicker</p>
+                      <p className="brand-display text-3xl uppercase text-black">Schwebels Treat Clicker</p>
                     </div>
                     <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-[3px] border-black bg-cyan-200 shadow-[4px_5px_0_#17130f]">
                       <DogTreatIcon icon="bone" className="h-9 w-9" />

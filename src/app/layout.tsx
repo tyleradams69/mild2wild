@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bangers, Geist, Geist_Mono, Permanent_Marker } from "next/font/google";
+import { buildLocalBusinessJsonLd, buildWebsiteJsonLd, businessName, siteUrl } from "@/lib/seo";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -24,27 +25,31 @@ const marker = Permanent_Marker({
   weight: "400",
 });
 
-const siteUrl = "https://mild2wild.vercel.app";
-
-const localBusinessJsonLd = {
-  "@context": "https://schema.org",
-  "@type": ["BeautySalon", "TattooParlor"],
-  name: "Mild 2 Wild",
-  url: siteUrl,
-  image: `${siteUrl}/og-image.svg`,
-  description:
-    "A colorful tattoo, nail, hair, aesthetics, spa, and retail studio with website booking requests and staff profile pages.",
-  makesOffer: ["Tattoo consultations", "Flash tattoos", "Custom nail art", "Gel manicures", "Hair color", "Cuts and styling", "Facials", "Brow and lash services"],
-};
+const localBusinessJsonLd = buildLocalBusinessJsonLd();
+const websiteJsonLd = buildWebsiteJsonLd();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Mild 2 Wild | Tattoos, Nails, Hair & Spa",
+    default: `${businessName} | Tattoos, Nails, Hair & Spa`,
     template: "%s | Mild 2 Wild",
   },
   description:
     "Request tattoos, custom nails, hair color, salon services, aesthetics, spa care, and aftercare favorites from Mild 2 Wild's colorful studio website.",
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   applicationName: "Mild 2 Wild",
   keywords: ["tattoos", "tattoo parlor", "custom nails", "nail art", "hair salon", "spa", "aesthetics", "booking", "Mild 2 Wild"],
   authors: [{ name: "Mild 2 Wild" }],
@@ -89,7 +94,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           suppressHydrationWarning
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify([localBusinessJsonLd, websiteJsonLd]) }}
         />
         {children}
       </body>

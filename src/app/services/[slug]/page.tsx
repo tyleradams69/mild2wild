@@ -1,16 +1,34 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell, SectionEyebrow, StaffCard } from "@/components/site";
 import {
-  getFeaturedStaffForCategory,
   getServiceCategoryBySlug,
   getServicesForCategory,
-  getStaffForService,
   serviceCategories,
+  staffMembers,
   type ServiceCategorySlug,
 } from "@/lib/studio-data";
+import { readStoredStaffMembers } from "@/lib/staff-profile-overrides";
 
 export function generateStaticParams() {
   return serviceCategories.map((category) => ({ slug: category.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const category = getServiceCategoryBySlug(slug);
+  if (!category) return { title: "Service Not Found", robots: { index: false, follow: false } };
+
+  return {
+    title: `${category.name} Services`,
+    description: `${category.headline} ${category.description}`,
+    alternates: { canonical: `/services/${category.slug}` },
+    openGraph: {
+      title: `${category.name} Services | Mild 2 Wild`,
+      description: category.description,
+      url: `/services/${category.slug}`,
+    },
+  };
 }
 
 export default async function ServiceCategoryPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -31,7 +49,7 @@ export default async function ServiceCategoryPage({ params }: { params: Promise<
   }
 
   const services = getServicesForCategory(category.slug as ServiceCategorySlug);
-  const staff = getFeaturedStaffForCategory(category.slug as ServiceCategorySlug);
+  const staff = (await readStoredStaffMembers(staffMembers)).filter((member) => member.serviceCategorySlugs.includes(category.slug as ServiceCategorySlug));
 
   return (
     <PageShell>
@@ -60,7 +78,7 @@ export default async function ServiceCategoryPage({ params }: { params: Promise<
           <SectionEyebrow color={category.accent}>Services</SectionEyebrow>
           <div className="space-y-4">
             {services.map((service) => {
-              const serviceStaff = getStaffForService(service.slug);
+              const serviceStaff = staff.filter((member) => member.serviceSlugs.includes(service.slug));
               return (
                 <article key={service.slug} className="neon-card rounded-[1.6rem] p-6">
                   <div className="flex items-start justify-between gap-5">

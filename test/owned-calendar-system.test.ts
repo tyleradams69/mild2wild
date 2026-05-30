@@ -6,6 +6,7 @@ import {
   detectOwnedCalendarConflicts,
   filterOwnedAppointmentsForSession,
   normalizeBooksyCsvRow,
+  parseCalendarLocalDateTimeInput,
   type OwnedCalendarAppointment,
 } from "../src/lib/owned-calendar-system";
 
@@ -76,6 +77,11 @@ describe("owned calendar system", () => {
     );
 
     expect(conflicts.map((item) => item.id)).toEqual(["appt-1"]);
+  });
+
+  it("parses dashboard datetime-local input as New York shop time", () => {
+    expect(parseCalendarLocalDateTimeInput("2026-06-03T14:30")).toBe("2026-06-03T18:30:00.000Z");
+    expect(parseCalendarLocalDateTimeInput("bad-input")).toBeNull();
   });
 
   it("normalizes Booksy CSV rows into first-party appointment imports", () => {

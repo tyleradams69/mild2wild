@@ -116,8 +116,8 @@ export function SiteFooter() {
 
   return (
     <footer className="footer-mural relative overflow-hidden border-t-[4px] border-black px-5 py-12 text-center text-sm">
-      <PaintSplat color="#39aeea" variant="window" className="absolute -right-16 top-2 w-56 rotate-12 opacity-75" />
-      <PaintSplat color="#f1c535" variant="bubble" className="absolute -left-14 bottom-0 w-52 -rotate-12 opacity-75" />
+      <PaintSplat color="#39aeea" variant="window" className="pointer-events-none absolute -right-12 top-4 w-48 rotate-12 opacity-70" />
+      <PaintSplat color="#f1c535" variant="bubble" className="pointer-events-none absolute -left-12 bottom-0 w-44 -rotate-12 opacity-70" />
       <div className="relative z-10">
         <p className="brand-display paint-outline text-4xl uppercase text-pink-300">Mild 2 Wild</p>
         <p className="marker-script mt-3 text-lg text-yellow-100">Tattoos • Nails • Hair • Aesthetics • Spa • Products</p>
@@ -153,12 +153,12 @@ export function ServiceCategoryCard({ category }: { category: ServiceCategory })
     >
       <div className="relative z-10 mb-8 flex items-center justify-between">
         <span
-          className="service-sticker rounded-full px-4 py-2 text-xs font-black uppercase tracking-[0.22em]"
+          className="service-sticker relative z-10 max-w-[9.5rem] break-words rounded-full px-4 py-2 text-center text-xs font-black uppercase leading-tight tracking-[0.16em]"
           style={{ background: category.accent }}
         >
           {category.name}
         </span>
-        <PaintSplat color={category.accent} variant="window" className="absolute -right-12 -top-14 w-36 rotate-12 opacity-85 transition group-hover:rotate-[20deg]" />
+        <PaintSplat color={category.accent} variant="window" className="pointer-events-none absolute -right-6 -top-8 w-28 rotate-12 opacity-78 transition group-hover:rotate-[18deg]" />
       </div>
       <h3 className="brand-display relative z-10 text-4xl uppercase text-black">{category.name}</h3>
       <p className="relative z-10 mt-4 leading-7 text-black/68">{category.description}</p>

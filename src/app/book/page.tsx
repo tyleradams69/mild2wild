@@ -1,7 +1,20 @@
+import type { Metadata } from "next";
 import { BookingRequestForm } from "@/components/booking-request-form";
 import { PageShell, PaintSplat, SectionEyebrow } from "@/components/site";
 import { buildBookingServiceGroups } from "@/lib/booking-foundation";
 import { serviceCategories, services, staffMembers } from "@/lib/studio-data";
+import { readStoredStaffMembers } from "@/lib/staff-profile-overrides";
+
+export const metadata: Metadata = {
+  title: "Request an Appointment",
+  description: "Choose a Mild 2 Wild service, pick a preferred team member, and send a booking request for tattoos, nails, hair, aesthetics, or spa services.",
+  alternates: { canonical: "/book" },
+};
+
+const safeStaffSlug = (value?: string) => {
+  const slug = value?.trim() ?? "";
+  return /^team-member-\d{2,3}$/.test(slug) ? slug : "";
+};
 
 const bookingNotes = [
   "One request can include inspiration and notes.",
@@ -15,8 +28,10 @@ const helpCards = [
   ["We match it up", "The shop can recommend the best fit when confirming your request.", "#d9ffb8"],
 ];
 
-export default function BookPage() {
-  const bookingGroups = buildBookingServiceGroups({ serviceCategories, services, staffMembers });
+export default async function BookPage({ searchParams }: { searchParams?: Promise<{ staff?: string }> }) {
+  const params = await searchParams;
+  const requestedStaffSlug = safeStaffSlug(params?.staff);
+  const bookingGroups = buildBookingServiceGroups({ serviceCategories, services, staffMembers: await readStoredStaffMembers(staffMembers) });
 
   return (
     <PageShell>
@@ -39,7 +54,7 @@ export default function BookPage() {
         </div>
 
         <div className="mt-10 grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-          <BookingRequestForm groups={bookingGroups} />
+          <BookingRequestForm key={requestedStaffSlug || "all-staff"} groups={bookingGroups} initialStaffSlug={requestedStaffSlug} />
 
           <div className="grid min-w-0 gap-6">
             <div className="neon-card relative min-w-0 overflow-hidden rounded-[2rem] p-6">
