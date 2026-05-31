@@ -112,10 +112,14 @@ describe("staff profile overrides", () => {
     expect(normalizeStaffProfileUpdate({ name: "", title: "Nail Artist", bio: "bio" })).toMatchObject({ ok: false });
   });
 
-  it("allows owner to edit any staff profile but staff can only edit their own", () => {
+  it("allows only owner to edit public profiles, including the dog mascot", () => {
     expect(buildProfileEditModel(ownerSession, "team-member-10", staffMembers)).toMatchObject({ canEdit: true, profile: { slug: "team-member-10" } });
-    expect(buildProfileEditModel(staffSession, "team-member-13", staffMembers)).toMatchObject({ canEdit: true, profile: { slug: "team-member-13" } });
+    expect(buildProfileEditModel(ownerSession, "team-member-12", staffMembers)).toMatchObject({ canEdit: true, profile: { slug: "team-member-12" } });
+    expect(buildProfileEditModel(staffSession, "team-member-13", staffMembers)).toMatchObject({
+      canEdit: false,
+      profile: { slug: "team-member-13" },
+      reason: "Only Caitlin's admin account can edit public profiles.",
+    });
     expect(buildProfileEditModel(staffSession, "team-member-10", staffMembers)).toMatchObject({ canEdit: false, profile: { slug: "team-member-10" } });
-    expect(buildProfileEditModel(ownerSession, "team-member-12", staffMembers)).toMatchObject({ canEdit: false, reason: "Mascot profiles are public-only." });
   });
 });

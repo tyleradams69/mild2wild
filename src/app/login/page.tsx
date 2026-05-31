@@ -39,7 +39,7 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
   const message = errorCopy(params?.error);
   const staffSlug = safeStaffSlug(params?.staff);
   const staffProfile = (await readStoredStaffMembers(staffMembers)).find((staff) => staff.slug === staffSlug && !staff.isMascot);
-  const next = safeLoginNext(params?.next || (staffProfile ? `/dashboard/staff/${staffProfile.slug}/edit` : "/dashboard"));
+  const next = safeLoginNext(params?.next || (staffProfile ? `/dashboard/calendar/${staffProfile.slug}` : "/dashboard"));
 
   return (
     <PageShell>
@@ -49,7 +49,7 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
           Sign in to the <span className="block">dashboard.</span>
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-8 text-white/65">
-          Authorized team members can sign in to manage appointments, schedules, profile copy, and portfolio showcases.
+          Authorized team members can sign in to manage their own calendar. Caitlin&apos;s admin account handles profile copy, colors, templates, portfolio uploads, and site-wide updates.
         </p>
 
         {staffProfile ? (
@@ -60,7 +60,7 @@ export default async function LoginPage({ searchParams }: { searchParams?: Promi
             <div className="min-w-0">
               <p className="text-xs font-black uppercase tracking-[0.22em] text-pink-100/70">Signing in for</p>
               <p className="brand-display mt-1 text-2xl font-black uppercase text-white">{staffProfile.name}</p>
-              <p className="mt-1 text-sm font-bold text-white/55">You&apos;ll land on this profile editor after your account is verified.</p>
+              <p className="mt-1 text-sm font-bold text-white/55">You&apos;ll land on this staff calendar after your account is verified.</p>
             </div>
           </div>
         ) : null}

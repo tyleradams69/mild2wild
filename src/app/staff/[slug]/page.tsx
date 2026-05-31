@@ -57,7 +57,7 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
   const innerPanelStyle = getProfileInnerPanelStyle(portraitPalette);
   const bioIntro = staff.bio.match(/^(.+?[.!?])\s+/)?.[1] ?? "";
   const bioBody = bioIntro ? staff.bio.slice(bioIntro.length).trim() : staff.bio;
-  const portfolioTheme = getPortfolioTheme(staff.serviceCategorySlugs[0] ?? "nails", portraitPalette);
+  const portfolioTheme = getPortfolioTheme(isMascot ? "mascot" : (staff.serviceCategorySlugs[0] ?? "nails"), portraitPalette, theme.portfolioStyle.id);
 
   return (
     <PageShell>
@@ -81,12 +81,20 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             {staff.socialLinks.map((link) => {
               const socialText = formatSocialLinkText(link.label);
+              const isFriendshipApl = isFriendshipAplLink(link.label);
               return (
                 <a
                   key={`${link.label}-${link.href}`}
                   href={link.href}
                   aria-label={link.label}
-                  className="inline-flex min-h-12 max-w-full items-center justify-center gap-3 rounded-full border border-white/15 px-5 py-3 text-center text-sm font-black text-white/70 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
+                  className={isFriendshipApl
+                    ? "inline-flex min-h-12 max-w-full items-center justify-center gap-3 rounded-full border-[3px] px-5 py-3 text-center text-sm font-black uppercase tracking-[0.12em] text-black transition hover:-translate-y-0.5"
+                    : "inline-flex min-h-12 max-w-full items-center justify-center gap-3 rounded-full border border-white/15 px-5 py-3 text-center text-sm font-black text-white/70 transition hover:border-white/35 hover:bg-white/10 hover:text-white"}
+                  style={isFriendshipApl ? {
+                    background: `linear-gradient(135deg, ${portraitPalette.blush}, ${portraitPalette.accent} 58%, ${portraitPalette.secondary})`,
+                    borderColor: portraitPalette.ink,
+                    boxShadow: `4px 5px 0 ${portraitPalette.shadow}, 0 16px 34px ${portraitPalette.primary}25`,
+                  } : undefined}
                 >
                   <SocialLinkIcon label={link.label} />
                   {socialText ? <span>{socialText}</span> : null}
@@ -103,11 +111,11 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
                   Book with me
                 </Link>
                 <Link
-                  href={`/login?staff=${staff.slug}&next=${encodeURIComponent(`/dashboard/staff/${staff.slug}/edit`)}`}
+                  href={`/login?staff=${staff.slug}&next=${encodeURIComponent(`/dashboard/calendar/${staff.slug}`)}`}
                   className="inline-flex min-h-12 max-w-full items-center justify-center rounded-full border-[3px] px-5 py-3 text-center text-sm font-black uppercase tracking-[0.16em] text-black transition hover:-translate-y-0.5"
                   style={{ background: portraitPalette.blush, borderColor: portraitPalette.ink, boxShadow: `4px 5px 0 ${portraitPalette.secondary}` }}
                 >
-                  Staff login
+                  Calendar login
                 </Link>
               </>
             ) : null}
@@ -126,24 +134,16 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
             </p>
           </div>
 
-          {isMascot ? (
-            <div className="mt-8 flex flex-wrap gap-3">
-              <span className="rounded-full bg-lime-300 px-4 py-2 text-sm font-black uppercase tracking-[0.18em] text-black">
-                Non-bookable mascot
-              </span>
-            </div>
-          ) : null}
-
           <div className="mt-10 grid max-w-full gap-5 overflow-hidden md:grid-cols-2">
             {isMascot ? (
-              <section className="neon-card rounded-[2rem] p-6">
+              <section className="neon-card rounded-[2rem] p-6" style={panelStyle}>
                 <h3 className="brand-display text-2xl font-black uppercase">Mascot role</h3>
                 <div className="mt-5 grid gap-3">
-                  <div className="rounded-2xl border border-lime-300/25 bg-lime-300/10 p-4 text-lime-50">
+                  <div className="rounded-2xl border-[2px] p-4 text-[#4d4543]" style={innerPanelStyle}>
                     ✦ Featured on the staff page, tour page, and brand moments.
                   </div>
-                  <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-white/68">
-                    ✦ Not available for appointments or service selection.
+                  <div className="rounded-2xl border-[2px] p-4 text-[#4d4543]" style={innerPanelStyle}>
+                    ✦ A sweet intro for guests before they meet the human team.
                   </div>
                 </div>
               </section>
@@ -186,62 +186,51 @@ export default async function StaffProfilePage({ params }: { params: Promise<{ s
                 ))}
               </div>
             </section>
-
-            {isMascot ? (
-              <section className="neon-card rounded-[2rem] p-6 md:col-span-2">
-                <h3 className="brand-display text-2xl font-black uppercase">Brand mascot only</h3>
-                <p className="mt-3 max-w-3xl text-white/62">
-                  {staff.name} is here for brand personality only. Guests can enjoy the mascot profile, but the shop dog cannot be booked for appointments or selected as a service provider.
-                </p>
-              </section>
-            ) : null}
           </div>
         </div>
 
-        {!isMascot ? (
-          <section id="portfolio" className="neon-card max-w-full scroll-mt-28 overflow-hidden rounded-[2rem] p-4 lg:col-span-2 md:p-6" style={panelStyle}>
-            <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end">
-              <div>
-                <p className="text-xs font-black uppercase tracking-[0.24em]" style={{ color: portfolioTheme.accent }}>{portfolioTheme.eyebrow}</p>
-                <h3 className="brand-display mt-2 text-2xl font-black uppercase md:text-3xl">{portfolioTheme.heading}</h3>
-              </div>
-              <p className="max-w-full break-words text-sm font-medium leading-6 text-[#625a54] md:max-w-xl">
-                {portfolioTheme.description(staff.name)}
-              </p>
+        <section id="portfolio" className="neon-card max-w-full scroll-mt-28 overflow-hidden rounded-[2rem] p-4 lg:col-span-2 md:p-6" style={panelStyle}>
+          <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[0.24em]" style={{ color: portfolioTheme.accent }}>{portfolioTheme.eyebrow}</p>
+              <h3 className="brand-display mt-2 text-2xl font-black uppercase md:text-3xl">{portfolioTheme.heading}</h3>
             </div>
-            {staff.portfolioImages?.length ? (
-              <div className="mt-6 grid max-h-[94rem] gap-4 overflow-y-auto overscroll-contain pr-1 sm:max-h-[82rem] sm:grid-cols-2 lg:max-h-[80rem] lg:grid-cols-4">
-                {staff.portfolioImages.map((image) => (
-                  <figure key={image.src} className="group flex max-w-full flex-col overflow-hidden rounded-[1.6rem] border-[3px]" style={portfolioTheme.cardStyle}>
-                    <div className="relative aspect-[4/5] overflow-hidden" style={{ background: portfolioTheme.imageBackground }}>
-                      <Image
-                        src={image.src}
-                        alt={image.alt}
-                        fill
-                        sizes="(min-width: 1024px) 20vw, (min-width: 640px) 45vw, 100vw"
-                        className={portfolioTheme.imageClassName}
-                      />
-                      {portfolioTheme.overlay}
-                    </div>
-                    <figcaption className="grow border-t-[3px] px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-black" style={portfolioTheme.captionStyle}>
-                      {image.label}
-                    </figcaption>
-                  </figure>
-                ))}
-              </div>
-            ) : (
-              <div className="mt-6 rounded-[1.8rem] border-[3px] p-6" style={portfolioTheme.emptyStyle}>
-                <p className="brand-display text-2xl font-black uppercase text-black">Portfolio ready for uploads</p>
-                <p className="mt-2 max-w-2xl text-sm font-bold leading-6 text-[#5f5650]">
-                  {staff.name} can log in from a phone, open the profile editor, and add photos from the camera roll whenever their work examples are ready.
-                </p>
-                <Link href={`/login?staff=${staff.slug}&next=${encodeURIComponent(`/dashboard/staff/${staff.slug}/edit`)}`} className="mt-4 inline-flex rounded-full border-[3px] px-5 py-3 text-xs font-black uppercase tracking-[0.16em] text-black transition hover:-translate-y-0.5" style={{ background: portfolioTheme.accent, borderColor: portfolioTheme.ink, boxShadow: `4px 5px 0 ${portfolioTheme.shadow}` }}>
-                  Edit portfolio
-                </Link>
-              </div>
-            )}
-          </section>
-        ) : null}
+            <p className="max-w-full break-words text-sm font-medium leading-6 text-[#625a54] md:max-w-xl">
+              {portfolioTheme.description(staff.name)}
+            </p>
+          </div>
+          {staff.portfolioImages?.length ? (
+            <div className="mt-6 grid max-h-[94rem] gap-4 overflow-y-auto overscroll-contain pr-1 sm:max-h-[82rem] sm:grid-cols-2 lg:max-h-[80rem] lg:grid-cols-4">
+              {staff.portfolioImages.map((image) => (
+                <figure key={image.src} className="group flex max-w-full flex-col overflow-hidden rounded-[1.6rem] border-[3px]" style={portfolioTheme.cardStyle}>
+                  <div className="relative aspect-[4/5] overflow-hidden" style={{ background: portfolioTheme.imageBackground }}>
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      fill
+                      sizes="(min-width: 1024px) 20vw, (min-width: 640px) 45vw, 100vw"
+                      className={portfolioTheme.imageClassName}
+                    />
+                    {portfolioTheme.overlay}
+                  </div>
+                  <figcaption className="grow border-t-[3px] px-4 py-3 text-xs font-black uppercase tracking-[0.16em] text-black" style={portfolioTheme.captionStyle}>
+                    {image.label}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          ) : (
+            <div className="mt-6 rounded-[1.8rem] border-[3px] p-6" style={portfolioTheme.emptyStyle}>
+              <p className="brand-display text-2xl font-black uppercase text-black">Portfolio ready for uploads</p>
+              <p className="mt-2 max-w-2xl text-sm font-bold leading-6 text-[#5f5650]">
+                Caitlin can use the admin profile editor to add photos, update bios, and tune profile designs whenever new work examples are ready.
+              </p>
+              <Link href={`/login?staff=${staff.slug}&next=${encodeURIComponent(`/dashboard/staff/${staff.slug}/edit`)}`} className="mt-4 inline-flex rounded-full border-[3px] px-5 py-3 text-xs font-black uppercase tracking-[0.16em] text-black transition hover:-translate-y-0.5" style={{ background: portfolioTheme.accent, borderColor: portfolioTheme.ink, boxShadow: `4px 5px 0 ${portfolioTheme.shadow}` }}>
+                Admin: edit portfolio
+              </Link>
+            </div>
+          )}
+        </section>
       </section>
     </PageShell>
   );
@@ -295,17 +284,18 @@ function getRainbowPortfolioShadow() {
   ].join(", ");
 }
 
-function getPortfolioTheme(categorySlug: string, palette: ProfilePalette) {
-  if (categorySlug === "tattoo") {
+function getPortfolioTheme(categorySlug: string, palette: ProfilePalette, portfolioStyleId: string) {
+  const resolvedStyle = portfolioStyleId === "default-service" ? getServicePortfolioStyleId(categorySlug) : portfolioStyleId;
+  const base = getPortfolioCopy(categorySlug);
+
+  if (resolvedStyle === "tattoo-flash") {
     return {
-      eyebrow: "Flash + fine line work",
-      heading: "Tattoo portfolio",
+      ...base,
       accent: palette.accent,
       ink: palette.ink,
       shadow: palette.shadow,
       imageBackground: palette.ink,
       imageClassName: "object-cover grayscale contrast-110 transition duration-500 group-hover:scale-105 group-hover:grayscale-0",
-      description: (name: string) => `A moody flash-wall showcase for ${name}'s tattoo concepts, linework, shading, and finished pieces.`,
       cardStyle: {
         borderColor: palette.ink,
         background: `linear-gradient(145deg, ${palette.ink}, ${palette.deep} 62%, ${palette.accent} 140%)`,
@@ -315,25 +305,41 @@ function getPortfolioTheme(categorySlug: string, palette: ProfilePalette) {
         borderColor: palette.ink,
         background: `linear-gradient(135deg, ${palette.accent}, ${palette.secondary})`,
       },
-      emptyStyle: {
-        borderColor: palette.ink,
-        background: `radial-gradient(circle at 10% 0%, ${palette.accent}44, transparent 12rem), linear-gradient(135deg, ${palette.soft}, ${palette.blush})`,
-        boxShadow: `6px 7px 0 ${palette.shadow}`,
-      },
+      emptyStyle: getPortfolioEmptyStyle(palette),
       overlay: <span aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: `radial-gradient(circle at 18% 14%, ${palette.accent}33, transparent 9rem), linear-gradient(145deg, transparent, rgba(0,0,0,0.22))` }} />,
     };
   }
 
-  if (categorySlug === "hair") {
+  if (resolvedStyle === "black-bone") {
     return {
-      eyebrow: "Color, shape + shine",
-      heading: "Hair portfolio",
+      ...base,
+      accent: palette.accent,
+      ink: palette.ink,
+      shadow: palette.shadow,
+      imageBackground: "#17120F",
+      imageClassName: "object-cover contrast-110 saturate-75 transition duration-500 group-hover:scale-105 group-hover:saturate-100",
+      cardStyle: {
+        borderColor: "#17120F",
+        background: `linear-gradient(145deg, #17120F, ${palette.deep} 70%, ${palette.soft} 150%)`,
+        boxShadow: `5px 6px 0 #F6E7C8, 9px 10px 0 ${palette.shadow}, 0 24px 54px rgba(23,18,15,0.24)`,
+      },
+      captionStyle: {
+        borderColor: "#17120F",
+        background: `linear-gradient(135deg, #FFF8EA, ${palette.blush})`,
+      },
+      emptyStyle: getPortfolioEmptyStyle(palette),
+      overlay: <span aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-30" style={{ background: "radial-gradient(circle at 12% 12%, rgba(246,231,200,0.34), transparent 7rem), linear-gradient(145deg, rgba(0,0,0,0.08), transparent 46%)" }} />,
+    };
+  }
+
+  if (resolvedStyle === "glossy-salon") {
+    return {
+      ...base,
       accent: palette.accent,
       ink: palette.ink,
       shadow: palette.shadow,
       imageBackground: palette.blush,
       imageClassName: "object-cover saturate-125 transition duration-500 group-hover:scale-105 group-hover:saturate-150",
-      description: (name: string) => `A glossy salon lookbook for ${name}'s color work, cuts, styling, and finished hair moments.`,
       cardStyle: {
         borderColor: palette.ink,
         background: `linear-gradient(145deg, ${palette.soft}, ${palette.accent} 70%, ${palette.secondary} 130%)`,
@@ -343,25 +349,19 @@ function getPortfolioTheme(categorySlug: string, palette: ProfilePalette) {
         borderColor: palette.ink,
         background: `linear-gradient(135deg, ${palette.accent}, ${palette.primary} 74%, ${palette.secondary})`,
       },
-      emptyStyle: {
-        borderColor: palette.ink,
-        background: `radial-gradient(circle at 85% 5%, ${palette.accent}66, transparent 11rem), linear-gradient(135deg, ${palette.soft}, ${palette.blush})`,
-        boxShadow: `6px 7px 0 ${palette.shadow}`,
-      },
+      emptyStyle: getPortfolioEmptyStyle(palette),
       overlay: <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-1/2" style={{ background: `linear-gradient(110deg, rgba(255,255,255,0.24), transparent 40%, ${palette.glow}2E)` }} />,
     };
   }
 
-  if (categorySlug === "aesthetics") {
+  if (resolvedStyle === "spa-glow") {
     return {
-      eyebrow: "Soft glow + self-care",
-      heading: "Spa portfolio",
+      ...base,
       accent: palette.accent,
       ink: palette.ink,
       shadow: palette.shadow,
       imageBackground: palette.blush,
       imageClassName: "object-cover contrast-105 transition duration-500 group-hover:scale-105",
-      description: (name: string) => `A calm glow-board for ${name}'s skincare, brows, lashes, spa details, and self-care results.`,
       cardStyle: {
         borderColor: palette.ink,
         background: `linear-gradient(145deg, ${palette.soft}, ${palette.blush} 62%, ${palette.secondary} 125%)`,
@@ -371,24 +371,128 @@ function getPortfolioTheme(categorySlug: string, palette: ProfilePalette) {
         borderColor: palette.ink,
         background: `linear-gradient(135deg, ${palette.blush}, ${palette.accent})`,
       },
-      emptyStyle: {
-        borderColor: palette.ink,
-        background: `radial-gradient(circle at 12% 12%, ${palette.primary}33, transparent 10rem), radial-gradient(circle at 88% 0%, ${palette.secondary}44, transparent 10rem), linear-gradient(135deg, ${palette.soft}, ${palette.blush})`,
-        boxShadow: `6px 7px 0 ${palette.shadow}`,
-      },
+      emptyStyle: getPortfolioEmptyStyle(palette),
       overlay: <span aria-hidden="true" className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/25 blur-xl" />,
     };
   }
 
+  if (resolvedStyle === "ghost-glow") {
+    return {
+      ...base,
+      accent: "#D7C7FF",
+      ink: palette.ink,
+      shadow: "#A78BFA",
+      imageBackground: "#F8F3FF",
+      imageClassName: "object-cover contrast-105 saturate-90 transition duration-500 group-hover:scale-105 group-hover:saturate-110",
+      cardStyle: {
+        borderColor: palette.ink,
+        background: "linear-gradient(145deg, #FFFDF8, #F3E8FF 58%, #DFF7FF 130%)",
+        boxShadow: `4px 5px 0 #FFFFFF, 8px 9px 0 #D7C7FF, 12px 13px 0 ${palette.shadow}, 0 24px 58px rgba(167,139,250,0.22)`,
+      },
+      captionStyle: {
+        borderColor: palette.ink,
+        background: "linear-gradient(135deg, #FFFDF8, #EEE7FF 72%, #DFF7FF)",
+      },
+      emptyStyle: getPortfolioEmptyStyle(palette),
+      overlay: <span aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(circle at 18% 14%, rgba(255,255,255,0.45), transparent 7rem), radial-gradient(circle at 86% 10%, rgba(215,199,255,0.38), transparent 8rem)" }} />,
+    };
+  }
+
+  if (resolvedStyle === "bone-yard") {
+    return {
+      ...base,
+      accent: "#F6E7C8",
+      ink: "#17120F",
+      shadow: "#5B5145",
+      imageBackground: "#FFF8EA",
+      imageClassName: "object-cover contrast-105 transition duration-500 group-hover:scale-105",
+      cardStyle: {
+        borderColor: "#17120F",
+        background: "linear-gradient(145deg, #FFF8EA, #F3E7D3 72%, #B7A58A 145%)",
+        boxShadow: "4px 5px 0 #F6E7C8, 8px 9px 0 #B7A58A, 12px 13px 0 #5B5145, 0 24px 54px rgba(23,18,15,0.18)",
+      },
+      captionStyle: {
+        borderColor: "#17120F",
+        background: "linear-gradient(135deg, #FFF8EA, #F6E7C8 74%, #E0CFB0)",
+      },
+      emptyStyle: getPortfolioEmptyStyle(palette),
+      overlay: <span aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-30" style={{ background: "radial-gradient(ellipse at 12% 8%, rgba(23,18,15,0.16), transparent 7rem), radial-gradient(ellipse at 90% 18%, rgba(246,231,200,0.36), transparent 8rem)" }} />,
+    };
+  }
+
+  if (resolvedStyle === "moonlit-aura") {
+    return {
+      ...base,
+      accent: "#C9A8FF",
+      ink: palette.ink,
+      shadow: "#6D5BD0",
+      imageBackground: "#F0E5FF",
+      imageClassName: "object-cover contrast-105 saturate-110 transition duration-500 group-hover:scale-105 group-hover:saturate-125",
+      cardStyle: {
+        borderColor: palette.ink,
+        background: "linear-gradient(145deg, #FFF7EA, #F0E5FF 58%, #D6FFF6 135%)",
+        boxShadow: "5px 6px 0 #C9A8FF, 9px 10px 0 #87E8D5, 13px 14px 0 #6D5BD0, 0 24px 58px rgba(109,91,208,0.2)",
+      },
+      captionStyle: {
+        borderColor: palette.ink,
+        background: "linear-gradient(135deg, #F0E5FF, #D6FFF6 74%, #C9A8FF)",
+      },
+      emptyStyle: getPortfolioEmptyStyle(palette),
+      overlay: <span aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(circle at 16% 12%, rgba(255,255,255,0.36), transparent 6rem), radial-gradient(circle at 82% 8%, rgba(201,168,255,0.32), transparent 9rem)" }} />,
+    };
+  }
+
+  if (resolvedStyle === "chrome-pop") {
+    return {
+      ...base,
+      accent: "#30F2FF",
+      ink: palette.ink,
+      shadow: "#7A6CFF",
+      imageBackground: "#E4FBFF",
+      imageClassName: "object-cover contrast-110 saturate-125 transition duration-500 group-hover:scale-105 group-hover:saturate-150",
+      cardStyle: {
+        borderColor: palette.ink,
+        background: "linear-gradient(145deg, #FFFDF8, #E4FBFF 60%, #FFB8EA 138%)",
+        boxShadow: "4px 5px 0 #30F2FF, 8px 9px 0 #57FFD6, 12px 13px 0 #7A6CFF, 0 24px 58px rgba(48,242,255,0.18)",
+      },
+      captionStyle: {
+        borderColor: palette.ink,
+        background: "linear-gradient(135deg, #E4FBFF, #FFB8EA 78%, #57FFD6)",
+      },
+      emptyStyle: getPortfolioEmptyStyle(palette),
+      overlay: <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-2/3" style={{ background: "linear-gradient(120deg, rgba(255,255,255,0.34), transparent 38%, rgba(48,242,255,0.18) 62%, transparent)" }} />,
+    };
+  }
+
+  if (resolvedStyle === "clean-cream") {
+    return {
+      ...base,
+      accent: palette.accent,
+      ink: palette.ink,
+      shadow: palette.shadow,
+      imageBackground: palette.soft,
+      imageClassName: "object-cover transition duration-500 group-hover:scale-105",
+      cardStyle: {
+        borderColor: palette.ink,
+        background: `linear-gradient(145deg, ${palette.soft}, ${palette.blush} 115%)`,
+        boxShadow: `6px 7px 0 ${palette.shadow}, 0 20px 48px ${palette.primary}18`,
+      },
+      captionStyle: {
+        borderColor: palette.ink,
+        background: `linear-gradient(135deg, ${palette.soft}, ${palette.blush})`,
+      },
+      emptyStyle: getPortfolioEmptyStyle(palette),
+      overlay: null,
+    };
+  }
+
   return {
-    eyebrow: "Recent work",
-    heading: "Nail portfolio",
+    ...base,
     accent: palette.primary,
     ink: palette.ink,
     shadow: palette.shadow,
     imageBackground: "#fff7e8",
     imageClassName: "object-cover transition duration-500 group-hover:scale-105",
-    description: (name: string) => `A few examples of ${name}'s nail art, color, and detail work.`,
     cardStyle: {
       borderColor: palette.ink,
       background: "#fff7e8",
@@ -398,12 +502,64 @@ function getPortfolioTheme(categorySlug: string, palette: ProfilePalette) {
       borderColor: palette.ink,
       background: `linear-gradient(135deg, ${palette.blush}, #fff7e8 72%)`,
     },
-    emptyStyle: {
-      borderColor: palette.ink,
-      background: `linear-gradient(135deg, ${palette.blush}, #fff7e8 72%)`,
-      boxShadow: `6px 7px 0 ${palette.shadow}`,
-    },
+    emptyStyle: getPortfolioEmptyStyle(palette),
     overlay: null,
+  };
+}
+
+function getServicePortfolioStyleId(categorySlug: string) {
+  if (categorySlug === "tattoo") return "tattoo-flash";
+  if (categorySlug === "hair") return "glossy-salon";
+  if (categorySlug === "aesthetics") return "spa-glow";
+  if (categorySlug === "mascot") return "ghost-glow";
+  return "rainbow-outline";
+}
+
+function getPortfolioCopy(categorySlug: string) {
+  if (categorySlug === "tattoo") {
+    return {
+      eyebrow: "Flash + fine line work",
+      heading: "Tattoo portfolio",
+      description: (name: string) => `A moody flash-wall showcase for ${name}'s tattoo concepts, linework, shading, and finished pieces.`,
+    };
+  }
+
+  if (categorySlug === "hair") {
+    return {
+      eyebrow: "Color, shape + shine",
+      heading: "Hair portfolio",
+      description: (name: string) => `A glossy salon lookbook for ${name}'s color work, cuts, styling, and finished hair moments.`,
+    };
+  }
+
+  if (categorySlug === "aesthetics") {
+    return {
+      eyebrow: "Soft glow + self-care",
+      heading: "Spa portfolio",
+      description: (name: string) => `A calm glow-board for ${name}'s skincare, brows, lashes, spa details, and self-care results.`,
+    };
+  }
+
+  if (categorySlug === "mascot") {
+    return {
+      eyebrow: "Shop dog snapshots",
+      heading: "Dog portfolio",
+      description: (name: string) => `A sweet little gallery for Caitlin to upload ${name}'s shop-dog photos, mascot moments, and Mild 2 Wild cameos.`,
+    };
+  }
+
+  return {
+    eyebrow: "Recent work",
+    heading: "Nail portfolio",
+    description: (name: string) => `A few examples of ${name}'s nail art, color, and detail work.`,
+  };
+}
+
+function getPortfolioEmptyStyle(palette: ProfilePalette) {
+  return {
+    borderColor: palette.ink,
+    background: `radial-gradient(circle at 12% 12%, ${palette.primary}33, transparent 10rem), radial-gradient(circle at 88% 0%, ${palette.secondary}44, transparent 10rem), linear-gradient(135deg, ${palette.soft}, ${palette.blush})`,
+    boxShadow: `6px 7px 0 ${palette.shadow}`,
   };
 }
 
@@ -701,11 +857,47 @@ function formatSocialLinkText(label: string) {
   return label;
 }
 
+function isFriendshipAplLink(label: string) {
+  return label.toLowerCase().includes("friendship apl");
+}
+
 function SocialLinkIcon({ label }: { label: string }) {
   const normalized = label.toLowerCase();
   if (normalized.includes("instagram")) return <InstagramLogo />;
   if (normalized.includes("tiktok")) return <TikTokLogo />;
+  if (isFriendshipAplLink(label)) return <FriendshipAplLogo />;
   return null;
+}
+
+function FriendshipAplLogo() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 78 38" className="h-8 w-[4.9rem] shrink-0" fill="none">
+      <path d="M10 27.5C22 10.5 48 5.5 67 15" stroke="#FF4FB8" strokeWidth="5" strokeLinecap="round" opacity="0.78" />
+      <path d="M13.5 30.2C27 18.5 49 17 66.5 25.8" stroke="#FFE18A" strokeWidth="4" strokeLinecap="round" opacity="0.92" />
+      <path d="M31.3 5.6c2.3 1.3 3.5 3 3.8 5.3 1-2 2.5-3.4 4.7-4.1" stroke="#1F1714" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M34.1 5.2c1.6 1.3 2.4 2.7 2.5 4.3.8-1.4 2-2.4 3.6-3" stroke="#FF4FB8" strokeWidth="1.8" strokeLinecap="round" />
+      <g transform="rotate(-7 21 20)">
+        <path d="M8.6 14.2 5.2 7.6l7.3 2.1M31.7 14.2l3.4-6.6-7.3 2.1" fill="#FFB7DA" stroke="#1F1714" strokeWidth="3" strokeLinejoin="round" />
+        <path d="M6.9 20.5C6.9 12.6 13.2 7 21.2 7s14.1 5.6 14.1 13.5S29.1 34 21.2 34 6.9 28.4 6.9 20.5Z" fill="#FFF8EA" stroke="#1F1714" strokeWidth="3.4" />
+        <path d="m15.3 12.8 2.1 2.1m9.6-2.1-2.1 2.1" stroke="#1F1714" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M16.7 19.7h.1m8.9 0h.1" stroke="#1F1714" strokeWidth="4" strokeLinecap="round" />
+        <path d="M18.7 24.6c1.5 1.6 3.5 1.6 5 0" stroke="#1F1714" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M13.8 23.3 8.9 22m4.9 3.6-4.5 1.2m19.1-3.5 4.9-1.3m-4.9 3.6 4.5 1.2" stroke="#1F1714" strokeWidth="1.5" strokeLinecap="round" opacity="0.75" />
+        <path d="M21.2 22.3v2.1" stroke="#1F1714" strokeWidth="1.8" strokeLinecap="round" />
+        <path d="M13.6 14.9c-1.7 1.2-2.5 2.7-2.6 4.6" stroke="white" strokeWidth="2.4" strokeLinecap="round" opacity="0.9" />
+      </g>
+      <g transform="rotate(6 54 20)">
+        <path d="M40.5 16.3c-3.6-3.6-6.6-3.5-9.1-.8.3 4.2 2.6 7.1 6.6 8.5M67.5 16.3c3.6-3.6 6.6-3.5 9.1-.8-.3 4.2-2.6 7.1-6.6 8.5" fill="#C9F8FF" stroke="#1F1714" strokeWidth="3.2" strokeLinejoin="round" />
+        <path d="M37.3 20.5C37.3 12.4 44 6.2 54.1 6.2s16.8 6.2 16.8 14.3-6.7 14.2-16.8 14.2-16.8-6.1-16.8-14.2Z" fill="#EAFDFF" stroke="#1F1714" strokeWidth="3.4" />
+        <path d="M47.7 19.5h.1m12.5 0h.1" stroke="#1F1714" strokeWidth="4" strokeLinecap="round" />
+        <path d="M50.2 25.1c2.4 1.8 5.4 1.8 7.8 0" stroke="#1F1714" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M54.1 21.7c.9 0 1.8.4 1.8 1s-.9 1.1-1.8 1.1-1.8-.5-1.8-1.1.9-1 1.8-1Z" fill="#1F1714" />
+        <path d="M43.5 14.1c2.1-2.4 5.8-3.8 10.6-3.8" stroke="white" strokeWidth="2.4" strokeLinecap="round" opacity="0.9" />
+        <path d="m45.5 9.7-3.8-4.4m20.8 4.4 3.8-4.4" stroke="#1F1714" strokeWidth="2.6" strokeLinecap="round" />
+      </g>
+      <path d="M7.6 8.2 9 11.4l3.3 1.3L9 14 7.6 17.3 6.2 14 3 12.7l3.2-1.3 1.4-3.2ZM69.2 2.8l1 2.4 2.5.9-2.5 1-1 2.4-1-2.4-2.4-1 2.4-.9 1-2.4Z" fill="#FFF8EA" stroke="#1F1714" strokeWidth="1.4" strokeLinejoin="round" />
+    </svg>
+  );
 }
 
 function InstagramLogo() {

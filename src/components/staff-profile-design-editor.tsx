@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { staffProfileColorSlots, staffProfileDecorTemplates, staffProfileTemplates } from "@/lib/staff-profile-themes";
-import type { StaffProfileColorSlot, StaffProfileDecorId, StaffProfileTemplateId, StaffProfileTheme } from "@/lib/studio-data";
+import { staffProfileColorSlots, staffProfileDecorTemplates, staffProfilePortfolioStyleTemplates, staffProfileTemplates } from "@/lib/staff-profile-themes";
+import type { StaffProfileColorSlot, StaffProfileDecorId, StaffProfilePortfolioStyleId, StaffProfileTemplateId, StaffProfileTheme } from "@/lib/studio-data";
 
 type StaffProfileDesignEditorProps = {
   initialTheme?: StaffProfileTheme;
@@ -12,18 +12,21 @@ type StaffProfileDesignEditorProps = {
 
 const templateMap = new Map(staffProfileTemplates.map((template) => [template.id, template]));
 const decorMap = new Map(staffProfileDecorTemplates.map((template) => [template.id, template]));
+const portfolioStyleMap = new Map(staffProfilePortfolioStyleTemplates.map((template) => [template.id, template]));
 
 export function StaffProfileDesignEditor({ initialTheme, defaultTemplate, defaultDecor }: StaffProfileDesignEditorProps) {
   const startingTemplate = initialTheme?.template ?? defaultTemplate;
   const startingPalette = templateMap.get(startingTemplate)?.palette ?? templateMap.get(defaultTemplate)?.palette ?? staffProfileTemplates[0].palette;
   const [template, setTemplate] = useState<StaffProfileTemplateId>(startingTemplate);
   const [decor, setDecor] = useState<StaffProfileDecorId>(initialTheme?.decor ?? defaultDecor);
+  const [portfolioStyle, setPortfolioStyle] = useState<StaffProfilePortfolioStyleId>(initialTheme?.portfolioStyle ?? "default-service");
   const [colors, setColors] = useState<Record<StaffProfileColorSlot, string>>(() => {
     return Object.fromEntries(staffProfileColorSlots.map(({ key }) => [key, initialTheme?.colors?.[key] ?? startingPalette[key]])) as Record<StaffProfileColorSlot, string>;
   });
 
   const activeTemplate = useMemo(() => templateMap.get(template) ?? staffProfileTemplates[0], [template]);
   const activeDecor = useMemo(() => decorMap.get(decor) ?? staffProfileDecorTemplates[0], [decor]);
+  const activePortfolioStyle = useMemo(() => portfolioStyleMap.get(portfolioStyle) ?? staffProfilePortfolioStyleTemplates[0], [portfolioStyle]);
 
   function chooseTemplate(nextTemplate: StaffProfileTemplateId) {
     setTemplate(nextTemplate);
@@ -53,6 +56,7 @@ export function StaffProfileDesignEditor({ initialTheme, defaultTemplate, defaul
 
       <input type="hidden" name="profileThemeTemplate" value={template} />
       <input type="hidden" name="profileThemeDecor" value={decor} />
+      <input type="hidden" name="profileThemePortfolioStyle" value={portfolioStyle} />
       <label className="mt-4 block">
         <span className="text-xs font-black uppercase tracking-[0.18em] text-white/45">Design template</span>
         <select
@@ -84,6 +88,22 @@ export function StaffProfileDesignEditor({ initialTheme, defaultTemplate, defaul
         </select>
       </label>
       <p className="mt-2 rounded-2xl border border-white/10 bg-black/30 p-3 text-xs font-bold leading-5 text-white/48">{activeDecor.description}</p>
+
+      <label className="mt-4 block">
+        <span className="text-xs font-black uppercase tracking-[0.18em] text-white/45">Portfolio card style</span>
+        <select
+          value={portfolioStyle}
+          onChange={(event) => setPortfolioStyle(event.target.value as StaffProfilePortfolioStyleId)}
+          className="mt-2 w-full rounded-2xl border border-white/10 bg-black/70 px-4 py-3 text-white outline-none focus:border-white/40"
+        >
+          {staffProfilePortfolioStyleTemplates.map((option) => (
+            <option key={option.id} value={option.id}>
+              {option.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      <p className="mt-2 rounded-2xl border border-white/10 bg-black/30 p-3 text-xs font-bold leading-5 text-white/48">{activePortfolioStyle.description}</p>
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <button type="button" onClick={resetToTemplate} className="rounded-full border border-white/15 px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white/70 transition hover:bg-white hover:text-black">

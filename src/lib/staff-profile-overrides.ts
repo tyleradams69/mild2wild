@@ -9,7 +9,7 @@ import {
   type StaffMember,
   type StaffProfileTheme,
 } from "./studio-data";
-import { getDefaultProfileDecorId, getDefaultProfileTemplateId, normalizeStaffProfileTheme } from "./staff-profile-themes";
+import { getDefaultProfileDecorId, getDefaultProfilePortfolioStyleId, getDefaultProfileTemplateId, normalizeStaffProfileTheme } from "./staff-profile-themes";
 
 export type StaffProfileUpdate = {
   name: string;
@@ -151,9 +151,8 @@ export function normalizeStaffProfileUpdate(input: Record<string, unknown>): Nor
 export function buildProfileEditModel(session: DashboardAuthSession, staffSlug: string, staffMembers: StaffMember[]) {
   const profile = staffMembers.find((staff) => staff.slug === staffSlug);
   if (!profile) return { canEdit: false, profile: null, reason: "Profile not found." };
-  if (profile.isMascot) return { canEdit: false, profile, reason: "Mascot profiles are public-only." };
-  if (session.role !== "owner" && session.staffSlug !== profile.slug) {
-    return { canEdit: false, profile, reason: "Staff can only edit their own profile." };
+  if (session.role !== "owner") {
+    return { canEdit: false, profile, reason: "Only Caitlin's admin account can edit public profiles." };
   }
   return { canEdit: true, profile, reason: null };
 }
@@ -238,6 +237,7 @@ function buildCreatedStaffMember(profile: StaffProfileCreation): StaffMember {
     profileTheme: profile.profileTheme ?? {
       template: getDefaultProfileTemplateId({ name: profile.name, serviceCategorySlugs: [profile.categorySlug] }),
       decor: getDefaultProfileDecorId({ name: profile.name, serviceCategorySlugs: [profile.categorySlug] }),
+      portfolioStyle: getDefaultProfilePortfolioStyleId({ serviceCategorySlugs: [profile.categorySlug] }),
     },
     calendarColor: profile.calendarColor,
   };

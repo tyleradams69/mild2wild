@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { PageShell, SectionEyebrow, StaffCard } from "@/components/site";
-import { serviceCategories, staffMembers } from "@/lib/studio-data";
+import { serviceCategories, staffMembers, type StaffMember } from "@/lib/studio-data";
 import { readStoredStaffMembers } from "@/lib/staff-profile-overrides";
 
 export const dynamic = "force-dynamic";
@@ -49,15 +50,11 @@ export default async function StaffIndexPage() {
         </div>
 
         {mascotProfiles.length > 0 ? (
-          <div className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.03] p-5">
-            <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-end">
-              <div>
-                <p className="text-xs font-black uppercase tracking-[0.28em] text-lime-300">Shop dog mascot</p>
-                <h2 className="brand-display mt-2 text-3xl font-black uppercase">Meet Schwebels</h2>
-              </div>
-            </div>
-            <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {mascotProfiles.map((staff) => <StaffCard key={staff.slug} staff={staff} />)}
+          <div className="mt-10 max-w-4xl rounded-[2rem] border-[3px] border-black bg-[#fff8ea]/92 p-4 shadow-[6px_7px_0_#f3b4da]">
+            <div className="grid gap-4 sm:grid-cols-[10rem_1fr] sm:items-center">
+              {mascotProfiles.map((staff) => (
+                <MascotStaffFeature key={staff.slug} staff={staff} />
+              ))}
             </div>
           </div>
         ) : null}
@@ -67,5 +64,34 @@ export default async function StaffIndexPage() {
         </div>
       </section>
     </PageShell>
+  );
+}
+
+function MascotStaffFeature({ staff }: { staff: StaffMember }) {
+  return (
+    <>
+      <Link href={`/staff/${staff.slug}`} className="group relative aspect-square overflow-hidden rounded-[1.5rem] border-[3px] border-black bg-black shadow-[4px_5px_0_#17130f]">
+        <Image
+          src={staff.photoUrl}
+          alt={`${staff.name} profile photo`}
+          fill
+          sizes="10rem"
+          className="object-cover transition duration-500 group-hover:scale-105"
+        />
+        <span className="absolute left-3 top-3 rounded-full border-2 border-black bg-[#F06BD6] px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.16em] text-black shadow-[2px_3px_0_#17130f]">
+          Mascot
+        </span>
+      </Link>
+      <div className="min-w-0 py-1">
+        <p className="text-xs font-black uppercase tracking-[0.24em] text-[#9BDC3A]">Mascot</p>
+        <h2 className="brand-display mt-1 text-3xl font-black uppercase text-black sm:text-4xl">Meet {staff.name}</h2>
+        <p className="mt-2 line-clamp-2 max-w-2xl text-sm font-semibold leading-6 text-black/62 sm:text-base">
+          {staff.bio}
+        </p>
+        <Link href={`/staff/${staff.slug}`} className="mt-4 inline-flex rounded-full border-[3px] border-black bg-[#F06BD6] px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-black shadow-[3px_4px_0_#17130f] transition hover:-translate-y-0.5">
+          View profile →
+        </Link>
+      </div>
+    </>
   );
 }

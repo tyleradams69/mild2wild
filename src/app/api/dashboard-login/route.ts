@@ -33,7 +33,11 @@ function requestedStaffSlug(value: string | undefined | null) {
 function dashboardLocationForSession(session: DashboardAuthSession, next: string, staffSlug: string) {
   if (!staffSlug) return safeDashboardRedirect(next);
   if (session.role === "owner") return safeDashboardRedirect(next || `/dashboard/staff/${staffSlug}/edit`);
-  if (session.staffSlug === staffSlug) return safeDashboardRedirect(next || `/dashboard/staff/${staffSlug}/edit`);
+  if (session.staffSlug === staffSlug) {
+    const staffCalendar = `/dashboard/calendar/${staffSlug}`;
+    const destination = safeDashboardRedirect(next || staffCalendar);
+    return destination.startsWith("/dashboard/staff/") ? staffCalendar : destination;
+  }
   return "/dashboard";
 }
 

@@ -62,9 +62,23 @@ export type StaffProfileDecorId =
   | "ribbon-hearts"
   | "flash-daggers";
 
+export type StaffProfilePortfolioStyleId =
+  | "default-service"
+  | "rainbow-outline"
+  | "clean-cream"
+  | "black-bone"
+  | "tattoo-flash"
+  | "glossy-salon"
+  | "spa-glow"
+  | "ghost-glow"
+  | "bone-yard"
+  | "moonlit-aura"
+  | "chrome-pop";
+
 export type StaffProfileTheme = {
   template: StaffProfileTemplateId;
   decor?: StaffProfileDecorId;
+  portfolioStyle?: StaffProfilePortfolioStyleId;
   colors?: Partial<Record<StaffProfileColorSlot, string>>;
 };
 
@@ -357,15 +371,20 @@ export const staffMembers: StaffMember[] = staffSeed.map(({ index, categorySlug,
   return {
     slug: `team-member-${paddedIndex}`,
     name: isMascot ? "Schwebels" : (publicStaffNames[index] ?? `${categoryTitles[categorySlug as ServiceCategorySlug]} ${paddedIndex}`),
-    title: isMascot ? "Shop Dog Mascot" : categoryTitles[categorySlug as ServiceCategorySlug],
+    title: isMascot ? "Mascot" : categoryTitles[categorySlug as ServiceCategorySlug],
     bio: isMascot ? mascotBio : isJuny ? junyBio : isSerenity ? serenityBio : isSurge ? surgeBio : categoryBio[categorySlug as ServiceCategorySlug],
     photoUrl: `/staff/team-member-${paddedIndex}.jpg`,
     serviceCategorySlugs: categorySlug ? [categorySlug] : [],
     serviceSlugs: categorySlug ? serviceSlugsByCategory[categorySlug] : [],
-    socialLinks: [
-      { label: "Instagram coming soon", href: "#" },
-      { label: "View portfolio", href: "#portfolio" },
-    ],
+    socialLinks: isMascot
+      ? [
+          { label: "Friendship APL", href: "https://friendshipapl.org" },
+          { label: "View portfolio", href: "#portfolio" },
+        ]
+      : [
+          { label: "Instagram coming soon", href: "#" },
+          { label: "View portfolio", href: "#portfolio" },
+        ],
     gallery: isMascot
       ? ["Shop dog mascot", "Schwebels story", "Tour-page cameo"]
       : isJuny

@@ -403,7 +403,7 @@ export default async function DashboardPage() {
             <p className="mt-4 text-white/65">
               {dashboardModel.canManageAllCalendars
                 ? "Can manage all calendars, staff profiles, services, products, and booking requests."
-                : "Can view the portal but only edit their own profile, availability, and bookings."}
+                : "Can view the portal and only edit their own calendar, appointments, and block time."}
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link href="#calendar-board" className="rounded-full bg-cyan-200 px-5 py-3 text-xs font-black uppercase tracking-[0.18em] text-black transition hover:bg-white">
@@ -491,8 +491,8 @@ export default async function DashboardPage() {
           <h2 className="brand-display text-4xl font-black uppercase">Meet-me pages ready to manage.</h2>
           <p className="mt-3 text-sm leading-6 text-white/60">
             {profileEditorModel.canManageAllProfiles
-              ? "Owner/admin can update every staff profile, create new hires from the same template, and keep the mascot public-only."
-              : "Staff accounts only get their own editable profile controls."}
+              ? "Owner/admin can update every staff profile, create new hires from the same template, edit the dog profile, and control all colors, templates, bios, and portfolios."
+              : "Staff accounts do not edit public profiles. Caitlin handles bios, portfolio uploads, colors, and templates from the admin account."}
           </p>
           {profileEditorModel.canManageAllProfiles ? (
             <form action={createStaffProfileAction} className="mt-6 rounded-[1.6rem] border border-pink-200/20 bg-white/[0.04] p-4">
@@ -553,7 +553,7 @@ export default async function DashboardPage() {
           <div className="mt-6 max-h-[34rem] space-y-3 overflow-y-auto pr-2 [scrollbar-color:#FF8AC8_rgba(255,255,255,0.08)]">
             {profileEditorModel.editableProfiles.length === 0 ? (
               <div className="rounded-3xl border border-dashed border-white/15 bg-black/40 p-5 text-sm leading-6 text-white/58">
-                No editable staff profiles are assigned to this login yet.
+                No profile editors are available for this login. Caitlin&apos;s admin account handles all bios, colors, templates, and portfolio uploads.
               </div>
             ) : profileEditorModel.editableProfiles.map((profile) => (
               <Link key={profile.slug} href={`/dashboard/staff/${profile.slug}/edit`} className="block rounded-3xl border border-white/10 bg-white/5 p-4 transition hover:border-white/30 hover:bg-white/10">

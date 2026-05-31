@@ -40,17 +40,16 @@ describe("dashboard workspace", () => {
     });
   });
 
-  it("lets owner manage all non-mascot profiles but scopes staff to their own editable profile", () => {
+  it("lets only owner manage public profiles and includes the mascot editor", () => {
     const ownerModel = buildProfileEditorModel(ownerSession, staffMembers, services);
     const staffModel = buildProfileEditorModel(nailStaffSession, staffMembers, services);
 
     expect(ownerModel.canManageAllProfiles).toBe(true);
-    expect(ownerModel.editableProfiles).toHaveLength(staffMembers.filter((staff) => !staff.isMascot).length);
-    expect(ownerModel.editableProfiles.map((profile) => profile.slug)).not.toContain("team-member-12");
+    expect(ownerModel.editableProfiles).toHaveLength(staffMembers.length);
+    expect(ownerModel.editableProfiles.map((profile) => profile.slug)).toContain("team-member-12");
 
     expect(staffModel.canManageAllProfiles).toBe(false);
-    expect(staffModel.editableProfiles.map((profile) => profile.slug)).toEqual(["team-member-13"]);
-    expect(staffModel.editableProfiles[0]).toMatchObject({ title: "Nail Artist", serviceNames: expect.arrayContaining(["Custom Nail Art"]) });
+    expect(staffModel.editableProfiles).toEqual([]);
   });
 
   it("normalizes website booking requests into a routed inbox", () => {

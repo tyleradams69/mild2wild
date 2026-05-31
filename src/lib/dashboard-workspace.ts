@@ -52,7 +52,7 @@ export type DashboardInboxItem = {
 };
 
 export function buildProfileEditorModel(session: DashboardAuthSession, staffMembers: StaffMember[], services: StudioService[] = []): ProfileEditorModel {
-  const editableStaff = staffMembers.filter((staff) => !staff.isMascot && (session.role === "owner" || staff.slug === session.staffSlug));
+  const editableStaff = session.role === "owner" ? staffMembers : [];
 
   return {
     canManageAllProfiles: session.role === "owner",

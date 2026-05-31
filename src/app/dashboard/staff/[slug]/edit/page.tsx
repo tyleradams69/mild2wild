@@ -101,6 +101,7 @@ function collectProfileTheme(formData: FormData) {
   return normalizeStaffProfileTheme({
     template: formData.get("profileThemeTemplate"),
     decor: formData.get("profileThemeDecor"),
+    portfolioStyle: formData.get("profileThemePortfolioStyle"),
     colors,
   });
 }

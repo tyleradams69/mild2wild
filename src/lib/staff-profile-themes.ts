@@ -1,4 +1,4 @@
-import type { StaffMember, StaffProfileColorSlot, StaffProfileDecorId, StaffProfileTemplateId, StaffProfileTheme } from "./studio-data";
+import type { StaffMember, StaffProfileColorSlot, StaffProfileDecorId, StaffProfilePortfolioStyleId, StaffProfileTemplateId, StaffProfileTheme } from "./studio-data";
 
 export type ProfilePalette = {
   primary: string;
@@ -21,6 +21,12 @@ type StaffProfileTemplate = {
 
 type StaffProfileDecorTemplate = {
   id: StaffProfileDecorId;
+  name: string;
+  description: string;
+};
+
+type StaffProfilePortfolioStyleTemplate = {
+  id: StaffProfilePortfolioStyleId;
   name: string;
   description: string;
 };
@@ -52,6 +58,21 @@ export const staffProfileDecorTemplates: StaffProfileDecorTemplate[] = [
   { id: "halo-bubbles", name: "Halo Bubbles", description: "Floating spa bubbles, halos, and calming rounded glow shapes." },
   { id: "ribbon-hearts", name: "Ribbon Hearts", description: "Ribbon loops and sweet hearts for cute nail or hair profiles." },
   { id: "flash-daggers", name: "Flash Daggers", description: "Tiny tattoo-flash daggers and sparks with a sharper shop-wall vibe." },
+];
+
+
+export const staffProfilePortfolioStyleTemplates: StaffProfilePortfolioStyleTemplate[] = [
+  { id: "default-service", name: "Default for Service", description: "Automatically uses the best portfolio card treatment for this staff member's main service." },
+  { id: "rainbow-outline", name: "Rainbow Outline", description: "Stacked candy-rainbow comic outlines like the original nail portfolio cards." },
+  { id: "clean-cream", name: "Clean Cream", description: "Simple cream cards with a restrained single shadow and thick ink outline." },
+  { id: "black-bone", name: "Black + Bone", description: "Tattoo-shop bone cards with black ink, parchment captions, and muted shadow." },
+  { id: "tattoo-flash", name: "Tattoo Flash", description: "Dark flash-wall cards with smoky overlays and bold ink-shop contrast." },
+  { id: "glossy-salon", name: "Glossy Salon", description: "Warm glossy cards with shine overlays for hair, beauty, and polished sets." },
+  { id: "spa-glow", name: "Spa Glow", description: "Soft aura cards with gentle glow edges for skincare, lashes, brows, and calm beauty work." },
+  { id: "ghost-glow", name: "Ghost Glow", description: "Cute spooky translucent glow with pale lavender shadows and soft spectral edges." },
+  { id: "bone-yard", name: "Bone Yard", description: "Cream bone-stack shadows with black outlines, a little punk but still readable." },
+  { id: "moonlit-aura", name: "Moonlit Aura", description: "Dreamy moonlit purple/blue glow, nice for mystical, soft, or vibey portfolios." },
+  { id: "chrome-pop", name: "Chrome Pop", description: "Sharp chrome/star energy with bright highlights and sticker-pop shadows." },
 ];
 
 export const staffProfileTemplates: StaffProfileTemplate[] = [
@@ -267,6 +288,7 @@ export const staffProfileTemplates: StaffProfileTemplate[] = [
 
 const templatesById = new Map(staffProfileTemplates.map((template) => [template.id, template]));
 const decorTemplatesById = new Map(staffProfileDecorTemplates.map((template) => [template.id, template]));
+const portfolioStyleTemplatesById = new Map(staffProfilePortfolioStyleTemplates.map((template) => [template.id, template]));
 
 export function getStaffProfileTemplate(templateId: string | undefined) {
   return templatesById.get(templateId as StaffProfileTemplateId) ?? templatesById.get("recommended")!;
@@ -276,6 +298,10 @@ export function getStaffProfileDecorTemplate(decorId: string | undefined) {
   return decorTemplatesById.get(decorId as StaffProfileDecorId) ?? decorTemplatesById.get("classic-sparkles")!;
 }
 
+export function getStaffProfilePortfolioStyleTemplate(portfolioStyleId: string | undefined) {
+  return portfolioStyleTemplatesById.get(portfolioStyleId as StaffProfilePortfolioStyleId) ?? portfolioStyleTemplatesById.get("default-service")!;
+}
+
 export function getDefaultProfileTemplateId(staff: Pick<StaffMember, "name" | "serviceCategorySlugs">): StaffProfileTemplateId {
   if (staff.name.toLowerCase() === "surge") return "crimson-ink";
   const categorySlug = staff.serviceCategorySlugs[0];
@@ -283,6 +309,15 @@ export function getDefaultProfileTemplateId(staff: Pick<StaffMember, "name" | "s
   if (categorySlug === "hair") return "glossy-salon";
   if (categorySlug === "aesthetics") return "spa-glow";
   return "rainbow-nails";
+}
+
+export function getDefaultProfilePortfolioStyleId(staff: Pick<StaffMember, "serviceCategorySlugs">): StaffProfilePortfolioStyleId {
+  const categorySlug = staff.serviceCategorySlugs[0];
+  if (categorySlug === "tattoo") return "tattoo-flash";
+  if (categorySlug === "hair") return "glossy-salon";
+  if (categorySlug === "aesthetics") return "spa-glow";
+  if (!categorySlug) return "ghost-glow";
+  return "rainbow-outline";
 }
 
 export function getDefaultProfileDecorId(staff: Pick<StaffMember, "name" | "serviceCategorySlugs">): StaffProfileDecorId {
@@ -357,10 +392,12 @@ export function resolveStaffProfileTheme(staff: StaffMember) {
   const templateId = staff.profileTheme?.template ?? getDefaultProfileTemplateId(staff);
   const template = getStaffProfileTemplate(templateId);
   const decor = getStaffProfileDecorTemplate(staff.profileTheme?.decor ?? getDefaultProfileDecorId(staff));
+  const portfolioStyle = getStaffProfilePortfolioStyleTemplate(staff.profileTheme?.portfolioStyle ?? getDefaultProfilePortfolioStyleId(staff));
   const basePalette = template.id === "recommended" ? defaultPalette : template.palette;
   return {
     template,
     decor,
+    portfolioStyle,
     palette: {
       ...basePalette,
       ...(staff.profileTheme?.colors ?? {}),
@@ -373,6 +410,7 @@ export function normalizeStaffProfileTheme(value: unknown, fallbackTemplate: Sta
   const record = value as Record<string, unknown>;
   const template = templatesById.has(record.template as StaffProfileTemplateId) ? (record.template as StaffProfileTemplateId) : fallbackTemplate;
   const decor = decorTemplatesById.has(record.decor as StaffProfileDecorId) ? (record.decor as StaffProfileDecorId) : undefined;
+  const portfolioStyle = portfolioStyleTemplatesById.has(record.portfolioStyle as StaffProfilePortfolioStyleId) ? (record.portfolioStyle as StaffProfilePortfolioStyleId) : undefined;
   const colorRecord = record.colors && typeof record.colors === "object" && !Array.isArray(record.colors) ? (record.colors as Record<string, unknown>) : record;
   const colors = Object.fromEntries(
     staffProfileColorSlots.flatMap(({ key }) => {
@@ -380,7 +418,7 @@ export function normalizeStaffProfileTheme(value: unknown, fallbackTemplate: Sta
       return color ? [[key, color]] : [];
     }),
   ) as StaffProfileTheme["colors"];
-  return { template, ...(decor ? { decor } : {}), colors };
+  return { template, ...(decor ? { decor } : {}), ...(portfolioStyle ? { portfolioStyle } : {}), colors };
 }
 
 function normalizeHexColor(value: unknown) {
